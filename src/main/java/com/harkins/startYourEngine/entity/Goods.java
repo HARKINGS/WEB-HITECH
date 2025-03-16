@@ -1,5 +1,7 @@
-package com.harkins.startYourEngine.dto.response;
+package com.harkins.startYourEngine.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -8,7 +10,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PermissionResponse {
+@Entity
+public class Goods {
+    @Id
+    String goodsId;
     String name;
     String description;
+    int price;
+    String version;
 }
