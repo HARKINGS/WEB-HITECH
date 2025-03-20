@@ -1,21 +1,29 @@
 package com.harkins.startYourEngine.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
 @Entity
 public class Goods {
     @Id
-    String goodsId;
-    String name;
-    String description;
-    int price;
-    String version;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long goodsId;
+
+    private String goodsName;
+    private String goodsVersion;
+    private Long quantity;
+    private Double price;
+    private String goodsDescription;
+
 }
