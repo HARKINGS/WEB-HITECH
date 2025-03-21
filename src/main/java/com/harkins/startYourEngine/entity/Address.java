@@ -22,9 +22,11 @@ public class Address {
     private String state;
     private String country;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    String fullAddress;
 
     public String getFullAddress() {
         return String.format("%s, %s, %s, %s", 

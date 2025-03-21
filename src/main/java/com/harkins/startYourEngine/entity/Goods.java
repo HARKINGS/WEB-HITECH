@@ -25,5 +25,8 @@ public class Goods {
     private Long quantity;
     private Double price;
     private String goodsDescription;
-
+    private String goodsCategory;
+    private String goodsBrand;
+    private String goodsImageURL;
+    // private String goodsStatus;
 }
