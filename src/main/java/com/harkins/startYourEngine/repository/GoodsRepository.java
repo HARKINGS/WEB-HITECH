@@ -16,5 +16,5 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
     List<Goods> findByGoodsNameContainingIgnoreCase(String goodsName);
 
-    Optional<Goods> findByGoodsCategory(String goodsCategory);
+    List<Goods> findByGoodsCategory(String goodsCategory);
 }
