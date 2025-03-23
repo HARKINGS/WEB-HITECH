@@ -1,4 +1,4 @@
-# PROJECT2
+# WEB
 * Toàn bộ thông tin, quá trình lập trình, thiết kế, làm việc sẽ được lưu tại đây
 ## 16/03/2025
 ### Đã làm được 
