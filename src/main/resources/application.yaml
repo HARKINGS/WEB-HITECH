@@ -19,3 +19,5 @@ spring:
                 dialect: org.hibernate.dialect.MySQLDialect
 jwt:
     signerKey: "Ftbzo3IFNUZ/gqQhbF7/30/aoOASmg85tzSH/CCNA3XPyxbsi5RuywG/el7iIesc"
+    valid-duration: 3600 # Khoảng thời gian valid của 1 Token (s)
+    refreshable-duration: 14400 # Khoảng thời gian mà trong khoảng thời gian đó có thể refresh 1 Token (s)

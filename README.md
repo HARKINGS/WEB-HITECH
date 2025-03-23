@@ -13,3 +13,15 @@
 * Chức năng login, logout do chưa đủ thời gian
 ### Dự kiến tương lai
 * Thực hiện chức năng login/logout và tiếp tục code tiếp backend, sau đó sẽ code frontend
+
+
+## 23/03/2025
+### Đã làm được
+* Merge code, xử lý xung đột code 2 người back end
+* Bước đầu code login, logout
+
+### Chưa làm được
+* Chưa xong login logout (Do chưa có thời gian, làm muộn)
+
+### Dự kiến tương lai
+* Hoàn thiện login, logout trong tuần tới
