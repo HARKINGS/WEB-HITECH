@@ -23,9 +23,9 @@ public class ApplicationInitConfig {
     PasswordEncoder passwordEncoder;
 
     @Bean
-    @ConditionalOnProperty(value = "datasource.driverClassName",
-            prefix = "spring",
-            havingValue = "com.mysql.cj.jdbc.Driver")
+//    @ConditionalOnProperty(value = "datasource.driverClassName",
+//            prefix = "spring",
+//            havingValue = "com.mysql.cj.jdbc.Driver")
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         log.info("ApplicationRunner is running");
         return args -> {

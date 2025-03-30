@@ -3,6 +3,8 @@ package com.harkins.startYourEngine.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GoodsService {
 
     GoodsRepository goodsRepository;
