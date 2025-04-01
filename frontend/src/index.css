@@ -1,13 +1,106 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* src/index.css */
+
+:root {
+  /* ---- LIGHT THEME (Blue Accent) ---- */
+  --background-primary: #ffffff; /* White background */
+  --background-secondary: #f8f9fa; /* Light gray for sections/sidebar */
+  --background-nav: #ffffff; /* Nav bar background */
+  --background-header-top: #f0f0f0; /* Very top bar */
+  --text-primary: #212529; /* Dark text */
+  --text-secondary: #6c757d; /* Gray text */
+  --text-accent: #0d6efd; /* PRIMARY ACCENT: BLUE */
+  --text-on-accent: #ffffff; /* Text on blue background (buttons, etc.) */
+  --border-color: #dee2e6; /* Light gray borders */
+
+  /* Accent Color (Now Blue for Light Theme) */
+  --accent-color: #0d6efd;
+  --accent-color-darker: #0b5ed7; /* Darker blue for hover */
+
+  /* Other Colors */
+  --price-color: #dc3545; /* Reddish price */
+  --sale-badge-bg: var(--price-color);
+  --sale-badge-text: #ffffff;
+  --star-color: #ffc107; /* Gold/Yellow for stars */
+  --new-badge-bg: #198754; /* Green for 'NEW' badge */
+  --new-badge-text: #ffffff;
+
+  /* Font families (adjust if needed) */
+  --font-primary: 'Poppins', sans-serif;
+  --font-secondary: 'Roboto', sans-serif;
+
+  /* Transitions */
+  --transition-fast: all 0.2s ease-in-out;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html.dark {
+  /* ---- DARK THEME (Yellow Accent) ---- */
+  --background-primary: #1a1a1a;
+  --background-secondary: #2a2a2a;
+  --background-nav: #171d27;
+  --background-header-top: #171d27;
+  --text-primary: #e0e0e0;
+  --text-secondary: #b0b0b0;
+  --text-accent: #ffd700; /* PRIMARY ACCENT: YELLOW for Dark */
+  --text-on-accent: #333333; /* Darker text on yellow */
+  --border-color: #444444;
+
+  /* Accent Color (Now Yellow for Dark Theme) */
+  --accent-color: #ffd700; /* Yellow accent */
+  --accent-color-darker: #f0c400; /* Darker yellow for hover */
+
+  /* Other Colors (Adjust if needed for dark contrast) */
+  --price-color: #ff6b81; /* Brighter red price */
+  --sale-badge-bg: var(--price-color);
+  --sale-badge-text: #ffffff;
+  --star-color: #ffc107; /* Keep star color */
+  --new-badge-bg: #20c997; /* Brighter green */
+  --new-badge-text: #ffffff;
+
+  /* Fonts and Transitions remain the same */
+}
+
+/* Rest of global styles (body, a, button, etc.) */
+body {
+  margin: 0;
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover {
+  opacity: 0.8; /* Or use darker accent: color: var(--accent-color-darker); */
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+main {
+  /* Adjust min-height based on actual sticky header height if needed */
+  padding-top: 20px; /* Add padding if content is hidden under sticky header */
+  padding-bottom: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Class to prevent text selection */
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
