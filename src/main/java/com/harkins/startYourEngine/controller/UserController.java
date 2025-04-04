@@ -1,17 +1,20 @@
 package com.harkins.startYourEngine.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.harkins.startYourEngine.dto.request.CreateUserRequest;
 import com.harkins.startYourEngine.dto.request.UpdateUserRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
 import com.harkins.startYourEngine.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,8 +47,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable("userId") String userId,
-                                         @Valid @RequestBody UpdateUserRequest request) {
+    ApiResponse<UserResponse> updateUser(
+            @PathVariable("userId") String userId, @Valid @RequestBody UpdateUserRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(userId, request))
                 .build();
@@ -53,8 +56,6 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     ApiResponse<String> deleteUser(@PathVariable("userId") String userId) {
-        return ApiResponse.<String>builder()
-                .result("User deleted")
-                .build();
+        return ApiResponse.<String>builder().result("User deleted").build();
     }
 }

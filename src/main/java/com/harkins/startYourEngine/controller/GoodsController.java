@@ -1,26 +1,27 @@
 package com.harkins.startYourEngine.controller;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
 import com.harkins.startYourEngine.service.GoodsService;
 
-import jakarta.validation.Valid;
-import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-
-
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,8 +45,8 @@ public class GoodsController {
         return ApiResponse.<List<GoodsResponse>>builder()
                 .result(goodsService.getGoods())
                 .build();
-    }    
-    
+    }
+
     @GetMapping("/{goodsId}")
     ApiResponse<GoodsResponse> getGoodsById(@PathVariable("goodsId") Long goodsId) {
         return ApiResponse.<GoodsResponse>builder()
@@ -68,8 +69,8 @@ public class GoodsController {
     }
 
     @PutMapping("/update")
-    ApiResponse<GoodsResponse> updateGoods(@RequestParam("goodsId") Long goodsId,
-                                          @Valid @RequestBody UpdateGoodsRequest request) {
+    ApiResponse<GoodsResponse> updateGoods(
+            @RequestParam("goodsId") Long goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();
@@ -78,8 +79,6 @@ public class GoodsController {
     @DeleteMapping("/{goodsId}")
     ApiResponse<String> deleteGoods(@PathVariable("goodsId") Long goodsId) {
         goodsService.deleteGoods(goodsId);
-        return ApiResponse.<String>builder()
-                .result("Goods deleted")
-                .build();
+        return ApiResponse.<String>builder().result("Goods deleted").build();
     }
 }

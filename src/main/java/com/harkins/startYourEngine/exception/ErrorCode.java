@@ -1,11 +1,11 @@
 package com.harkins.startYourEngine.exception;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
@@ -21,7 +21,8 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "Unauthorized!", HttpStatus.FORBIDDEN),
     ROLE_NOT_FOUND(1008, "Role not found!", HttpStatus.NOT_FOUND),
     INVALID_DOB(1009, "Your age must be at least {min}!", HttpStatus.BAD_REQUEST),
-    ;
+    GOODS_NOT_FOUND(1010, "Goods not found!", HttpStatus.NOT_FOUND),
+    REVIEW_NOT_FOUND(1011, "Review not found!", HttpStatus.NOT_FOUND);
 
     int code;
     String message;

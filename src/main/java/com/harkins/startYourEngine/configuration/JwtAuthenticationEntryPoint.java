@@ -2,8 +2,6 @@ package com.harkins.startYourEngine.configuration;
 
 import java.io.IOException;
 
-import com.harkins.startYourEngine.dto.response.ApiResponse;
-import com.harkins.startYourEngine.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +11,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harkins.startYourEngine.dto.response.ApiResponse;
+import com.harkins.startYourEngine.exception.ErrorCode;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -48,4 +48,3 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // và gửi đến client ngay lập tức
     }
 }
-

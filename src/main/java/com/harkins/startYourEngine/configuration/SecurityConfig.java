@@ -1,6 +1,5 @@
 package com.harkins.startYourEngine.configuration;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,18 +29,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request ->
-                        request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
-                        .permitAll()
-                        // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
-                        // hasAuthority("ROLE_ADMIN")
-                        .anyRequest()
-                        .authenticated());
+        httpSecurity.cors(Customizer.withDefaults()).authorizeHttpRequests(request -> request.requestMatchers(
+                        HttpMethod.POST, PUBLIC_ENDPOINTS)
+                .permitAll()
+                // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
+                // hasAuthority("ROLE_ADMIN")
+                .anyRequest()
+                .authenticated());
 
-        httpSecurity.oauth2ResourceServer(oauth2 ->
-                oauth2.jwt(JwtConfigurer -> JwtConfigurer.decoder(customJwtDecoder)
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(JwtConfigurer -> JwtConfigurer.decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
