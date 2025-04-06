@@ -35,6 +35,6 @@ public class Goods {
     private String goodsImageURL;
     // private String goodsStatus;
 
-    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
+//    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Review> reviews;
 }

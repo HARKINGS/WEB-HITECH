@@ -1,6 +1,7 @@
 # Web Hitech
 
-### Permissions
+## Permissions
+
 There are many permissions such as:
 
 * Create post (a)
@@ -22,18 +23,61 @@ There are many permissions such as:
 * Update Staff (q)
 * Comment/vote post (r)
 
-### ROLE
+## ROLE
+
 There are 3 roles currently:
+
 1. STAFF (a, b, c, d, f, h, i)
 2. ADMIN (All Staff permission + j, k, l, m, n, q)
 3. USER (e, f, h, i, o, p, r)
 
-### Entity
+## Entity
+
 There are currently the following entities:
 
 * User
-* Goods
+* Goods (Goods vs OrderItem Different ????)
 * Role
 * Permission
-* 
+* Voucher
+* Address
+* InfoBuy (Information about Items)
+* OrderItem
+* InvalidatedToken
+* Review
+
+## Query Test
+
+1. Login
+* Input:
+  + Right Login: ![img_2.png](img_2.png)
+* Output:
+  + Wrong Login: ![img_1.png](img_1.png)
+2. Create User
+* Input:
+![img_3.png](img_3.png)
+* Output:
+  + Dont have Account: ![img_4.png](img_4.png)
+  + Account Existed: ![img_5.png](img_5.png)
+3. Update User
+4. Find 1 User
+* Input:![img_11.png](img_11.png)
+* Output:![img_12.png](img_12.png)
+5. Get All Users 
+* Input: ![img_9.png](img_9.png)
+* Output:![img_10.png](img_10.png)
+6. Create Role 
+7. Get All Roles
+8. Delete Role
+9. Create Permission
+10. Get All Permissions
+11. Delete Permissions
+12. Check Login Token
+* Input: ![img_6.png](img_6.png)
+* Output:
+  * True Token: ![img_7.png](img_7.png)
+  * False Token: ![img_8.png](img_8.png)
+13. Logout
+
+
 
