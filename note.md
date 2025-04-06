@@ -67,17 +67,31 @@ There are currently the following entities:
 * Input: ![img_9.png](img_9.png)
 * Output:![img_10.png](img_10.png)
 6. Create Role 
+* Input:
+* Output:
 7. Get All Roles
+* Input:
+* Output:
 8. Delete Role
+* Input:
+* Output: 
 9. Create Permission
+* Input:![img_15.png](img_15.png)
+* Output:![img_16.png](img_16.png)
 10. Get All Permissions
+* Input:
+* Output:
 11. Delete Permissions
+* Input:
+* Output: 
 12. Check Login Token
 * Input: ![img_6.png](img_6.png)
 * Output:
   * True Token: ![img_7.png](img_7.png)
   * False Token: ![img_8.png](img_8.png)
 13. Logout
+* Input:![img_13.png](img_13.png)
+* Output:![img_14.png](img_14.png)
 
 
 

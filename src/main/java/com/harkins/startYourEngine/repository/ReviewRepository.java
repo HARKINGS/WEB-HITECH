@@ -1,8 +1,17 @@
 package com.harkins.startYourEngine.repository;
 
-// @Repository
-// public interface ReviewRepository extends JpaRepository<Review, Long> {
-//    List<Review> findByGoodsId(Long goodsId);
-// }
+import java.util.List;
 
-public class ReviewRepository {}
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.harkins.startYourEngine.entity.Review;
+
+//@Repository
+//public interface ReviewRepository extends JpaRepository<Review, Long> {
+//    List<Review> findByGoodsId(Long goodsId);
+//}
+
+public class ReviewRepository {
+
+}
