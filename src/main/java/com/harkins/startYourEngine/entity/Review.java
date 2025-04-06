@@ -25,7 +25,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id", nullable = false)
-    private Goods good;
+    private Goods goods;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
