@@ -7,6 +7,7 @@ import java.util.Objects;
 import jakarta.validation.ConstraintViolation;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,10 +25,14 @@ public class GlobalHandleExeption {
     ResponseEntity<ApiResponse> handleRuntimeException(RuntimeException e) {
         ApiResponse apiResponse = new ApiResponse();
 
-        apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        ErrorCode errorCode = ErrorCode.UNCATEGORIZED_EXCEPTION;
 
-        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode())
+        System.out.println(e.toString());
+
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+
+        return ResponseEntity.status(errorCode.getStatusCode())
                 .body(apiResponse);
     }
 
@@ -42,8 +47,8 @@ public class GlobalHandleExeption {
         return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
     }
 
-    @ExceptionHandler(value = AccessDeniedException.class)
-    ResponseEntity<ApiResponse> handleAccessDeniedException(AccessDeniedException e) {
+    @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})
+    ResponseEntity<ApiResponse> handleAccessDeniedException(Exception e) {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(ApiResponse.builder()

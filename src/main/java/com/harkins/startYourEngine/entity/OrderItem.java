@@ -1,6 +1,7 @@
 package com.harkins.startYourEngine.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
@@ -15,12 +16,12 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "infoBuyId")  
+    @JoinColumn(name = "infoBuyId")
     private InfoBuy infoBuy;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "goodsId")  
+    @JoinColumn(name = "goodsId")
     private Goods goods;
 
-    private Integer quantity;  
+    private Integer quantity;
 }

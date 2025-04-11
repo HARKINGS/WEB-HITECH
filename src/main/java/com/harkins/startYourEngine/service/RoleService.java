@@ -3,6 +3,9 @@ package com.harkins.startYourEngine.service;
 import java.util.HashSet;
 import java.util.List;
 
+import com.harkins.startYourEngine.exception.AppException;
+import com.harkins.startYourEngine.exception.ErrorCode;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.harkins.startYourEngine.dto.request.RoleRequest;
@@ -26,7 +29,11 @@ public class RoleService {
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse createRole(RoleRequest roleRequest) {
+        if(roleRepository.existsByName(roleRequest.getName()))
+            throw new AppException(ErrorCode.ROLE_EXISTED);
+
         Role role = roleMapper.toRole(roleRequest);
         var permissions = permissionRepository.findAllById(roleRequest.getPermissions());
 
@@ -36,10 +43,12 @@ public class RoleService {
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteRole(String roleName) {
         roleRepository.deleteById(roleName);
     }
