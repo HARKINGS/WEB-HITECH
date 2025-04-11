@@ -3,6 +3,7 @@ package com.harkins.startYourEngine.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;

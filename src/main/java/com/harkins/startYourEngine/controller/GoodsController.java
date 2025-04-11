@@ -1,26 +1,31 @@
 package com.harkins.startYourEngine.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
+import com.harkins.startYourEngine.dto.request.CreateReviewRequest;
+import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
+import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
+import com.harkins.startYourEngine.dto.response.ApiResponse;
+import com.harkins.startYourEngine.dto.response.GoodsResponse;
+import com.harkins.startYourEngine.dto.response.ReviewResponse;
+import com.harkins.startYourEngine.service.GoodsService;
+import com.harkins.startYourEngine.service.ReviewService;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
-import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
-import com.harkins.startYourEngine.dto.response.ApiResponse;
-import com.harkins.startYourEngine.dto.response.GoodsResponse;
-import com.harkins.startYourEngine.service.GoodsService;
-
-import jakarta.validation.Valid;
-import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-
-
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class GoodsController {
 
     GoodsService goodsService;
+    ReviewService reviewService;
 
     @PostMapping
     ApiResponse<GoodsResponse> createGoods(@Valid @RequestBody CreateGoodsRequest request) {
@@ -44,8 +50,8 @@ public class GoodsController {
         return ApiResponse.<List<GoodsResponse>>builder()
                 .result(goodsService.getGoods())
                 .build();
-    }    
-    
+    }
+
     @GetMapping("/{goodsId}")
     ApiResponse<GoodsResponse> getGoodsById(@PathVariable("goodsId") Long goodsId) {
         return ApiResponse.<GoodsResponse>builder()
@@ -68,8 +74,8 @@ public class GoodsController {
     }
 
     @PutMapping("/update")
-    ApiResponse<GoodsResponse> updateGoods(@RequestParam("goodsId") Long goodsId,
-                                          @Valid @RequestBody UpdateGoodsRequest request) {
+    ApiResponse<GoodsResponse> updateGoods(
+            @RequestParam("goodsId") Long goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();
@@ -78,8 +84,40 @@ public class GoodsController {
     @DeleteMapping("/{goodsId}")
     ApiResponse<String> deleteGoods(@PathVariable("goodsId") Long goodsId) {
         goodsService.deleteGoods(goodsId);
+        return ApiResponse.<String>builder().result("Goods deleted").build();
+    }
+
+    @GetMapping("/{goodsId}/reviews")
+    public ApiResponse<List<ReviewResponse>> getGoodsReviews(@PathVariable("goodsId") Long goodsId) {
+        return ApiResponse.<List<ReviewResponse>>builder()
+                .result(reviewService.getReviewByGoods(goodsId))
+                .build();
+    }
+
+    @PostMapping("/{goodsId}/reviews")
+    public ApiResponse<ReviewResponse> createReview(
+            @PathVariable("goodsId") Long goodsId, @Valid @RequestBody CreateReviewRequest request) {
+        return ApiResponse.<ReviewResponse>builder()
+                .result(reviewService.createReview(goodsId, request))
+                .build();
+    }
+
+    @PutMapping("/{goodsId}/reviews/{reviewId}")
+    public ApiResponse<ReviewResponse> updateReview(
+            @PathVariable("goodsId") Long goodsId,
+            @PathVariable("reviewId") Long reviewId,
+            @Valid @RequestBody UpdateReviewRequest request) {
+        return ApiResponse.<ReviewResponse>builder()
+                .result(reviewService.updateReview(goodsId, reviewId, request))
+                .build();
+    }
+
+    @DeleteMapping("/{goodsId}/reviews/{reviewId}")
+    public ApiResponse<String> deleteReview(
+            @PathVariable("goodsId") Long goodsId, @PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteReview(goodsId, reviewId);
         return ApiResponse.<String>builder()
-                .result("Goods deleted")
+                .result("Review deleted successfully")
                 .build();
     }
 }
