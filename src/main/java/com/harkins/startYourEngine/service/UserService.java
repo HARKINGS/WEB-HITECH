@@ -3,6 +3,8 @@ package com.harkins.startYourEngine.service;
 import java.util.HashSet;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,8 +12,9 @@ import org.springframework.stereotype.Service;
 import com.harkins.startYourEngine.dto.request.CreateUserRequest;
 import com.harkins.startYourEngine.dto.request.UpdateUserRequest;
 import com.harkins.startYourEngine.dto.response.UserResponse;
+import com.harkins.startYourEngine.entity.Role;
 import com.harkins.startYourEngine.entity.User;
-import com.harkins.startYourEngine.enums.Role;
+import com.harkins.startYourEngine.enums.PredefinedRole;
 import com.harkins.startYourEngine.exception.AppException;
 import com.harkins.startYourEngine.exception.ErrorCode;
 import com.harkins.startYourEngine.mapper.UserMapper;
@@ -33,14 +36,16 @@ public class UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
+    //    @PreAuthorize("hasRole('ADMIN')")
+    //    @PreAuthorize("hasAuthority('CREATE_USER')")
     public UserResponse createUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
+        HashSet<Role> roles = new HashSet<>();
+        roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
 
         //        user.setRoles(roles);
 
@@ -56,6 +61,8 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_USER')")
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UpdateUserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
@@ -68,18 +75,21 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_USER')")
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);
     }
 
     //    @PreAuthorize("hasRole('ADMIN')")
-    //    @PreAuthorize("hasAuthority('APPROVE_POST')")
+    @PreAuthorize("hasAuthority('GET_ALL_USERS')")
     public List<UserResponse> getUsers() {
         log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
-    //    @PostAuthorize("returnObject.username == authentication.name")
+    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('GET_USER')")
     public UserResponse getUser(String id) {
         log.info("In method get user by Id");
         return userMapper.toUserResponse(

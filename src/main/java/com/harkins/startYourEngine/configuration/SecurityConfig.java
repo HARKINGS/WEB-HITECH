@@ -37,6 +37,14 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated());
 
+        //        Với kiểu config như này thì sẽ thoả mãn user chỉ cần vào web ko cần đăng nhập
+        //        http
+        //                .authorizeRequests()
+        //                .antMatchers("/admin/**").hasRole("ADMIN")
+        //                .antMatchers("/staff/**").hasRole("STAFF")
+        //                .antMatchers("/products/**", "/cart/**", "/checkout").permitAll()
+        //                .anyRequest().authenticated()
+
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(JwtConfigurer -> JwtConfigurer.decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));

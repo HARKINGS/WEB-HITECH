@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.validation.constraints.Size;
 
+import com.harkins.startYourEngine.validator.DobConstraint;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,6 +22,7 @@ public class UpdateUserRequest {
     String firstName;
     String lastName;
 
+    @DobConstraint(min = 18, message = "User must be at least 18 years old")
     LocalDate dob;
 
     List<String> roles;

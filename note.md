@@ -50,48 +50,54 @@ There are currently the following entities:
 
 1. Login
 * Input:
-  + Right Login: ![img_2.png](img_2.png)
+  + Right Login: ![img_2.png](img/img_2.png)
 * Output:
-  + Wrong Login: ![img_1.png](img_1.png)
+  + Wrong Login: ![img_1.png](img/img_1.png)
 2. Create User
-* Input:
-![img_3.png](img_3.png)
+* Input: ![img_3.png](img/img_3.png)
 * Output:
-  + Dont have Account: ![img_4.png](img_4.png)
-  + Account Existed: ![img_5.png](img_5.png)
+  + Dont have Account: ![img_4.png](img/img_4.png)
+  + Account Existed: ![img_5.png](img/img_5.png)
 3. Update User
+* Input: ![img_19.png](img/img_19.png)
+* Output: ![img_20.png](img/img_20.png)
 4. Find 1 User
-* Input:![img_11.png](img_11.png)
-* Output:![img_12.png](img_12.png)
+* Input:![img_11.png](img/img_11.png)
+* Output:![img_12.png](img/img_12.png)
 5. Get All Users 
-* Input: ![img_9.png](img_9.png)
-* Output:![img_10.png](img_10.png)
+* Input: ![img_9.png](img/img_9.png)
+* Output:![img_10.png](img/img_10.png)
 6. Create Role 
-* Input:
+* Input: 
 * Output:
 7. Get All Roles
-* Input:
-* Output:
+* Input: ![img_28.png](img/img_28.png)
+* Output: ![img_29.png](img/img_29.png) ![img_30.png](img/img_30.png) ![img_31.png](img/img_31.png)
 8. Delete Role
 * Input:
 * Output: 
 9. Create Permission
-* Input:![img_15.png](img_15.png)
-* Output:![img_16.png](img_16.png)
+* Input:![img_15.png](img/img_15.png)
+* Output:
+  + New permission: ![img_16.png](img/img_16.png)
+  + Permission existed: ![img_25.png](img/img_25.png)
 10. Get All Permissions
-* Input:
-* Output:
+* Input: ![img_23.png](img/img_23.png)
+* Output: ![img_24.png](img/img_24.png)
 11. Delete Permissions
-* Input:
-* Output: 
+* Input: ![img_26.png](img/img_26.png)
+* Output: ![img_27.png](img/img_27.png)
 12. Check Login Token
-* Input: ![img_6.png](img_6.png)
+* Input: ![img_6.png](img/img_6.png)
 * Output:
-  * True Token: ![img_7.png](img_7.png)
-  * False Token: ![img_8.png](img_8.png)
+  * True Token: ![img_7.png](img/img_7.png)
+  * False Token: ![img_8.png](img/img_8.png)
 13. Logout
-* Input:![img_13.png](img_13.png)
-* Output:![img_14.png](img_14.png)
+* Input:![img_13.png](img/img_13.png)
+* Output:![img_14.png](img/img_14.png)
+14. Delete User
+* Input: ![img_21.png](img/img_21.png)
+* Output: ![img_22.png](img/img_22.png)
 
 
 
