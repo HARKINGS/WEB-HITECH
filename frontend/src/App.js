@@ -25,7 +25,7 @@ function App() {
               <Route path="/checkout" element={<CheckoutPage />} /> */}
             </Routes>
           </main>
-          {/* <Footer /> */}
+          <Footer />
           <ThemeToggle />
         </div>
       </Router>
