@@ -28,6 +28,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id", nullable = false)
+    @JsonBackReference("goods-reviews")
     private Goods goods;
 
     @Column(nullable = false, columnDefinition = "TEXT")

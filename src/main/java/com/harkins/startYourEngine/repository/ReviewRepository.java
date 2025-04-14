@@ -9,5 +9,5 @@ import com.harkins.startYourEngine.entity.Review;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findByGoodsId(Long goodsId);
+    List<Review> findByGoods_GoodsId(Long goodsId);
 }
