@@ -46,6 +46,12 @@
 * Phát triển tiếp phần Front End
 * Tìm hiểu RAG
 
+## 06/04/2025
+### Đã làm được
+* Chỉnh sửa lỗi 1 số truy vấn như login, create account, get info, get account,...
+* Tạo thêm, cập nhập báo cáo ở file README.md
+* (1 thành viên khác) Code them phần review, infoBuy, OrderItem, ...
+
 ## 12/4/2025
 ### Đã làm được 
 * Code phân quyền cho các vai trò
