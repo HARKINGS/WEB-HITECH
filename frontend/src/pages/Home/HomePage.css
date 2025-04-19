@@ -1,0 +1,36 @@
+/* Styles for Home Page */
+.hero-section {
+    /* Styles for hero banner/slider */
+    padding: 60px 0;
+    background-color: var(--background-secondary); /* Hoặc ảnh nền */
+    text-align: center;
+  }
+  .hero-placeholder {
+      height: 300px;
+      background-color: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 20px;
+  }
+  
+  .featured-products-section, .other-section {
+    padding: 40px 0;
+  }
+  
+  .featured-products-section h2, .other-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+  }
+  
+  /* Sử dụng lại grid từ global hoặc định nghĩa riêng */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 20px;
+  }
+  
+  /* Styles cho các section khác nếu cần */

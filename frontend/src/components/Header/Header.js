@@ -5,16 +5,12 @@ import { FaSearch, FaUser, FaShoppingCart, FaBars, FaChevronDown, FaStar, FaRegS
 
 // Mock data for dropdowns (replace with real data later)
 const browseCategoriesData = [
-    { name: 'Our Store', link: '/shop', subItems: true },
+    { name: 'Our Store', link: '/shop' },
     { name: 'TV & Speaker', link: '#' },
     { name: 'Smart Devices', link: '#', subItems: true },
     { name: 'Chargers & Cables', link: '#' },
     { name: 'Laptop & Computers', link: '#' },
-    { name: 'Phones', link: '#', subItems: true },
-    { name: 'Cameras', link: '#' },
-    { name: 'Smart Watches', link: '#' },
-    { name: 'Earbuds Bose', link: '#' },
-    { name: 'Android TV', link: '#' },
+    // { name: 'Phones', link: '#', subItems: true },
 ];
 
 // Basic star rendering function (if needed in menus)
