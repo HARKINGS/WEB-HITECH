@@ -1,0 +1,105 @@
+.sidebar-filters {
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    background-color: var(--background-primary);
+    border-radius: 5px;
+  }
+  
+  .filter-section {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .filter-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  .filter-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+     /* Prevent selection */
+     -webkit-user-select: none;
+     -moz-user-select: none;
+     -ms-user-select: none;
+     user-select: none;
+  }
+  
+  .filter-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .filter-content ul li {
+    margin-bottom: 8px;
+  }
+  .filter-content ul a {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  .filter-content ul a:hover {
+    color: var(--text-accent);
+  }
+  /* Style cho checkbox, label */
+  .filter-content div label {
+      margin-left: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+  }
+  .filter-content div input[type="checkbox"] {
+      cursor: pointer;
+  }
+  
+  /* Color Filter */
+  .color-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--border-color);
+    transition: var(--transition-fast);
+  }
+  .color-swatch:hover, .color-swatch.active {
+    border-color: var(--text-accent);
+    transform: scale(1.1);
+  }
+  
+  /* Placeholder for Price Slider */
+  .price-slider-placeholder {
+      height: 40px;
+      background-color: var(--background-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 10px;
+  }
+  
+  /* Rating Filter */
+  .rating-filter div {
+      margin-bottom: 8px;
+      cursor: pointer;
+      color: var(--text-secondary);
+  }
+  .rating-filter div:hover {
+      color: var(--text-accent);
+  }
+  .rating-filter .star-icon {
+      color: var(--star-color);
+      margin-right: 2px;
+  }
+  .rating-filter .fa-star + span { /* Số lượng review */
+      margin-left: 5px;
+      font-size: 0.85rem;
+  }

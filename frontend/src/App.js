@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer'
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -18,7 +19,8 @@ import Users from './pages/admin/Users';
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-
+import HomePage from './pages/Home/HomePage';
+import ShopPage from './pages/Shop/ShopPage';
 import './App.css';
 
 function App() {
@@ -75,13 +77,8 @@ function App() {
                 <main>
                   <Routes>
                     {/* Temporary homepage for demonstration */}
-                    <Route path="/" element={
-                      <div style={{ padding: '40px', textAlign: 'center' }}>
-                        <h1>Welcome to Electech</h1>
-                        <p>Go to <a href="/admin?demo=true">Admin Panel</a></p>
-                        <p>Or <a href="/login">Login</a> to your account</p>
-                      </div>
-                    } />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/shop" element={<ShopPage />} />
                   </Routes>
                 </main>
                 <ThemeToggle />
