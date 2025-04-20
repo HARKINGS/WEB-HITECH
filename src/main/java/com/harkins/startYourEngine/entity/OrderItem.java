@@ -2,6 +2,8 @@ package com.harkins.startYourEngine.entity;
 
 import jakarta.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 
 @Entity
@@ -24,4 +26,9 @@ public class OrderItem {
     private Goods goods;
 
     private Integer quantity;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

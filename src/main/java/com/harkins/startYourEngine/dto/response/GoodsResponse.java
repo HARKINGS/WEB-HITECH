@@ -17,6 +17,5 @@ public class GoodsResponse {
     Double price;
     String goodsDescription;
     String goodsCategory;
-    String goodsBrand;
     String goodsImageURL;
 }

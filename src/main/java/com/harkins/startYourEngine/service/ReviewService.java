@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.harkins.startYourEngine.dto.request.CreateReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
 import com.harkins.startYourEngine.dto.response.ReviewResponse;
+import com.harkins.startYourEngine.dto.response.UserResponse;
 import com.harkins.startYourEngine.entity.Goods;
 import com.harkins.startYourEngine.entity.Review;
 import com.harkins.startYourEngine.entity.User;
@@ -29,8 +31,10 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final GoodsRepository goodsRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
     private final ReviewMapper reviewMapper;
 
+    @Transactional
     public ReviewResponse createReview(Long goodsId, CreateReviewRequest request) {
         // Validate goods exists
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> {
@@ -43,6 +47,12 @@ public class ReviewService {
             log.error("User not found with id: {}", request.getUserId());
             return new AppException(ErrorCode.USER_NOT_FOUND);
         });
+
+        // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
+        if (reviewRepository.existsByGoodsAndUser(goods, user)) {
+            log.error("User {} has already reviewed goods {}", request.getUserId(), goodsId);
+            throw new AppException(ErrorCode.REVIEW_ALREADY_EXISTS);
+        }
 
         // Create new review
         Review review = Review.builder()
@@ -80,7 +90,7 @@ public class ReviewService {
             log.error("Goods not found with id: {}", goodsId);
             throw new AppException(ErrorCode.GOODS_NOT_FOUND);
         }
-        List<Review> reviews = reviewRepository.findByGoodsId(goodsId);
+        List<Review> reviews = reviewRepository.findByGoods_GoodsId(goodsId);
         if (reviews.isEmpty()) {
             log.warn("No reviews found for goods with id: {}", goodsId);
             throw new AppException(ErrorCode.GOODS_NOT_FOUND);
@@ -88,34 +98,47 @@ public class ReviewService {
         return reviews.stream().map(reviewMapper::toReviewResponse).toList();
     }
 
-    public ReviewResponse updateReview(Long goodsId, Long reviewId, UpdateReviewRequest request) {
-        Review review =
+    @Transactional
+    public ReviewResponse updateReview(Long reviewId, UpdateReviewRequest request) {
+        // Tìm review theo ID
+        Review existingReview =
                 reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
 
-        // Validate xem review có thuộc về goods không
-        if (!review.getGoods().getGoodsId().equals(goodsId)) {
-            throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
+        // Sử dụng userService.getMyInfo() để lấy thông tin người dùng hiện tại
+        UserResponse currentUser = userService.getMyInfo();
+
+        // Kiểm tra quyền sở hữu review
+        if (!existingReview.getUser().getUserId().equals(currentUser.getUserId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
-        // Update các field từ request
+        // Cập nhật thông tin
         if (request.getContent() != null) {
-            review.setContent(request.getContent());
+            existingReview.setContent(request.getContent());
         }
         if (request.getRating() != null) {
-            review.setRating(request.getRating());
+            existingReview.setRating(request.getRating());
         }
 
-        Review updatedReview = reviewRepository.save(review);
+        // Cập nhật thời gian
+        existingReview.setUpdatedAt(new Date());
+
+        // Lưu vào database
+        Review updatedReview = reviewRepository.save(existingReview);
+
         return reviewMapper.toReviewResponse(updatedReview);
     }
 
-    public void deleteReview(Long goodsId, Long reviewId) {
+    public void deleteReview(Long reviewId) {
         Review review =
                 reviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
 
-        // Validate xem review có thuộc về goods không
-        if (!review.getGoods().getGoodsId().equals(goodsId)) {
-            throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
+        // Sử dụng userService.getMyInfo() để lấy thông tin người dùng hiện tại
+        UserResponse currentUser = userService.getMyInfo();
+
+        // Kiểm tra quyền sở hữu review
+        if (!review.getUser().getUserId().equals(currentUser.getUserId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
         }
 
         reviewRepository.delete(review);

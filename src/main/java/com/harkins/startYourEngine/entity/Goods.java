@@ -33,9 +33,12 @@ public class Goods {
     private Double price;
     private String goodsDescription;
     private String goodsCategory;
-    private String goodsBrand;
     private String goodsImageURL;
     // private String goodsStatus;
+
+    @JsonManagedReference(value = "goods-orderItems")
+    @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("goods-reviews")

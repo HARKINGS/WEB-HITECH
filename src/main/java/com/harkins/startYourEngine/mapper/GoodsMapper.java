@@ -17,6 +17,5 @@ public interface GoodsMapper {
 
     @Mapping(target = "goodsName", ignore = true)
     @Mapping(target = "goodsCategory", ignore = true)
-    @Mapping(target = "goodsBrand", ignore = true)
     void updateGoods(@MappingTarget Goods goods, UpdateGoodsRequest request);
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import com.harkins.startYourEngine.dto.request.CreateReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
+import com.harkins.startYourEngine.dto.response.GoodsDetailsResponse;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
 import com.harkins.startYourEngine.dto.response.ReviewResponse;
 import com.harkins.startYourEngine.service.GoodsService;
@@ -37,6 +40,26 @@ public class GoodsController {
 
     GoodsService goodsService;
     ReviewService reviewService;
+
+    @GetMapping("/details/{goodsId}")
+    public ResponseEntity<?> getGoodsWithReviews(@PathVariable Long goodsId) {
+        try {
+            // Lấy thông tin sản phẩm
+            GoodsResponse goods = goodsService.getGoodsById(goodsId);
+
+            // Lấy danh sách đánh giá
+            List<ReviewResponse> reviews = reviewService.getReviewByGoods(goodsId);
+
+            // Tạo đối tượng chứa cả sản phẩm và đánh giá
+            GoodsDetailsResponse response = new GoodsDetailsResponse(goods, reviews);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            log.error("Error retrieving goods details: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to retrieve goods details: " + e.getMessage());
+        }
+    }
 
     @PostMapping
     ApiResponse<GoodsResponse> createGoods(@Valid @RequestBody CreateGoodsRequest request) {
@@ -102,20 +125,17 @@ public class GoodsController {
                 .build();
     }
 
-    @PutMapping("/{goodsId}/reviews/{reviewId}")
+    @PutMapping("/reviews/{reviewId}")
     public ApiResponse<ReviewResponse> updateReview(
-            @PathVariable("goodsId") Long goodsId,
-            @PathVariable("reviewId") Long reviewId,
-            @Valid @RequestBody UpdateReviewRequest request) {
+            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
         return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.updateReview(goodsId, reviewId, request))
+                .result(reviewService.updateReview(reviewId, request))
                 .build();
     }
 
-    @DeleteMapping("/{goodsId}/reviews/{reviewId}")
-    public ApiResponse<String> deleteReview(
-            @PathVariable("goodsId") Long goodsId, @PathVariable("reviewId") Long reviewId) {
-        reviewService.deleteReview(goodsId, reviewId);
+    @DeleteMapping("/reviews/{reviewId}")
+    public ApiResponse<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteReview(reviewId);
         return ApiResponse.<String>builder()
                 .result("Review deleted successfully")
                 .build();
