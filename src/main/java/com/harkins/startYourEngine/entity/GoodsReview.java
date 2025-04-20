@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Review {
+public class GoodsReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

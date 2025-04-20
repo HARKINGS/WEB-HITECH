@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateReviewRequest {
+public class CreateGoodsReviewRequest {
     @NotNull(message = "Goods ID is required")
     private Long goodsId;
 

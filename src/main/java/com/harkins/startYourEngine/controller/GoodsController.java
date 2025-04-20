@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
-import com.harkins.startYourEngine.dto.request.CreateReviewRequest;
+import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsDetailsResponse;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
-import com.harkins.startYourEngine.dto.response.ReviewResponse;
+import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.service.GoodsService;
-import com.harkins.startYourEngine.service.ReviewService;
+import com.harkins.startYourEngine.service.GoodsReviewService;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GoodsController {
 
     GoodsService goodsService;
-    ReviewService reviewService;
+    GoodsReviewService goodsReviewService;
 
     @GetMapping("/details/{goodsId}")
     public ResponseEntity<?> getGoodsWithReviews(@PathVariable Long goodsId) {
@@ -48,7 +48,7 @@ public class GoodsController {
             GoodsResponse goods = goodsService.getGoodsById(goodsId);
 
             // Lấy danh sách đánh giá
-            List<ReviewResponse> reviews = reviewService.getReviewByGoods(goodsId);
+            List<GoodsReviewResponse> reviews = goodsReviewService.getReviewByGoods(goodsId);
 
             // Tạo đối tượng chứa cả sản phẩm và đánh giá
             GoodsDetailsResponse response = new GoodsDetailsResponse(goods, reviews);
@@ -111,31 +111,31 @@ public class GoodsController {
     }
 
     @GetMapping("/{goodsId}/reviews")
-    public ApiResponse<List<ReviewResponse>> getGoodsReviews(@PathVariable("goodsId") Long goodsId) {
-        return ApiResponse.<List<ReviewResponse>>builder()
-                .result(reviewService.getReviewByGoods(goodsId))
+    public ApiResponse<List<GoodsReviewResponse>> getGoodsReviews(@PathVariable("goodsId") Long goodsId) {
+        return ApiResponse.<List<GoodsReviewResponse>>builder()
+                .result(goodsReviewService.getReviewByGoods(goodsId))
                 .build();
     }
 
     @PostMapping("/{goodsId}/reviews")
-    public ApiResponse<ReviewResponse> createReview(
-            @PathVariable("goodsId") Long goodsId, @Valid @RequestBody CreateReviewRequest request) {
-        return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.createReview(goodsId, request))
+    public ApiResponse<GoodsReviewResponse> createReview(
+            @PathVariable("goodsId") Long goodsId, @Valid @RequestBody CreateGoodsReviewRequest request) {
+        return ApiResponse.<GoodsReviewResponse>builder()
+                .result(goodsReviewService.createReview(goodsId, request))
                 .build();
     }
 
     @PutMapping("/reviews/{reviewId}")
-    public ApiResponse<ReviewResponse> updateReview(
+    public ApiResponse<GoodsReviewResponse> updateReview(
             @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
-        return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.updateReview(reviewId, request))
+        return ApiResponse.<GoodsReviewResponse>builder()
+                .result(goodsReviewService.updateGoodsReview(reviewId, request))
                 .build();
     }
 
     @DeleteMapping("/reviews/{reviewId}")
     public ApiResponse<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
-        reviewService.deleteReview(reviewId);
+        goodsReviewService.deleteGoodsReview(reviewId);
         return ApiResponse.<String>builder()
                 .result("Review deleted successfully")
                 .build();

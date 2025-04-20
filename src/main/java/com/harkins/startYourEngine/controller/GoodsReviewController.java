@@ -7,12 +7,12 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.harkins.startYourEngine.dto.request.CreateReviewRequest;
+import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
-import com.harkins.startYourEngine.dto.response.ReviewResponse;
+import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
-import com.harkins.startYourEngine.service.ReviewService;
+import com.harkins.startYourEngine.service.GoodsReviewService;
 import com.harkins.startYourEngine.service.UserService;
 
 import lombok.*;
@@ -24,55 +24,55 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping("/reviews")
-public class ReviewController {
-    private final ReviewService reviewService;
+public class GoodsReviewController {
+    private final GoodsReviewService goodsReviewService;
     private final UserService userService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<ReviewResponse> createReview(@Valid @RequestBody CreateReviewRequest request) {
+    public ApiResponse<GoodsReviewResponse> createReview(@Valid @RequestBody CreateGoodsReviewRequest request) {
         UserResponse currentUser = userService.getMyInfo();
         log.info("Creating new review for goods: {}, user: {}", request.getGoodsId(), currentUser.getUserId());
 
         request.setUserId(currentUser.getUserId());
 
-        return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.createReview(request.getGoodsId(), request))
+        return ApiResponse.<GoodsReviewResponse>builder()
+                .result(goodsReviewService.createReview(request.getGoodsId(), request))
                 .build();
     }
 
     @GetMapping("/{reviewId}")
-    public ApiResponse<ReviewResponse> getReviewById(@PathVariable("reviewId") Long reviewId) {
+    public ApiResponse<GoodsReviewResponse> getReviewById(@PathVariable("reviewId") Long reviewId) {
         log.info("Getting review with id: {}", reviewId);
-        return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.getReviewById(reviewId))
+        return ApiResponse.<GoodsReviewResponse>builder()
+                .result(goodsReviewService.getReviewById(reviewId))
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<ReviewResponse>> getAllReviews() {
+    public ApiResponse<List<GoodsReviewResponse>> getAllReviews() {
         log.info("Getting all reviews");
-        return ApiResponse.<List<ReviewResponse>>builder()
-                .result(reviewService.getAllReviews())
+        return ApiResponse.<List<GoodsReviewResponse>>builder()
+                .result(goodsReviewService.getAllReviews())
                 .build();
     }
 
     @GetMapping("/goods-review/{goodsId}")
-    public ApiResponse<List<ReviewResponse>> getReviewByGoods(@PathVariable("goodsId") Long goodsId) {
+    public ApiResponse<List<GoodsReviewResponse>> getReviewByGoods(@PathVariable("goodsId") Long goodsId) {
         log.info("Fetching reviews for goods: {}", goodsId);
-        return ApiResponse.<List<ReviewResponse>>builder()
-                .result(reviewService.getReviewByGoods(goodsId))
+        return ApiResponse.<List<GoodsReviewResponse>>builder()
+                .result(goodsReviewService.getReviewByGoods(goodsId))
                 .build();
     }
 
     @PutMapping("/{reviewId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<ReviewResponse> updateReview(
+    public ApiResponse<GoodsReviewResponse> updateReview(
             @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
         log.info("Updating review: {}", reviewId);
 
-        return ApiResponse.<ReviewResponse>builder()
-                .result(reviewService.updateReview(reviewId, request))
+        return ApiResponse.<GoodsReviewResponse>builder()
+                .result(goodsReviewService.updateGoodsReview(reviewId, request))
                 .build();
     }
 
@@ -81,7 +81,7 @@ public class ReviewController {
     public ApiResponse<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
         log.info("Deleting review: {}", reviewId);
 
-        reviewService.deleteReview(reviewId);
+        goodsReviewService.deleteGoodsReview(reviewId);
         return ApiResponse.<String>builder()
                 .result("Review deleted successfully")
                 .build();

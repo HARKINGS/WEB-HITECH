@@ -14,5 +14,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GoodsDetailsResponse {
     GoodsResponse goods;
-    List<ReviewResponse> reviews;
+    List<GoodsReviewResponse> reviews;
 }

@@ -42,5 +42,5 @@ public class Goods {
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("goods-reviews")
-    private List<Review> reviews;
+    private List<GoodsReview> goodsReviews;
 }
