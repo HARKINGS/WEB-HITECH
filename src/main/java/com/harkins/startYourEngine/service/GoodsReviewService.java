@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
-import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
+import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
 import com.harkins.startYourEngine.entity.Goods;
@@ -99,7 +99,7 @@ public class GoodsReviewService {
     }
 
     @Transactional
-    public GoodsReviewResponse updateGoodsReview(Long reviewId, UpdateReviewRequest request) {
+    public GoodsReviewResponse updateGoodsReview(Long reviewId, UpdateGoodsReviewRequest request) {
         // Tìm review theo ID
         GoodsReview existingGoodsReview =
                 goodsReviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));

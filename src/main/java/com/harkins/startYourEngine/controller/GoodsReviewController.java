@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
-import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
+import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
@@ -68,7 +68,7 @@ public class GoodsReviewController {
     @PutMapping("/{reviewId}")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<GoodsReviewResponse> updateReview(
-            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
+            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
         log.info("Updating review: {}", reviewId);
 
         return ApiResponse.<GoodsReviewResponse>builder()

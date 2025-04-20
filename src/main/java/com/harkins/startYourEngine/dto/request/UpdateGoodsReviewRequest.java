@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateReviewRequest {
+public class UpdateGoodsReviewRequest {
     private String content;
 
     @Min(value = 1, message = "Rating must be between 1 and 5")

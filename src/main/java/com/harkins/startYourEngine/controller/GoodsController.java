@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
-import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
+import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsDetailsResponse;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
@@ -127,7 +127,7 @@ public class GoodsController {
 
     @PutMapping("/reviews/{reviewId}")
     public ApiResponse<GoodsReviewResponse> updateReview(
-            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
+            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
         return ApiResponse.<GoodsReviewResponse>builder()
                 .result(goodsReviewService.updateGoodsReview(reviewId, request))
                 .build();

@@ -3,7 +3,7 @@
 
 # Trương Minh Ngọc
 ## 16/03/2025
-### Đã làm được 
+### Đã làm được
 * Chỉnh sửa phần User Controller
 * Hoàn thiện thêm code của File service, với Permission, Role
 * Code các chức năng cho Permission, Role (thêm, xoá, xem toàn bộ)
@@ -29,7 +29,7 @@
 * Hoàn thiện login, logout trong tuần tới
 
 ## 30/03/2025
-### Đã làm được 
+### Đã làm được
 * Code xong phần ConFigure cho code
   * Điều chỉnh việc thêm tài khoản admin khi chưa có
   * Xử lý các request chưa được xác thực
@@ -37,7 +37,7 @@
 * Hoàn thiện phần controller, phần code đã ổn định với việc quản lý tài khoản
 
 ### Chưa làm được
-* Trong quá trình chạy lại để kiểm tra, lại phát sinh lỗi 
+* Trong quá trình chạy lại để kiểm tra, lại phát sinh lỗi
   * Mặc dù run được, nhưng các request đều bị lỗi Unauthorized!
 * Nguyên nhân vẫn đang tìm kiếm, nhưng đây có thể là lỗi về mặt phân quyền
 
@@ -52,17 +52,29 @@
 * Tạo thêm, cập nhập báo cáo ở file README.md
 * (1 thành viên khác) Code them phần goodsReview, infoBuy, OrderItem, ...
 
-## 12/4/2025
-### Đã làm được 
+## 12/04/2025
+### Đã làm được
 * Code phân quyền cho các vai trò
 * Các vai trò user, staff, admin đều có quyền thực hiện 1 số chức năng chung, admin sẽ sở hữu nhiều quyền nhất, rồi tới staff, cuối cùng là user
 * Chạy thử đã ổn định các chức năng, API chính liên quan đến quản lý tài khoản, vai trò, quyền
-### Chưa làm được 
+### Chưa làm được
 * Hiểu sâu về RAG
 * Code front end
 ### Dự kiến tương lai
 * Tìm hiểu và áp dụng RAG vào code
 * Code front end
+
+## 20/04/2025
+### Đã làm được
+* Thực hiện up database lên cloud (= railway, tuy nhiên cloud của railway lại chỉ chấp nhận version java-17)
+* Hoan thiện, chỉnh sửa, đổi tên Review thành GoodsReview, cùng các class liên quan
+* Đã tìm hiểu về RAG, LLM (Language Model và Large Language Model), transformers
+* Bắt đầu tiến hành làm báo cáo
+### Chưa làm được
+* Hoàn thiện báo cáo
+* Code xong RAG
+### Dự kiến
+* Tiếp tục code hoàn thiện Backend, code Frontend
 
 # Tên ai thì điền vào
 ## 01/04/2025
