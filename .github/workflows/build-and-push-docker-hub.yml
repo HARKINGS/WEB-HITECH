@@ -30,8 +30,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: harkins/ci-cd:staging2
-
+          tags: harkins/ci-cd:HarkinsStagging, harkins/ci-cd:latest
 
   pull-and-up:
     name: Pull new image and re run with the new version
