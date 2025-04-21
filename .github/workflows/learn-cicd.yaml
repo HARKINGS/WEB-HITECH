@@ -1,6 +1,9 @@
-name: learn-github-actions
+name: learn-github-actions 
+# name có thể đặt tùy ý, nhưng nên có ý nghĩa với nội dung của file
+# run-name: ${{github.actor}} is learning Github actions
 run-name: ${{github.actor}} is learning Github actions
 on: [push]
+# on: [push, pull_request] nghĩa là khi có push hoặc pull request thì sẽ chạy workflow này
 jobs:
   check-bats-version:
     name: Build
