@@ -1,4 +1,8 @@
 /* Styles for Home Page */
+
+.home-page {
+  padding-top: 100px;
+}
 .hero-section {
     /* Styles for hero banner/slider */
     padding: 60px 0;

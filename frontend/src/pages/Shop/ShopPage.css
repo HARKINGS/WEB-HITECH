@@ -8,7 +8,6 @@
     --text-color-secondary: #a0a0a0; /* Chữ phụ xám */
     --border-color-light: #333333; /* Border sáng hơn trên nền tối */
     --border-color-dark: #000000; /* Border tối hơn */
-    --accent-color: #ffc107; /* Màu vàng nhấn */
     /* --accent-text-color: #111111;  */
     --link-hover-color: var(--accent-color);
     --card-bg: #ffffff; /* **NOTE**: Card sản phẩm nền trắng như ảnh */
@@ -17,9 +16,9 @@
   }
   
   .shop-page {
-    background-color: var(--shop-bg);
+    /* background-color: var(--shop-bg); */
     color: var(--text-color-primary);
-    padding: 0 0 50px 0; /* Bỏ padding top, thêm padding bottom */
+    padding: 100px 0 50px 0; /* Bỏ padding top, thêm padding bottom */
   }
   
   .container {
@@ -58,7 +57,7 @@
   h1.page-title {
     font-size: 2rem; /* To hơn */
     font-weight: 600;
-    color: var(--text-color-primary);
+    color: var(--text-primary);
     margin: 0;
   }
   
@@ -72,12 +71,7 @@
   
   /* --- Sidebar --- */
   .shop-sidebar {
-    /* --- **QUAN TRỌNG** --- */
-    /* Các style chi tiết cho filter widgets (tiêu đề, checkbox, màu sắc, khoảng giá...) */
-    /* NÊN được định nghĩa trong file CSS của component SidebarFilter. */
-    /* Dưới đây là style khung cơ bản nếu cần */
-  
-    /* Ví dụ style cho widget chung trong sidebar */
+
     .filter-widget {
       background-color: var(--widget-bg);
       padding: 20px;
@@ -144,7 +138,7 @@
   }
   
   .controls-left .shop-info {
-      color: var(--text-color-secondary);
+      color: var(--text-primary);
       margin: 0; /* Reset margin p */
   }
   
@@ -251,7 +245,6 @@
       z-index: 2;
   }
   
-  
   /* --- Pagination --- */
   .shop-pagination {
     text-align: center;
@@ -282,6 +275,11 @@
   
   
   /* --- Responsive Adjustments --- */
+  @media (max-width: 1320px) {
+    .container {
+      max-width: 90%;
+    }
+}
   @media (max-width: 1199px) {
       .shop-product-grid {
           grid-template-columns: repeat(3, 1fr); /* 3 cột */
@@ -290,7 +288,7 @@
   
   @media (max-width: 991px) {
       .shop-container {
-          grid-template-columns: 240px 1fr; /* Sidebar nhỏ hơn */
+          grid-template-columns: 1fr; /* Sidebar nhỏ hơn */
           gap: 25px;
       }
        .shop-product-grid {

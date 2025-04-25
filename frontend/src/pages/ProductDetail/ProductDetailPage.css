@@ -1,0 +1,207 @@
+.product-detail-page {
+    padding: 130px 0 30px 0;
+}
+
+.breadcrumbs {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+.breadcrumbs a {
+    color: var(--text-secondary);
+}
+.breadcrumbs a:hover {
+    color: var(--text-accent);
+}
+.breadcrumbs span {
+    color: var(--text-primary);
+}
+
+
+.product-detail-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Gallery và Info */
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+/* Product Gallery */
+.product-gallery .main-image {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+    padding: 10px; /* Padding nếu cần */
+    background-color: var(--background-secondary);
+}
+.product-gallery .main-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+/* Styles cho thumbnails nếu có */
+
+/* Product Info Details */
+.product-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+.product-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+.product-meta .rating {
+    display: flex;
+    align-items: center;
+}
+.product-meta .rating .star-icon { /* Copy style từ product card */ }
+
+.product-price-detail {
+    margin-bottom: 20px;
+    font-size: 1.5rem; /* Giá lớn hơn */
+}
+.product-price-detail .current-price { /* Copy style từ product card */ }
+.product-price-detail .old-price { /* Copy style từ product card */ }
+
+.product-short-description {
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Quantity Selector & Add to Cart */
+.product-actions-detail {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.quantity-selector {
+    display: flex;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+.quantity-selector button {
+    background: var(--background-secondary);
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+.quantity-selector input {
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    font-size: 1rem;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    padding: 0 5px;
+    /* Hide number input arrows */
+    /* -moz-appearance: textfield; */
+}
+.quantity-selector input::-webkit-outer-spin-button,
+.quantity-selector input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.btn-add-to-cart-detail {
+    /* Kế thừa style từ .btn-add-to-cart nhưng có thể to hơn */
+    padding: 10px 25px;
+    font-size: 1rem;
+}
+
+/* Secondary Actions */
+.product-secondary-actions {
+    margin-bottom: 20px;
+}
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    margin-right: 15px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.btn-icon:hover {
+    color: var(--text-accent);
+}
+
+/* Product Tabs */
+.product-tabs {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 40px;
+    background-color: var(--background-primary);
+}
+.tab-headers {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--background-secondary);
+}
+.tab-header {
+    padding: 15px 25px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    border-bottom: 3px solid transparent; /* For active state */
+    margin-bottom: -1px; /* Align border with container border */
+    transition: var(--transition-fast);
+}
+.tab-header.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--accent-color);
+}
+.tab-header:hover:not(.active) {
+    color: var(--text-primary);
+}
+.tab-content {
+    padding: 25px;
+}
+.tab-pane h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+.tab-pane p, .tab-pane li {
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+
+/* Related Products */
+.related-products h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+}
+.related-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Grid nhỏ hơn cho related */
+}
+
+
+/* Responsive for Product Detail */
+@media (max-width: 768px) {
+    .product-detail-main {
+        grid-template-columns: 1fr; /* Stack gallery và info */
+    }
+}

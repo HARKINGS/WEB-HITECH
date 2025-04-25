@@ -21,6 +21,14 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import HomePage from './pages/Home/HomePage';
 import ShopPage from './pages/Shop/ShopPage';
+
+import ProductDetailPage from './pages/ProductDetail/ProductDetailPage';
+import ContactPage from './pages/Contact/ContactPage';
+import CartPage from './pages/Cart/CartPage';
+import CheckoutPage from './pages/Checkout/CheckoutPage';
+import PolicyDetails from './pages/Policy/PolicyDetails'; 
+
+
 import './App.css';
 
 function App() {
@@ -79,9 +87,15 @@ function App() {
                     {/* Temporary homepage for demonstration */}
                     <Route path="/" element={<HomePage />} />
                     <Route path="/shop" element={<ShopPage />} />
+                    <Route path="/products/:productId" element={<ProductDetailPage />} /> {/* Route cho chi tiết SP */}
+                    <Route path="/contact-us" element={<ContactPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/policy" element={<PolicyDetails />} />
                   </Routes>
                 </main>
                 <ThemeToggle />
+                <Footer />
               </div>
             } />
           </Routes>

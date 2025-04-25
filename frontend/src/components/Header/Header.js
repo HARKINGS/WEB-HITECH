@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
-import { FaSearch, FaUser, FaShoppingCart, FaBars, FaChevronDown, FaStar, FaRegStar } from 'react-icons/fa';
-import { useAuth } from '../../hooks/useAuth'; // Add this import
+import { FaSearch, FaUser, FaShoppingCart, FaBars, FaChevronDown, FaStar, FaRegStar } from 'react-icons/fa'; // Added FaStar, FaRegStar for potential use in menus
 
 // Mock data for dropdowns (replace with real data later)
 const browseCategoriesData = [
-    { name: 'Our Store', link: '/shop' },
+    { name: 'Cửa hàng', link: '/shop'},
     { name: 'TV & Speaker', link: '#' },
     { name: 'Smart Devices', link: '#', subItems: true },
     { name: 'Chargers & Cables', link: '#' },
     { name: 'Laptop & Computers', link: '#' },
-    // { name: 'Phones', link: '#', subItems: true },
+    { name: 'Phones', link: '#', subItems: true },
+    { name: 'Cameras', link: '#' },
+    { name: 'Smart Watches', link: '#' },
+    { name: 'Earbuds Bose', link: '#' },
+    { name: 'Android TV', link: '#' },
 ];
 
 // Basic star rendering function (if needed in menus)
@@ -31,8 +34,6 @@ const renderStars = (rating) => {
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState('');
-    const { isAuthenticated, user, logout } = useAuth(); // Get auth state
-
     // State for mobile menu toggle (add later if needed)
     // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -42,26 +43,21 @@ const Header = () => {
         // Navigate to search results page or implement search logic
     };
 
-    // Function to handle logout
-    const handleLogout = () => {
-        logout();
-    };
-
     // Function to render a simple list dropdown
     const renderSimpleDropdown = (items) => (
         <ul className="dropdown-list">
             {items.map((item, index) => (
                 <li key={index}>
                     <Link to={item.link}>{item.name}
-                        {item.badge && <span className={`badge badge-${item.badge.type}`}>{item.badge.text}</span>}
+                      {item.badge && <span className={`badge badge-${item.badge.type}`}>{item.badge.text}</span>}
                     </Link>
                 </li>
             ))}
         </ul>
     );
 
-    // Function to render category style dropdown
-    const renderCategoryDropdown = (columns) => (
+     // Function to render category style dropdown
+     const renderCategoryDropdown = (columns) => (
         <div className="mega-menu-grid category-style-grid">
             {columns.map((col, colIndex) => (
                 <div className="mega-menu-column" key={colIndex}>
@@ -74,18 +70,18 @@ const Header = () => {
                 </div>
             ))}
             {/* Optional: Add best selling section */}
-            <div className="mega-menu-column best-selling">
+             <div className="mega-menu-column best-selling">
                 <h4>Best selling</h4>
                 {/* Add Product showcase here */}
                 <div className="product-showcase-mini">
-                    <img src="/assets/images/washing-machine.jpg" alt="Product" />
+                    <img src="/assets/images/washing-machine.jpg" alt="Product"/>
                     <div>
                         <Link to="/products/2">12KG Front Load Washing Machine With Inverter</Link>
                         <span className="price">$210</span>
                     </div>
                 </div>
-                <div className="product-showcase-mini">
-                    <img src="/assets/images/apple-watch-se.jpg" alt="Product" />
+                 <div className="product-showcase-mini">
+                    <img src="/assets/images/apple-watch-se.jpg" alt="Product"/>
                     <div>
                         <Link to="/products/6">Apple Watch SE 44mm GPS+Cellular Gold</Link>
                         <span className="price">$35 - $45</span>
@@ -97,57 +93,57 @@ const Header = () => {
 
     // Function to render product style dropdown
     const renderProductDropdown = (title, products) => (
-        <div className="product-style-grid">
+         <div className="product-style-grid">
             {title && <h4>{title}</h4>}
             <div className="product-grid-mini">
-                {products.map(product => (
-                    <div className="product-card-mini" key={product.id}>
-                        <Link to={`/products/${product.id}`} className="product-image-link-mini">
-                            <img src={product.imageUrl || '/path/to/placeholder.jpg'} alt={product.name} />
-                            {product.salePercent && <span className="badge badge-sale">-{product.salePercent}%</span>}
-                        </Link>
-                        <div className="product-info-mini">
-                            <h5 className="product-name-mini">
-                                <Link to={`/products/${product.id}`}>{product.name}</Link>
-                            </h5>
-                            <div className="product-rating-mini">{renderStars(product.rating)}</div>
-                            <div className="product-price-mini">
-                                <span className="current-price">${product.price.toFixed(2)}</span>
-                                {product.oldPrice && <span className="old-price">${product.oldPrice.toFixed(2)}</span>}
-                            </div>
-                        </div>
+             {products.map(product => (
+                 <div className="product-card-mini" key={product.id}>
+                    <Link to={`/products/${product.id}`} className="product-image-link-mini">
+                       <img src={product.imageUrl || '/path/to/placeholder.jpg'} alt={product.name} />
+                       {product.salePercent && <span className="badge badge-sale">-{product.salePercent}%</span>}
+                    </Link>
+                    <div className="product-info-mini">
+                       <h5 className="product-name-mini">
+                           <Link to={`/products/${product.id}`}>{product.name}</Link>
+                       </h5>
+                       <div className="product-rating-mini">{renderStars(product.rating)}</div>
+                       <div className="product-price-mini">
+                          <span className="current-price">${product.price.toFixed(2)}</span>
+                           {product.oldPrice && <span className="old-price">${product.oldPrice.toFixed(2)}</span>}
+                       </div>
                     </div>
-                ))}
+                 </div>
+             ))}
             </div>
         </div>
     );
 
-    // Function to render "Shop By" style dropdown
-    const renderShopByDropdown = (categories, topRated) => (
+     // Function to render "Shop By" style dropdown
+     const renderShopByDropdown = (categories, topRated) => (
         <div className="mega-menu-grid shop-by-grid">
             <div className="mega-menu-column shop-by-categories">
                 <h4>Shop By</h4>
                 <div className="category-icons-grid">
                     {categories.map((cat, index) => (
-                        <Link to={cat.link} key={index} className="category-icon-item">
-                            <img src={cat.iconUrl} alt={cat.name} />
+                         <Link to={cat.link} key={index} className="category-icon-item">
+                            <img src={cat.iconUrl} alt={cat.name}/>
                             <span>{cat.name}</span>
                         </Link>
                     ))}
                 </div>
             </div>
             <div className="mega-menu-column top-rated-products">
-                <h4>Top Rated</h4>
-                {/* Add Product showcase here */}
-                {topRated.map((prod, index) => (
+                 <h4>Top Rated</h4>
+                 {/* Add Product showcase here */}
+                 {topRated.map((prod, index) => (
                     <div className="product-showcase-mini horizontal" key={index}>
-                        <img src={prod.imageUrl} alt={prod.name} />
+                       <img src={prod.imageUrl} alt={prod.name}/>
                         <div>
-                            <Link to={`/products/${prod.id}`}>{prod.name}</Link>
-                            <span className="price">${prod.priceRange || prod.price.toFixed(2)}</span>
+                           <Link to={`/products/${prod.id}`}>{prod.name}</Link>
+                           <span className="price">${prod.priceRange || prod.price.toFixed(2)}</span>
                         </div>
                     </div>
-                ))}
+                 ))}
             </div>
         </div>
     );
@@ -156,9 +152,8 @@ const Header = () => {
     return (
         <header className="site-header">
             {/* Top Bar */}
-            <div className="header-top">
-                {/* ... (Top bar content remains the same) ... */}
-                <div className="container header-top-inner">
+            {/* <div className="header-top">
+                 <div className="container header-top-inner">
                     <div className="header-message noselect">
                         Tell a friends about Electech Electronics & get 30% off your next order.
                     </div>
@@ -166,8 +161,8 @@ const Header = () => {
                         <Link to="/about-us">About Us</Link>
                         <Link to="/contact-us">Contact Us</Link>
                     </nav>
-                </div>
-            </div>
+                 </div>
+            </div> */}
 
             {/* Main Header */}
             <div className="header-main">
@@ -179,11 +174,6 @@ const Header = () => {
                         </Link>
                     </div>
                     <form className="search-form" onSubmit={handleSearch}>
-                        {/* ... search form elements ... */}
-                        <div className="search-category-dropdown noselect">
-                            <span>All Categories</span> <FaChevronDown size={12} />
-                            {/* Dropdown content here if needed */}
-                        </div>
                         <input
                             type="text"
                             placeholder="Search products..."
@@ -195,37 +185,13 @@ const Header = () => {
                             <FaSearch />
                         </button>
                     </form>
-                    <div className="header-actions">
+                     <div className="header-actions">
                         <Link to="/cart" className="header-action-item">
                             <FaShoppingCart />
                             <span className="noselect">
                                 My Cart <span className="cart-count">0</span> Items
                             </span>
                         </Link>
-                        {/* Display different options based on authentication status */}
-                        {isAuthenticated ? (
-                            <>
-                                <Link to="/profile" className="header-action-item">
-                                    <FaUser />
-                                    <span className="noselect">
-                                        {user?.name || 'My Account'}
-                                    </span>
-                                </Link>
-                                <button onClick={handleLogout} className="header-action-item logout-button">
-                                    <span className="noselect">Logout</span>
-                                </button>
-                            </>
-                        ) : (
-                            <div className="header-auth-links">
-                                <Link to="/login" className="header-action-item">
-                                    <FaUser />
-                                    <span className="noselect">Login</span>
-                                </Link>
-                                <Link to="/register" className="header-action-item">
-                                    <span className="noselect">Register</span>
-                                </Link>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
@@ -237,7 +203,7 @@ const Header = () => {
                     <div className="nav-item has-dropdown browse-categories-wrapper">
                         <div className="browse-categories noselect">
                             <FaBars />
-                            <span>Browse All Categories</span>
+                            <span>Danh mục sản phẩm</span>
                         </div>
                         <div className="dropdown-menu browse-menu">
                             <ul className="dropdown-list vertical-list">
@@ -245,8 +211,8 @@ const Header = () => {
                                     <li key={index}>
                                         <Link to={item.link}>
                                             {item.name}
-                                            {item.subItems && <FaChevronDown className="submenu-arrow" size={10} />}
-                                        </Link>
+                                            {item.subItems && <FaChevronDown className="submenu-arrow" size={10}/>}
+                                         </Link>
                                         {/* Add logic for potential sub-sub-menus here if needed */}
                                     </li>
                                 ))}
@@ -257,47 +223,40 @@ const Header = () => {
                     <nav className="main-navigation">
                         {/* Home Link (No Dropdown) */}
                         <div className="nav-item">
-                            <Link to="/">Home</Link>
+                          <Link to="/">Trang chủ</Link>
                         </div>
 
                         {/* Shop Dropdown */}
                         <div className="nav-item has-dropdown">
-                            <Link to="/shop">Shop <FaChevronDown size={10} /></Link>
+                            <Link to="/shop">Cửa hàng <FaChevronDown size={10} /></Link>
                             <div className="dropdown-menu mega-menu shop-menu">
                                 {renderCategoryDropdown([
-                                    {
-                                        title: 'Product Types', items: [
-                                            { name: 'Simple Product', link: '#' },
-                                            { name: 'Grouped Product', link: '#' },
-                                            { name: 'Variable Product', link: '#' },
-                                            { name: 'External/Affiliate Product', link: '#' },
-                                            { name: 'Sale Product', link: '#' },
-                                            { name: 'Upsell Products', link: '#' },
-                                            { name: 'Cross-Sell Product', link: '#' },
-                                        ]
-                                    },
-                                    {
-                                        title: 'WooCommerce Pages', items: [
-                                            { name: 'Shop Page', link: '/shop' },
-                                            { name: 'Checkout Page', link: '/checkout' },
-                                            { name: 'Shopping Cart', link: '/cart' },
-                                            { name: 'My Account', link: '/account' },
-                                            { name: 'Shop Ajax Filter', link: '#' },
-                                            { name: 'Product Category', link: '#' },
-                                            { name: 'Privacy Policy', link: '#' },
-                                        ]
-                                    },
-                                    {
-                                        title: 'Product Features', items: [
-                                            { name: 'Stock Progress Bar', link: '#' },
-                                            { name: 'Color/Image Swatches', link: '#' },
-                                            { name: 'Sticky Add To Cart', link: '#' },
-                                            { name: 'Custom Tab', link: '#' },
-                                            { name: 'Countdown Timer', link: '#' },
-                                            { name: 'Product Video', link: '#' },
-                                            { name: 'Product Brand', link: '#' },
-                                        ]
-                                    },
+                                    { title: 'Product Types', items: [
+                                        { name: 'Simple Product', link: '#'},
+                                        { name: 'Grouped Product', link: '#'},
+                                        { name: 'Variable Product', link: '#'},
+                                        { name: 'External/Affiliate Product', link: '#'},
+                                        { name: 'Sale Product', link: '#'},
+                                        { name: 'Upsell Products', link: '#'},
+                                        { name: 'Cross-Sell Product', link: '#'},
+                                    ]},
+                                    { title: 'WooCommerce Pages', items: [
+                                        { name: 'Shop Page', link: '/shop'},
+                                        { name: 'Checkout Page', link: '/checkout'},
+                                        { name: 'Shopping Cart', link: '/cart'},
+                                        { name: 'Shop Ajax Filter', link: '#'},
+                                        { name: 'Product Category', link: '#'},
+                                        { name: 'Privacy Policy', link: '#'},
+                                    ]},
+                                    { title: 'Product Features', items: [
+                                         { name: 'Stock Progress Bar', link: '#'},
+                                         { name: 'Color/Image Swatches', link: '#'},
+                                         { name: 'Sticky Add To Cart', link: '#'},
+                                         { name: 'Custom Tab', link: '#'},
+                                         { name: 'Countdown Timer', link: '#'},
+                                         { name: 'Product Video', link: '#'},
+                                         { name: 'Product Brand', link: '#'},
+                                    ]},
                                 ])}
                                 {/* Image Ad Section */}
                                 {/* <div className="mega-menu-column image-ad">
@@ -313,17 +272,17 @@ const Header = () => {
 
                         {/* Categories Dropdown */}
                         <div className="nav-item has-dropdown">
-                            <Link to="#">Categories  <FaChevronDown size={10} /></Link>
-                            <div className="dropdown-menu mega-menu categories-menu">
+                            <Link to="#">Sản phẩm  <FaChevronDown size={10} /></Link>
+                             <div className="dropdown-menu mega-menu categories-menu">
                                 {renderCategoryDropdown([
-                                    { title: 'Cameras', items: [{ name: 'Backup camera', link: '#' }, { name: 'Digital Camera', link: '#' }, /*...*/ { name: 'Movie camera', link: '#' }] },
-                                    { title: 'Phones', items: [{ name: 'Basic Phones', link: '#' }, { name: 'Feature Phones', link: '#' }, /*...*/ { name: 'Smart Phones', link: '#' }] },
-                                    { title: 'TV & Speaker', items: [{ name: 'Android TV', link: '#' }, { name: 'Control Speakers', link: '#' }, /*...*/ { name: 'Game Controller', link: '#' }] },
-                                    { title: 'Smart Devices', items: [{ name: 'Android Tablet', link: '#' }, { name: 'Digital Watches', link: '#' }, /*...*/ { name: 'Smart Watches', link: '#' }] },
-                                    { title: 'Laptop & Computers', items: [{ name: 'Android Tablet', link: '#' }, { name: 'Convertible Laptops', link: '#' }, /*...*/ { name: 'Ultraportable Laptops', link: '#' }] },
-                                    { title: 'Chargers & Cables', items: [{ name: 'Adapter Plug', link: '#' }, { name: 'Bettery Chargers', link: '#' }, /*...*/ { name: 'USB Type Cable', link: '#' }] },
+                                    { title: 'Cameras', items: [ { name: 'Backup camera', link: '#'}, { name: 'Digital Camera', link: '#'}, /*...*/ { name: 'Movie camera', link: '#'} ]},
+                                    { title: 'Phones', items: [ { name: 'Basic Phones', link: '#'}, { name: 'Feature Phones', link: '#'}, /*...*/ { name: 'Smart Phones', link: '#'} ]},
+                                    { title: 'TV & Speaker', items: [ { name: 'Android TV', link: '#'}, { name: 'Control Speakers', link: '#'}, /*...*/ { name: 'Game Controller', link: '#'} ]},
+                                    { title: 'Smart Devices', items: [ { name: 'Android Tablet', link: '#'}, { name: 'Digital Watches', link: '#'}, /*...*/ { name: 'Smart Watches', link: '#'} ]},
+                                    { title: 'Laptop & Computers', items: [ { name: 'Android Tablet', link: '#'}, { name: 'Convertible Laptops', link: '#'}, /*...*/ { name: 'Ultraportable Laptops', link: '#'} ]},
+                                    { title: 'Chargers & Cables', items: [ { name: 'Adapter Plug', link: '#'}, { name: 'Bettery Chargers', link: '#'}, /*...*/ { name: 'USB Type Cable', link: '#'} ]},
                                 ])}
-                            </div>
+                             </div>
                         </div>
                         {/* Top Deals Dropdown */}
                         {/* <div className="nav-item has-dropdown">
@@ -333,17 +292,16 @@ const Header = () => {
                             </div>
                         </div> */}
 
-                        {/* Elements Dropdown */}
-                        <div className="nav-item has-dropdown">
-                            <Link to="#">Elements <FaChevronDown size={10} /></Link>
-                            <div className="dropdown-menu elements-menu">
-                                {renderSimpleDropdown([
-                                    //  { name: 'FAQs', link: '#', badge: { type: 'ask', text: 'ASK' } }, // Example badge
-                                    { name: 'About Us', link: '#' },
-                                    { name: 'Contact Us', link: '#' },
-                                ])}
-                            </div>
-                        </div>
+                         {/* Elements Dropdown */}
+                         <div className="nav-item has-dropdown">
+                             <Link to="#">Khác <FaChevronDown size={10} /></Link>
+                             <div className="dropdown-menu elements-menu">
+                                 {renderSimpleDropdown([
+                                     { name: 'Liên hệ chúng tôi', link: '/contact-us' },
+                                     { name: 'Chính sách', link: '/policy'}
+                                 ])}
+                             </div>
+                         </div>
 
                     </nav>
 
