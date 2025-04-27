@@ -76,6 +76,17 @@
 ### Dự kiến
 * Tiếp tục code hoàn thiện Backend, code Frontend
 
+## 27/04/2025
+### Đã làm được
+* Thực hiện thêm thuộc tính cho Voucher như hạn sử dụng, ...
+* Tạo mapper, service, controller cho service
+### Chưa làm được
+* Lỗi trong quá trình chạy code (do cài lại win, giờ lại gặp vấn đề về code)
+* Code chưa xong backend, có lẽ cần phai chỉnh sửa code toàn diện về Voucher
+### Dự tính tương lai
+* Khắc phục lỗi code 
+* Làm tiếp báo cáo
+
 # Tên ai thì điền vào
 ## 01/04/2025
 - Đã làm: Tạo Header và logic đổi Theme Light/Dark
