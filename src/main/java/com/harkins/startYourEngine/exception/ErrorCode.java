@@ -26,7 +26,8 @@ public enum ErrorCode {
     INVALID_DOB(1009, "Your age must be at least {min}!", HttpStatus.BAD_REQUEST),
     GOODS_NOT_FOUND(1010, "Goods not found!", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(1011, "Review not found!", HttpStatus.NOT_FOUND),
-    REVIEW_ALREADY_EXISTS(1012, "Review already exists!", HttpStatus.BAD_REQUEST);
+    REVIEW_ALREADY_EXISTS(1012, "Review already exists!", HttpStatus.BAD_REQUEST),
+    VOUCHER_EXISTED(1013, "Voucher already exists!", HttpStatus.BAD_REQUEST),;
 
     int code;
     String message;

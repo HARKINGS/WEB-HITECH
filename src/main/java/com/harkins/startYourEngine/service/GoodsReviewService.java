@@ -3,7 +3,6 @@ package com.harkins.startYourEngine.service;
 import java.util.Date;
 import java.util.List;
 
-import com.harkins.startYourEngine.entity.GoodsReview;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +11,7 @@ import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
 import com.harkins.startYourEngine.entity.Goods;
+import com.harkins.startYourEngine.entity.GoodsReview;
 import com.harkins.startYourEngine.entity.User;
 import com.harkins.startYourEngine.exception.AppException;
 import com.harkins.startYourEngine.exception.ErrorCode;
@@ -101,8 +101,9 @@ public class GoodsReviewService {
     @Transactional
     public GoodsReviewResponse updateGoodsReview(Long reviewId, UpdateGoodsReviewRequest request) {
         // Tìm review theo ID
-        GoodsReview existingGoodsReview =
-                goodsReviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
+        GoodsReview existingGoodsReview = goodsReviewRepository
+                .findById(reviewId)
+                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
 
         // Sử dụng userService.getMyInfo() để lấy thông tin người dùng hiện tại
         UserResponse currentUser = userService.getMyInfo();
@@ -130,8 +131,9 @@ public class GoodsReviewService {
     }
 
     public void deleteGoodsReview(Long reviewId) {
-        GoodsReview goodsReview =
-                goodsReviewRepository.findById(reviewId).orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
+        GoodsReview goodsReview = goodsReviewRepository
+                .findById(reviewId)
+                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
 
         // Sử dụng userService.getMyInfo() để lấy thông tin người dùng hiện tại
         UserResponse currentUser = userService.getMyInfo();

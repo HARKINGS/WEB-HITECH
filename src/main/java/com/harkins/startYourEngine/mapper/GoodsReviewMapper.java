@@ -1,6 +1,5 @@
 package com.harkins.startYourEngine.mapper;
 
-import com.harkins.startYourEngine.entity.GoodsReview;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -8,6 +7,7 @@ import org.mapstruct.MappingTarget;
 import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
+import com.harkins.startYourEngine.entity.GoodsReview;
 
 @Mapper(componentModel = "spring")
 public interface GoodsReviewMapper {
@@ -16,5 +16,6 @@ public interface GoodsReviewMapper {
     @Mapping(target = "userId", source = "user.userId")
     GoodsReviewResponse toReviewResponse(GoodsReview goodsReview);
 
-    void updateReviewResponse(@MappingTarget GoodsReview goodsReview, UpdateGoodsReviewRequest updateGoodsReviewRequest);
+    void updateReviewResponse(
+            @MappingTarget GoodsReview goodsReview, UpdateGoodsReviewRequest updateGoodsReviewRequest);
 }

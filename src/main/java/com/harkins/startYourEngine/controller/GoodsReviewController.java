@@ -25,8 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/reviews")
 public class GoodsReviewController {
-    private final GoodsReviewService goodsReviewService;
-    private final UserService userService;
+    GoodsReviewService goodsReviewService;
+    UserService userService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
