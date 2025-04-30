@@ -66,8 +66,8 @@ const Login = () => {
 
     const handleDemoLogin = () => {
         login({
-            email: 'demo@example.com',
-            password: 'password123'
+            email: 'admin@example.com',
+            password: 'admin123'
         });
     };
 

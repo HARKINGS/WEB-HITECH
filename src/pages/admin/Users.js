@@ -1,26 +1,95 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUserPlus, FaEdit, FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import UserModal from '../../components/modals/UserModal';
 import '../../styles/AdminPages.css';
 
 const Users = () => {
-    // Add state for pagination
+    // Add state for modal and users management
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5; // Number of users to display per page
 
-    // Mock data
-    const users = [
-        { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Customer', status: 'Active', joined: '2023-03-15' },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Admin', status: 'Active', joined: '2023-02-20' },
-        { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Customer', status: 'Inactive', joined: '2023-04-10' },
-        { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Customer', status: 'Active', joined: '2023-01-25' },
-        { id: 5, name: 'Charlie Wilson', email: 'charlie@example.com', role: 'Manager', status: 'Active', joined: '2023-05-05' },
-        { id: 6, name: 'Eva Green', email: 'eva@example.com', role: 'Customer', status: 'Active', joined: '2023-04-18' },
-        { id: 7, name: 'David Miller', email: 'david@example.com', role: 'Customer', status: 'Inactive', joined: '2023-03-30' },
-        { id: 8, name: 'Grace Lee', email: 'grace@example.com', role: 'Customer', status: 'Active', joined: '2023-05-12' },
-        { id: 9, name: 'Frank Thomas', email: 'frank@example.com', role: 'Customer', status: 'Active', joined: '2023-06-01' },
-        { id: 10, name: 'Helen Martinez', email: 'helen@example.com', role: 'Customer', status: 'Active', joined: '2023-06-10' },
-        { id: 11, name: 'Ivan Roberts', email: 'ivan@example.com', role: 'Manager', status: 'Active', joined: '2023-06-15' },
-    ];
+    // Fetch users from API
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const fetchUsers = async () => {
+        setLoading(true);
+        try {
+            // In a real scenario, this would fetch from your API
+            // For now, we'll use mock data
+            // const response = await axios.get('http://localhost:5000/api/users');
+            // setUsers(response.data);
+
+            // Mock data for demonstration
+            const mockUsers = [
+                { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Customer', status: 'Active', joined: '2023-03-15' },
+                { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Admin', status: 'Active', joined: '2023-02-20' },
+                { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Customer', status: 'Inactive', joined: '2023-04-10' },
+                { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Customer', status: 'Active', joined: '2023-01-25' },
+                { id: 5, name: 'Charlie Wilson', email: 'charlie@example.com', role: 'Manager', status: 'Active', joined: '2023-05-05' },
+                { id: 6, name: 'Eva Green', email: 'eva@example.com', role: 'Customer', status: 'Active', joined: '2023-04-18' },
+                { id: 7, name: 'David Miller', email: 'david@example.com', role: 'Customer', status: 'Inactive', joined: '2023-03-30' },
+                { id: 8, name: 'Grace Lee', email: 'grace@example.com', role: 'Customer', status: 'Active', joined: '2023-05-12' },
+                { id: 9, name: 'Frank Thomas', email: 'frank@example.com', role: 'Customer', status: 'Active', joined: '2023-06-01' },
+                { id: 10, name: 'Helen Martinez', email: 'helen@example.com', role: 'Customer', status: 'Active', joined: '2023-06-10' },
+                { id: 11, name: 'Ivan Roberts', email: 'ivan@example.com', role: 'Manager', status: 'Active', joined: '2023-06-15' },
+            ];
+            setUsers(mockUsers);
+            setLoading(false);
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Failed to load users. Please try again later.');
+            setLoading(false);
+        }
+    };
+
+    // Handle adding a new user
+    const handleAddUser = () => {
+        setCurrentUser(null); // Ensure we're in create mode, not edit mode
+        setIsModalOpen(true);
+    };
+
+    // Handle editing a user
+    const handleEditUser = (user) => {
+        setCurrentUser(user);
+        setIsModalOpen(true);
+    };
+
+    // Handle user modal success
+    const handleUserSuccess = (userData) => {
+        if (currentUser) {
+            // Update existing user in the list
+            setUsers(users.map(user =>
+                user.id === userData.id ? { ...user, ...userData } : user
+            ));
+        } else {
+            // Add new user to the list
+            setUsers([...users, userData]);
+        }
+    };
+
+    // Handle delete user
+    const handleDeleteUser = async (userId) => {
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            try {
+                // In a real app, this would make an API call
+                // await axios.delete(`http://localhost:5000/api/users/${userId}`);
+
+                // Remove user from local state
+                setUsers(users.filter(user => user.id !== userId));
+            } catch (err) {
+                console.error('Error deleting user:', err);
+                alert('Failed to delete user. Please try again.');
+            }
+        }
+    };
 
     // Calculate pagination values
     const indexOfLastUser = currentPage * usersPerPage;
@@ -47,11 +116,27 @@ const Users = () => {
         pageNumbers.push(i);
     }
 
+    if (loading) {
+        return <div className="admin-page users">Loading users...</div>;
+    }
+
+    if (error) {
+        return <div className="admin-page users">Error: {error}</div>;
+    }
+
     return (
         <div className="admin-page users">
+            {/* User creation/edit modal */}
+            <UserModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                user={currentUser}
+                onSuccess={handleUserSuccess}
+            />
+
             <div className="page-header">
                 <h1>Users</h1>
-                <button className="btn btn-primary">
+                <button className="btn btn-primary" onClick={handleAddUser}>
                     <FaUserPlus /> Add New User
                 </button>
             </div>
@@ -104,8 +189,18 @@ const Users = () => {
                                 </td>
                                 <td>{user.joined}</td>
                                 <td className="actions">
-                                    <button className="btn-icon edit"><FaEdit /></button>
-                                    <button className="btn-icon delete"><FaTrash /></button>
+                                    <button
+                                        className="btn-icon edit"
+                                        onClick={() => handleEditUser(user)}
+                                    >
+                                        <FaEdit />
+                                    </button>
+                                    <button
+                                        className="btn-icon delete"
+                                        onClick={() => handleDeleteUser(user.id)}
+                                    >
+                                        <FaTrash />
+                                    </button>
                                 </td>
                             </tr>
                         ))}

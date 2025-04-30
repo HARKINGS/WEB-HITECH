@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
                     id: 1,
                     name: 'Demo User',
                     email: 'demo@example.com',
-                    role: 'customer'
+                    role: 'admin'
                 };
                 const token = 'demo-token-123';
 
