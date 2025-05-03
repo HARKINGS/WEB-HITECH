@@ -1,5 +1,7 @@
 package com.harkins.startYourEngine.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,8 +14,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,8 +25,8 @@ public class Voucher {
     // thêm mã giảm giá
     // thêm loại giảm giá (tiền mặt hay phần trăm)
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    Long voucherId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     Long identifiedVoucherId;
     LocalDate expiryDate;

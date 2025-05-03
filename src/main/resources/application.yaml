@@ -7,7 +7,7 @@ spring:
     datasource:
         url: jdbc:mysql://localhost:3306/webhitech
         username: root
-        password:
+        password: 123456789
         driver-class-name: com.mysql.cj.jdbc.Driver
     
     jpa:
@@ -21,3 +21,12 @@ jwt:
     signerKey: "Ftbzo3IFNUZ/gqQhbF7/30/aoOASmg85tzSH/CCNA3XPyxbsi5RuywG/el7iIesc"
     valid-duration: 3600 # Khoảng thời gian valid của 1 Token (s)
     refreshable-duration: 14400 # Khoảng thời gian mà trong khoảng thời gian đó có thể refresh 1 Token (s)
+
+# ZaloPay configuration
+zalopay:
+  app-id: 2554
+  key1: sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn
+  key2: trMrHtvjo6myautxDUiAcYsVtaeQ8nhf
+  endpoint: https://sb-openapi.zalopay.vn/v2/create
+  orderstatus: https://sb-openapi.zalopay.vn/v2/query
+  callback-url: https://1ac8-42-113-215-72.ngrok-free.app/zalopay/callback

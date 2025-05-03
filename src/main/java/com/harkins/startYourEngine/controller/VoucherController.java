@@ -1,9 +1,9 @@
 package com.harkins.startYourEngine.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class VoucherController {
-}
+public class VoucherController {}
