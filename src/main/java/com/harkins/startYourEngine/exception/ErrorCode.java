@@ -27,7 +27,9 @@ public enum ErrorCode {
     GOODS_NOT_FOUND(1010, "Goods not found!", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(1011, "Review not found!", HttpStatus.NOT_FOUND),
     REVIEW_ALREADY_EXISTS(1012, "Review already exists!", HttpStatus.BAD_REQUEST),
-    VOUCHER_EXISTED(1013, "Voucher already exists!", HttpStatus.BAD_REQUEST),;
+    VOUCHER_EXISTED(1013, "Voucher already exists!", HttpStatus.BAD_REQUEST),
+    VOUCHER_NOT_FOUND(1014, "Voucher not found!", HttpStatus.NOT_FOUND),
+    ;
 
     int code;
     String message;

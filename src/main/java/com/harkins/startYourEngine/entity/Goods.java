@@ -34,7 +34,6 @@ public class Goods {
     private String goodsDescription;
     private String goodsCategory;
     private String goodsImageURL;
-    // private String goodsStatus;
 
     @JsonManagedReference(value = "goods-orderItems")
     @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)

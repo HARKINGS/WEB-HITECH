@@ -26,7 +26,7 @@ public class Voucher {
     // thêm loại giảm giá (tiền mặt hay phần trăm)
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    Long voucherId;
+    String voucherId;
 
     Long identifiedVoucherId;
     LocalDate expiryDate;
