@@ -1,5 +1,7 @@
 package com.harkins.startYourEngine.service;
 
+import org.springframework.stereotype.Service;
+
 import com.harkins.startYourEngine.dto.request.VoucherRequest;
 import com.harkins.startYourEngine.dto.response.VoucherResponse;
 import com.harkins.startYourEngine.entity.Voucher;
@@ -7,11 +9,11 @@ import com.harkins.startYourEngine.exception.AppException;
 import com.harkins.startYourEngine.exception.ErrorCode;
 import com.harkins.startYourEngine.mapper.VoucherMapper;
 import com.harkins.startYourEngine.repository.VoucherRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class VoucherService {
     VoucherMapper voucherMapper;
 
     public VoucherResponse createVoucher(VoucherRequest request) {
-        if(voucherRepository.existsByIdentifiedVoucherId(request.getIdentifiedVoucherId()))
+        if (voucherRepository.existsByIdentifiedVoucherId(request.getIdentifiedVoucherId()))
             throw new AppException(ErrorCode.VOUCHER_EXISTED);
 
         Voucher voucher = voucherMapper.toVoucher(request);

@@ -113,6 +113,16 @@
            <artifactId>mysql</artifactId>
            <scope>test</scope>
        </dependency>
+       <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.5.14</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpcore</artifactId>
+        <version>4.4.16</version>
+    </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
