@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class CreateOrderRequest {
     private List<CreateOrderItemRequest> orderItems;
     private Long addressId;
-    private Long voucherId;
+    private String voucherId;
     private String paymentMethod;
     private Double totalPrice;
     private Double totalDiscount;

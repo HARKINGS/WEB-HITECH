@@ -25,7 +25,7 @@ import com.harkins.startYourEngine.dto.request.TransactionRequest;
 
 @RestController
 @RequestMapping("/payment")
-public class PaymentController {
+public class VnPayController {
 
     @GetMapping("/create-payment")
     public ResponseEntity<?> createPayment() throws UnsupportedEncodingException {
