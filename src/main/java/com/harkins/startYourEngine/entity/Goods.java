@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Goods {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long goodsId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String goodsId;
 
     private String goodsName;
     private String goodsVersion;

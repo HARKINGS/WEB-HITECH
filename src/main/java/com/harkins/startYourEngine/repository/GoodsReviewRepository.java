@@ -10,8 +10,8 @@ import com.harkins.startYourEngine.entity.GoodsReview;
 import com.harkins.startYourEngine.entity.User;
 
 @Repository
-public interface GoodsReviewRepository extends JpaRepository<GoodsReview, Long> {
-    List<GoodsReview> findByGoods_GoodsId(Long goodsId);
+public interface GoodsReviewRepository extends JpaRepository<GoodsReview, String> {
+    List<GoodsReview> findByGoods_GoodsId(String goodsId);
 
     boolean existsByGoodsAndUser(Goods goods, User user);
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +36,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderService {
 
-    private final OrderRepository orderRepo;
-    private final OrderItemRepository orderItemRepo;
-    private final GoodsRepository goodsRepo;
-    private final UserService userService;
-    private final OrderMapper orderMapper;
-    private final AddressRepository addressRepo;
-    private final VoucherRepository voucherRepo;
-    private final UserRepository userRepository;
+    OrderRepository orderRepo;
+    OrderItemRepository orderItemRepo;
+    GoodsRepository goodsRepo;
+    UserService userService;
+    OrderMapper orderMapper;
+    AddressRepository addressRepo;
+    VoucherRepository voucherRepo;
+    UserRepository userRepository;
 
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse placeOrder(CreateOrderRequest request) throws NotFoundException {
@@ -111,7 +114,7 @@ public class OrderService {
         return orderMapper.toOrderResponse(savedOrder);
     }
 
-    public OrderResponse updateOrderItemStatus(Long orderItemId, String status) {
+    public OrderResponse updateOrderItemStatus(String orderItemId, String status) {
         // Vì OrderItem không có trường status, chúng ta sẽ cập nhật trạng thái của đơn hàng chứa item này
         OrderItem orderItem = orderItemRepo.findById(orderItemId).orElseThrow(() -> new RuntimeException());
 
@@ -128,7 +131,7 @@ public class OrderService {
         }
     }
 
-    public OrderResponse getOrderById(Long orderId) throws NotFoundException {
+    public OrderResponse getOrderById(String orderId) throws NotFoundException {
         log.info("Getting order by ID: {}", orderId);
 
         Order order = orderRepo.findById(orderId).orElseThrow(() -> {
@@ -146,7 +149,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse updateOrderStatus(Long orderId, String status) throws NotFoundException {
+    public OrderResponse updateOrderStatus(String orderId, String status) throws NotFoundException {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundException());
 
         try {
@@ -160,7 +163,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse updatePaymentStatus(Long orderId, String status) throws Exception {
+    public OrderResponse updatePaymentStatus(String orderId, String status) throws Exception {
         try {
             Order order = orderRepo.findById(orderId).orElseThrow(() -> {
                 log.error("Order not found for payment update: {}", orderId);
@@ -225,7 +228,7 @@ public class OrderService {
         return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
     }
 
-    public List<OrderResponse> deleteOrder(Long orderId) {
+    public List<OrderResponse> deleteOrder(String orderId) {
         orderRepo.deleteById(orderId);
         return getCurrentUserOrders();
     }

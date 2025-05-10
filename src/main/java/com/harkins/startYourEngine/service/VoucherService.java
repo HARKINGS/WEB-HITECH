@@ -1,5 +1,6 @@
 package com.harkins.startYourEngine.service;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.harkins.startYourEngine.dto.request.VoucherRequest;
@@ -23,6 +24,7 @@ public class VoucherService {
     VoucherRepository voucherRepository;
     VoucherMapper voucherMapper;
 
+    @PreAuthorize("hasAuthority('CREATE_VOUCHER')")
     public VoucherResponse createVoucher(VoucherRequest request) {
         if (voucherRepository.existsByIdentifiedVoucherId(request.getIdentifiedVoucherId()))
             throw new AppException(ErrorCode.VOUCHER_EXISTED);
@@ -31,6 +33,7 @@ public class VoucherService {
         return voucherMapper.toVoucherResponse(voucherRepository.save(voucher));
     }
 
+    @PreAuthorize("hasAuthority('GET_VOUCHER')")
     public VoucherResponse getVoucher(String voucherId) {
         //        Voucher voucher = voucherRepository.findByIdentifiedVoucherId(identifiedVoucherId);
         Voucher voucher =
@@ -38,6 +41,7 @@ public class VoucherService {
         return voucherMapper.toVoucherResponse(voucher);
     }
 
+    @PreAuthorize("hasAuthority('DELETE_VOUCHER')")
     public void deleteVoucher(String voucherId) {
         voucherRepository.deleteById(voucherId);
     }

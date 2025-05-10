@@ -38,7 +38,7 @@ public class OrderController {
     // 2. Cập nhật trạng thái 1 item trong đơn hàng
     @PutMapping("/update-item-status/{orderItemId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status) {
+    public ResponseEntity<?> updateOrderItemStatus(@PathVariable String orderItemId, @RequestParam String status) {
         try {
             OrderResponse updatedOrder = orderService.updateOrderItemStatus(orderItemId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -49,7 +49,7 @@ public class OrderController {
 
     // 3. Lấy trạng thái đơn hàng
     @GetMapping("/order-status/{orderId}")
-    public ResponseEntity<?> getOrderStatus(@PathVariable Long orderId) {
+    public ResponseEntity<?> getOrderStatus(@PathVariable String orderId) {
         try {
             OrderResponse order = orderService.getOrderById(orderId);
             Map<String, Object> response = new HashMap<>();
@@ -78,7 +78,7 @@ public class OrderController {
     // 5. Cập nhật trạng thái đơn hàng
     @PutMapping("/{orderId}/status")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @RequestParam String status) {
+    public ResponseEntity<?> updateOrderStatus(@PathVariable String orderId, @RequestParam String status) {
         try {
             OrderResponse updatedOrder = orderService.updateOrderStatus(orderId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -89,7 +89,7 @@ public class OrderController {
 
     // 6. Cập nhật trạng thái thanh toán
     @PutMapping("/{orderId}/payment-status")
-    public ResponseEntity<?> updatePaymentStatus(@PathVariable Long orderId, @RequestParam String status) {
+    public ResponseEntity<?> updatePaymentStatus(@PathVariable String orderId, @RequestParam String status) {
         try {
             OrderResponse updatedOrder = orderService.updatePaymentStatus(orderId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -125,7 +125,7 @@ public class OrderController {
 
     // 10. Xóa đơn hàng
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
+    public ResponseEntity<?> deleteOrder(@PathVariable String orderId) {
         List<OrderResponse> deleted = orderService.deleteOrder(orderId);
         return ResponseEntity.ok(Map.of("deleted", deleted));
     }

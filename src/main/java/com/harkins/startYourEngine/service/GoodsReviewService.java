@@ -3,6 +3,8 @@ package com.harkins.startYourEngine.service;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +28,17 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GoodsReviewService {
 
-    private final GoodsReviewRepository goodsReviewRepository;
-    private final GoodsRepository goodsRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final GoodsReviewMapper goodsReviewMapper;
+    GoodsReviewRepository goodsReviewRepository;
+    GoodsRepository goodsRepository;
+    UserRepository userRepository;
+    UserService userService;
+    GoodsReviewMapper goodsReviewMapper;
 
     @Transactional
-    public GoodsReviewResponse createReview(Long goodsId, CreateGoodsReviewRequest request) {
+    public GoodsReviewResponse createReview(String goodsId, CreateGoodsReviewRequest request) {
         // Validate goods exists
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> {
             log.error("Goods not found with id: {}", goodsId);
@@ -71,7 +74,7 @@ public class GoodsReviewService {
         return goodsReviewMapper.toReviewResponse(savedGoodsReview);
     }
 
-    public GoodsReviewResponse getReviewById(Long reviewId) {
+    public GoodsReviewResponse getReviewById(String reviewId) {
         log.info("Getting review with id: {}", reviewId);
         GoodsReview goodsReview = goodsReviewRepository.findById(reviewId).orElseThrow(() -> {
             log.error("Review not found with id: {}", reviewId);
@@ -85,7 +88,7 @@ public class GoodsReviewService {
         return goodsReviews.stream().map(goodsReviewMapper::toReviewResponse).toList();
     }
 
-    public List<GoodsReviewResponse> getReviewByGoods(Long goodsId) {
+    public List<GoodsReviewResponse> getReviewByGoods(String goodsId) {
         if (!goodsRepository.existsById(goodsId)) {
             log.error("Goods not found with id: {}", goodsId);
             throw new AppException(ErrorCode.GOODS_NOT_FOUND);
@@ -99,7 +102,7 @@ public class GoodsReviewService {
     }
 
     @Transactional
-    public GoodsReviewResponse updateGoodsReview(Long reviewId, UpdateGoodsReviewRequest request) {
+    public GoodsReviewResponse updateGoodsReview(String reviewId, UpdateGoodsReviewRequest request) {
         // Tìm review theo ID
         GoodsReview existingGoodsReview = goodsReviewRepository
                 .findById(reviewId)
@@ -130,7 +133,7 @@ public class GoodsReviewService {
         return goodsReviewMapper.toReviewResponse(updatedGoodsReview);
     }
 
-    public void deleteGoodsReview(Long reviewId) {
+    public void deleteGoodsReview(String reviewId) {
         GoodsReview goodsReview = goodsReviewRepository
                 .findById(reviewId)
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));

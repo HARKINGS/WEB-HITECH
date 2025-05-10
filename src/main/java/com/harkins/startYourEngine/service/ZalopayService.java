@@ -39,10 +39,10 @@ public class ZalopayService {
     public String createOrder(Map<String, Object> orderRequest) {
         try {
             // Lấy orderId nếu có
-            Long orderId = null;
+            String orderId = null;
             if (orderRequest.containsKey("orderId")) {
                 try {
-                    orderId = Long.valueOf(orderRequest.get("orderId").toString());
+                    orderId = String.valueOf(orderRequest.get("orderId").toString());
                     System.out.println("Received orderID: " + orderId);
                 } catch (NumberFormatException e) {
                     System.out.println("Invalid orderId format: " + orderRequest.get("orderId"));
@@ -165,7 +165,7 @@ public class ZalopayService {
      * @param transactionId ID giao dịch từ ZaloPay (app_trans_id)
      * @return true nếu cập nhật thành công, false nếu không
      */
-    public boolean updateOrderTransactionId(Long orderId, String transactionId) {
+    public boolean updateOrderTransactionId(String orderId, String transactionId) {
         try {
             Optional<Order> orderOpt = orderRepo.findById(orderId);
             if (orderOpt.isPresent()) {

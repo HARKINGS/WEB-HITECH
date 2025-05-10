@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateOrderItemRequest {
-    private Long goodsId;
+    private String goodsId;
     private Integer quantity;
 }

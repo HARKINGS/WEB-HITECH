@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.harkins.startYourEngine.entity.Order;
 import com.harkins.startYourEngine.enums.OrderStatus;
 
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface OrderRepository extends JpaRepository<Order, String> {
 
     Optional<Order> findByTransactionId(String transactionId);
 

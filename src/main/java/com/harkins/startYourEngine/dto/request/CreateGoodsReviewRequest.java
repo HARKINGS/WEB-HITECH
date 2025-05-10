@@ -8,25 +8,27 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateGoodsReviewRequest {
     @NotNull(message = "Goods ID is required")
-    private Long goodsId;
+    String goodsId;
 
     @NotNull(message = "User ID is required")
-    private String userId;
+    String userId;
 
     @NotBlank(message = "Content cannot be blank")
-    private String content;
+    String content;
 
     @NotNull(message = "Rating is required")
     @Min(value = 1, message = "Rating must be between 1 and 5")
     @Max(value = 5, message = "Rating must be between 1 and 5")
-    private Integer rating;
+    Integer rating;
 
-    private Date createdAt;
+    Date createdAt;
 }

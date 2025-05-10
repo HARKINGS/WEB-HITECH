@@ -37,21 +37,25 @@ public class UserService {
     PasswordEncoder passwordEncoder;
 
     //    @PreAuthorize("hasRole('ADMIN')")
-    //    @PreAuthorize("hasAuthority('CREATE_USER')")
-    public UserResponse createUser(CreateUserRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
+    @PreAuthorize("hasAuthority('CREATE_USER')")
+    public UserResponse createUser(CreateUserRequest request, String roleType) {
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
-        roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
 
-        //        user.setRoles(roles);
+        if(roleType == "STAFF") roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
+        else roleRepository.findById(PredefinedRole.USER).ifPresent(roles::add);
+
+        user.setRoles(roles);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -61,6 +65,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+//    Có quyền thay đổi và còn phải tên tài khoản trùng với tài khoản đăng nhập
     @PreAuthorize("hasAuthority('UPDATE_USER')")
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UpdateUserRequest request) {

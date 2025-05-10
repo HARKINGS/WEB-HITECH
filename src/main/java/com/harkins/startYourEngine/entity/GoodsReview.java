@@ -6,40 +6,39 @@ import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GoodsReview {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference("user-reviews")
-    private User user;
+    User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id", nullable = false)
     @JsonBackReference("goods-reviews")
-    private Goods goods;
+    Goods goods;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    String content;
 
     @Column(nullable = false)
-    private int rating;
+    int rating;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Date createdAt;
+    Date createdAt;
 
     @Column(name = "updated_at", nullable = false)
-    private Date updatedAt;
+    Date updatedAt;
 }

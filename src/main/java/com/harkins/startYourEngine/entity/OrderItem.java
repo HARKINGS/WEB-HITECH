@@ -6,34 +6,36 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.harkins.startYourEngine.enums.OrderStatus;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderItem {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "orderId")
-    private Order order;
+    Order order;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private OrderStatus status = OrderStatus.PENDING;
+    OrderStatus status = OrderStatus.PENDING;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "goodsId")
-    private Goods goods;
+    Goods goods;
 
-    private Integer quantity;
+    Integer quantity;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
 }

@@ -42,7 +42,7 @@ public class GoodsController {
     GoodsReviewService goodsReviewService;
 
     @GetMapping("/details/{goodsId}")
-    public ResponseEntity<?> getGoodsWithReviews(@PathVariable Long goodsId) {
+    public ResponseEntity<?> getGoodsWithReviews(@PathVariable String goodsId) {
         try {
             // Lấy thông tin sản phẩm
             GoodsResponse goods = goodsService.getGoodsById(goodsId);
@@ -76,7 +76,7 @@ public class GoodsController {
     }
 
     @GetMapping("/{goodsId}")
-    ApiResponse<GoodsResponse> getGoodsById(@PathVariable("goodsId") Long goodsId) {
+    ApiResponse<GoodsResponse> getGoodsById(@PathVariable("goodsId") String goodsId) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.getGoodsById(goodsId))
                 .build();
@@ -98,20 +98,20 @@ public class GoodsController {
 
     @PutMapping("/update")
     ApiResponse<GoodsResponse> updateGoods(
-            @RequestParam("goodsId") Long goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
+            @RequestParam("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();
     }
 
     @DeleteMapping("/{goodsId}")
-    ApiResponse<String> deleteGoods(@PathVariable("goodsId") Long goodsId) {
+    ApiResponse<String> deleteGoods(@PathVariable("goodsId") String goodsId) {
         goodsService.deleteGoods(goodsId);
         return ApiResponse.<String>builder().result("Goods deleted").build();
     }
 
     @GetMapping("/{goodsId}/reviews")
-    public ApiResponse<List<GoodsReviewResponse>> getGoodsReviews(@PathVariable("goodsId") Long goodsId) {
+    public ApiResponse<List<GoodsReviewResponse>> getGoodsReviews(@PathVariable("goodsId") String goodsId) {
         return ApiResponse.<List<GoodsReviewResponse>>builder()
                 .result(goodsReviewService.getReviewByGoods(goodsId))
                 .build();
@@ -119,7 +119,7 @@ public class GoodsController {
 
     @PostMapping("/{goodsId}/reviews")
     public ApiResponse<GoodsReviewResponse> createReview(
-            @PathVariable("goodsId") Long goodsId, @Valid @RequestBody CreateGoodsReviewRequest request) {
+            @PathVariable("goodsId") String goodsId, @Valid @RequestBody CreateGoodsReviewRequest request) {
         return ApiResponse.<GoodsReviewResponse>builder()
                 .result(goodsReviewService.createReview(goodsId, request))
                 .build();
@@ -127,14 +127,14 @@ public class GoodsController {
 
     @PutMapping("/reviews/{reviewId}")
     public ApiResponse<GoodsReviewResponse> updateReview(
-            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
+            @PathVariable("reviewId") String reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
         return ApiResponse.<GoodsReviewResponse>builder()
                 .result(goodsReviewService.updateGoodsReview(reviewId, request))
                 .build();
     }
 
     @DeleteMapping("/reviews/{reviewId}")
-    public ApiResponse<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
+    public ApiResponse<String> deleteReview(@PathVariable("reviewId") String reviewId) {
         goodsReviewService.deleteGoodsReview(reviewId);
         return ApiResponse.<String>builder()
                 .result("Review deleted successfully")

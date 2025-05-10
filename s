@@ -8,7 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
-import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
+import com.harkins.startYourEngine.dto.request.UpdateReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsReviewResponse;
 import com.harkins.startYourEngine.dto.response.UserResponse;
@@ -24,9 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequestMapping("/reviews")
-public class GoodsReviewController {
-    GoodsReviewService goodsReviewService;
-    UserService userService;
+public class ReviewController {
+    private final GoodsReviewService goodsReviewService;
+    private final UserService userService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
@@ -42,7 +42,7 @@ public class GoodsReviewController {
     }
 
     @GetMapping("/{reviewId}")
-    public ApiResponse<GoodsReviewResponse> getReviewById(@PathVariable("reviewId") String reviewId) {
+    public ApiResponse<GoodsReviewResponse> getReviewById(@PathVariable("reviewId") Long reviewId) {
         log.info("Getting review with id: {}", reviewId);
         return ApiResponse.<GoodsReviewResponse>builder()
                 .result(goodsReviewService.getReviewById(reviewId))
@@ -58,7 +58,7 @@ public class GoodsReviewController {
     }
 
     @GetMapping("/goods-review/{goodsId}")
-    public ApiResponse<List<GoodsReviewResponse>> getReviewByGoods(@PathVariable("goodsId") String goodsId) {
+    public ApiResponse<List<GoodsReviewResponse>> getReviewByGoods(@PathVariable("goodsId") Long goodsId) {
         log.info("Fetching reviews for goods: {}", goodsId);
         return ApiResponse.<List<GoodsReviewResponse>>builder()
                 .result(goodsReviewService.getReviewByGoods(goodsId))
@@ -68,7 +68,7 @@ public class GoodsReviewController {
     @PutMapping("/{reviewId}")
     @PreAuthorize("isAuthenticated()")
     public ApiResponse<GoodsReviewResponse> updateReview(
-            @PathVariable("reviewId") String reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
+            @PathVariable("reviewId") Long reviewId, @Valid @RequestBody UpdateReviewRequest request) {
         log.info("Updating review: {}", reviewId);
 
         return ApiResponse.<GoodsReviewResponse>builder()
@@ -78,7 +78,7 @@ public class GoodsReviewController {
 
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("isAuthenticated()")
-    public ApiResponse<String> deleteReview(@PathVariable("reviewId") String reviewId) {
+    public ApiResponse<String> deleteReview(@PathVariable("reviewId") Long reviewId) {
         log.info("Deleting review: {}", reviewId);
 
         goodsReviewService.deleteGoodsReview(reviewId);

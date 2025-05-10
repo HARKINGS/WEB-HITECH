@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherResponse {
-    Long voucherId;
+    String voucherId;
     Long identifiedVoucherId;
     LocalDate expiryDate;
     boolean validated;

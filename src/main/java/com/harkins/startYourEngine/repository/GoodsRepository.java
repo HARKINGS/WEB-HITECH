@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.harkins.startYourEngine.entity.Goods;
 
 @Repository
-public interface GoodsRepository extends JpaRepository<Goods, Long> {
+public interface GoodsRepository extends JpaRepository<Goods, String> {
 
     boolean existsByGoodsName(String goodsName);
 
