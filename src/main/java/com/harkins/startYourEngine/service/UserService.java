@@ -2,6 +2,7 @@ package com.harkins.startYourEngine.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +48,9 @@ public class UserService {
 
         HashSet<Role> roles = new HashSet<>();
 
-        if(roleType == "STAFF") roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
+        System.out.println(roleType);
+
+        if(Objects.equals(roleType, "STAFF")) roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
         else roleRepository.findById(PredefinedRole.USER).ifPresent(roles::add);
 
         user.setRoles(roles);

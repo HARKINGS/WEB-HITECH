@@ -1,0 +1,1022 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/harkins/CreateUser/1.0.0"
+  }, {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "/web"
+  } ],
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Web-Hitech-API",
+    "description" : "The API for the ECom Website project"
+  },
+  "paths" : {
+    "/auth/token" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Login Account",
+        "operationId" : "authenticate",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "type" : "string",
+                    "example" : "admin"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Login success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string",
+                          "example" : "123"
+                        },
+                        "authenticated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Login Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/introspect" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Check token",
+        "operationId" : "introspect",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "True token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "valid" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "False token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Refresh token",
+        "operationId" : "refreshToken",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success refresh token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string",
+                          "example" : "234"
+                        },
+                        "authenticated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Refresh token Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Logout account",
+        "operationId" : "logout",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Logout success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Logout Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "Get all Accounts",
+        "operationId" : "getUsers",
+        "responses" : {
+          "200" : {
+            "description" : "All User's info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "userId" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "username" : {
+                            "type" : "string",
+                            "example" : "user1"
+                          },
+                          "password" : {
+                            "type" : "string",
+                            "example" : "abc123"
+                          },
+                          "firstName" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "lastName" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "dob" : {
+                            "type" : "string",
+                            "format" : "date",
+                            "example" : "2000-01-01"
+                          },
+                          "roles" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "properties" : {
+                                "name" : {
+                                  "type" : "string",
+                                  "example" : "ADMIN"
+                                },
+                                "description" : {
+                                  "type" : "string",
+                                  "example" : "Admin role"
+                                },
+                                "permissions" : {
+                                  "type" : "array",
+                                  "items" : {
+                                    "type" : "object",
+                                    "properties" : {
+                                      "name" : {
+                                        "type" : "string",
+                                        "example" : "CREATE_PERMISSION"
+                                      },
+                                      "description" : {
+                                        "type" : "string",
+                                        "example" : "Create a permission"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{roleType}" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "description" : "Create an Account",
+        "operationId" : "createUser",
+        "parameters" : [ {
+          "name" : "roleType",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "admin"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "type" : "string",
+                    "example" : "user1"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "abc123"
+                  },
+                  "firstName" : {
+                    "type" : "string",
+                    "example" : ""
+                  },
+                  "lastName" : {
+                    "type" : "string",
+                    "example" : ""
+                  },
+                  "birthDate" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2000-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create User Account Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "userId" : {
+                      "type" : "string",
+                      "example" : "1212rjdsahfk3h-ffkhrk21-sffs234"
+                    },
+                    "username" : {
+                      "type" : "string",
+                      "example" : "user1"
+                    },
+                    "password" : {
+                      "type" : "string",
+                      "example" : "abc123"
+                    },
+                    "firstName" : {
+                      "type" : "string",
+                      "example" : ""
+                    },
+                    "lastName" : {
+                      "type" : "string",
+                      "example" : ""
+                    },
+                    "birthDate" : {
+                      "type" : "string",
+                      "format" : "date",
+                      "example" : "2000-01-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "505" : {
+            "description" : "User Account Existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1001
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "User Existed!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/myInfo" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "Get info of this account",
+        "operationId" : "getMyInfo",
+        "responses" : {
+          "200" : {
+            "description" : "Get Info Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "get user by Id",
+        "operationId" : "getUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Create an user success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "User" ],
+        "description" : "update user by Id",
+        "operationId" : "updateUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "password" : {
+                    "type" : "string",
+                    "example" : "123"
+                  },
+                  "firstName" : {
+                    "type" : "string",
+                    "example" : "Ngọc"
+                  },
+                  "lastName" : {
+                    "type" : "string",
+                    "example" : "Ngọc"
+                  },
+                  "dob" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2004-01-01"
+                  },
+                  "roles" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string",
+                      "example" : "CREATE_GOODS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "password" : {
+                          "type" : "string",
+                          "example" : "******"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "User" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "required" : true,
+          "in" : "path",
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "description" : "Delete an account",
+        "operationId" : "deleteUser",
+        "responses" : {
+          "200" : {
+            "description" : "Delete success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "User has been deleted"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles" : {
+      "get" : {
+        "tags" : [ "Role" ],
+        "description" : "get all roles",
+        "operationId" : "getAllRoles",
+        "responses" : {
+          "200" : {
+            "description" : "Get info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "example" : "ADMIN"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "example" : "Admin role"
+                          },
+                          "permissions" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "properties" : {
+                                "name" : {
+                                  "type" : "string",
+                                  "example" : "CREATE_PERMISSION"
+                                },
+                                "description" : {
+                                  "type" : "string",
+                                  "example" : "Create a permission"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Role" ],
+        "description" : "Create a new role",
+        "operationId" : "createRole",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "example" : "MANAGER"
+                  },
+                  "description" : {
+                    "type" : "string",
+                    "example" : "Mânager role"
+                  },
+                  "permissions" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string",
+                      "example" : "CREATE_GOODS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create new role success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "name" : {
+                          "type" : "string",
+                          "example" : "MANAGER"
+                        },
+                        "description" : {
+                          "type" : "string",
+                          "example" : "Mânager role"
+                        },
+                        "permissions" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "CREATE_GOODS"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Create a goods"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Role existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1009
+                    },
+                    "message" : {
+                      "type" : "integer",
+                      "example" : "Role already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{roleName}" : {
+      "delete" : {
+        "tags" : [ "Role" ],
+        "description" : "Delete a role",
+        "operationId" : "deleteRole",
+        "parameters" : [ {
+          "name" : "roleName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "MANAGER"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete role success or role isn't existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

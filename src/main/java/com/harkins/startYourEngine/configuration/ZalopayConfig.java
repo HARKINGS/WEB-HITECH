@@ -32,8 +32,8 @@ public class ZalopayConfig {
         try {
             // Triển khai phương thức HMAC nếu cần
             // Hoặc sử dụng HMACUtil class hiện có
-            return com.harkins.startYourEngine.Crypto.HMACUtil.HMacHexStringEncode(
-                    com.harkins.startYourEngine.Crypto.HMACUtil.HMACSHA256, key, data);
+            return com.harkins.startYourEngine.crypto.HMACUtil.HMacHexStringEncode(
+                    com.harkins.startYourEngine.crypto.HMACUtil.HMACSHA256, key, data);
         } catch (Exception e) {
             return "";
         }

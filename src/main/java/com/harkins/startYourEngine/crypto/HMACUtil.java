@@ -1,4 +1,4 @@
-package com.harkins.startYourEngine.Crypto;
+package com.harkins.startYourEngine.crypto;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;

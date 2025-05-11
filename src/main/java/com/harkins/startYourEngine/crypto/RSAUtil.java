@@ -1,4 +1,4 @@
-package com.harkins.startYourEngine.Crypto;
+package com.harkins.startYourEngine.crypto;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
