@@ -1,17 +1,19 @@
 package com.harkins.startYourEngine.dto.response;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GoodsReviewResponse {
-    private Long id;
-    private String content;
-    private int rating;
-    private String createdAt;
-    private String updatedAt;
-    private String userName;
-    private Long userId;
+    String id;
+    String content;
+    int rating;
+    String createdAt;
+    String updatedAt;
+    String userName;
+    Long userId;
 }

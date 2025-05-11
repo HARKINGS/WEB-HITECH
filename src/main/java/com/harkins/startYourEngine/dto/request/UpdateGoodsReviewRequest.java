@@ -6,17 +6,19 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateGoodsReviewRequest {
-    private String content;
+    String content;
 
     @Min(value = 1, message = "Rating must be between 1 and 5")
     @Max(value = 5, message = "Rating must be between 1 and 5")
-    private Integer rating;
+    Integer rating;
 
-    private Date createdAt;
+    Date createdAt;
 }

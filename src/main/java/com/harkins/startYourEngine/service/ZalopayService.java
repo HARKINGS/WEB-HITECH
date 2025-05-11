@@ -1,10 +1,13 @@
 package com.harkins.startYourEngine.service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.harkins.startYourEngine.configuration.ZalopayConfig;
+import com.harkins.startYourEngine.crypto.HMACUtil;
+import com.harkins.startYourEngine.entity.Order;
+import com.harkins.startYourEngine.repository.OrderRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -14,20 +17,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.harkins.startYourEngine.crypto.HMACUtil;
-import com.harkins.startYourEngine.configuration.ZalopayConfig;
-import com.harkins.startYourEngine.entity.Order;
-import com.harkins.startYourEngine.repository.OrderRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ZalopayService {
 
-    private final ZalopayConfig zalopayConfig;
-    private final OrderRepository orderRepo;
+    ZalopayConfig zalopayConfig;
+    OrderRepository orderRepo;
 
     private String getCurrentTimeString(String format) {
         Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+7"));

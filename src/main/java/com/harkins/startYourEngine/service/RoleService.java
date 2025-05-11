@@ -1,11 +1,5 @@
 package com.harkins.startYourEngine.service;
 
-import java.util.HashSet;
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-
 import com.harkins.startYourEngine.dto.request.RoleRequest;
 import com.harkins.startYourEngine.dto.response.RoleResponse;
 import com.harkins.startYourEngine.entity.Role;
@@ -14,11 +8,15 @@ import com.harkins.startYourEngine.exception.ErrorCode;
 import com.harkins.startYourEngine.mapper.RoleMapper;
 import com.harkins.startYourEngine.repository.PermissionRepository;
 import com.harkins.startYourEngine.repository.RoleRepository;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

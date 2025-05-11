@@ -12,34 +12,33 @@ import jakarta.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Goods {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String goodsId;
+    String goodsId;
 
-    private String goodsName;
-    private String goodsVersion;
-    private Long quantity;
-    private Double price;
-    private String goodsDescription;
-    private String goodsCategory;
-    private String goodsImageURL;
+    String goodsName;
+    String goodsVersion;
+    Long quantity;
+    Double price;
+    String goodsDescription;
+    String goodsCategory;
+    String goodsImageURL;
 
     @JsonManagedReference(value = "goods-orderItems")
     @OneToMany(mappedBy = "goods", cascade = CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    List<OrderItem> orderItems;
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("goods-reviews")
-    private List<GoodsReview> goodsReviews;
+    List<GoodsReview> goodsReviews;
 }
