@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateOrderRequest {
     private List<CreateOrderItemRequest> orderItems;
-    private Long addressId;
+    private String addressId;
     private String voucherId;
     private String paymentMethod;
     private Double totalPrice;
