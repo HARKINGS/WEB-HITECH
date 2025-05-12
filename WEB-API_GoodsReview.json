@@ -1,0 +1,537 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Goods Review API",
+    "description": "API for managing product reviews in the ECom Website project",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/web",
+      "description": "API Server"
+    }
+  ],
+  "paths": {
+    "/reviews": {
+      "get": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Get all product reviews",
+        "description": "Retrieves a list of all product reviews in the system",
+        "operationId": "getAllReviews",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reviews_list_response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Create a new review",
+        "description": "Creates a new review for a product. Requires authentication.",
+        "operationId": "createReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/create_goods_review_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/goods_review_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{reviewId}": {
+      "get": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Get review by ID",
+        "description": "Retrieves a specific review by its unique identifier",
+        "operationId": "getReviewById",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the review",
+            "schema": {
+              "type": "string",
+              "example": "987e6543-e21b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/goods_review_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Update a review",
+        "description": "Updates an existing review. Requires authentication.",
+        "operationId": "updateReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the review to update",
+            "schema": {
+              "type": "string",
+              "example": "987e6543-e21b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/update_goods_review_request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Review updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/goods_review_response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to update this review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Delete a review",
+        "description": "Deletes an existing review. Requires authentication.",
+        "operationId": "deleteReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the review to delete",
+            "schema": {
+              "type": "string",
+              "example": "987e6543-e21b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/delete_review_response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to delete this review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/goods-review/{goodsId}": {
+      "get": {
+        "tags": [
+          "Product Reviews"
+        ],
+        "summary": "Get reviews for a specific product",
+        "description": "Retrieves all reviews for a specific product identified by its goodsId",
+        "operationId": "getReviewByGoods",
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the product",
+            "schema": {
+              "type": "string",
+              "example": "123e4567-e89b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved reviews for the product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/reviews_list_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No reviews found for this product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "create_goods_review_request": {
+        "type": "object",
+        "required": [
+          "goodsId",
+          "content",
+          "rating"
+        ],
+        "properties": {
+          "goodsId": {
+            "type": "string",
+            "description": "The ID of the product being reviewed",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "content": {
+            "type": "string",
+            "description": "The review text content",
+            "example": "This product exceeded my expectations. Great quality and value for money."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Rating from 1 to 5 stars",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 5
+          }
+        }
+      },
+      "update_goods_review_request": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Updated review text content",
+            "example": "After using this product for a month, I'm still very satisfied with its performance."
+          },
+          "rating": {
+            "type": "integer",
+            "description": "Updated rating from 1 to 5 stars",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 4
+          }
+        }
+      },
+      "goods_review_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Response code indicating success or failure",
+            "example": 1000
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the review",
+                "example": "987e6543-e21b-12d3-a456-426614174000"
+              },
+              "content": {
+                "type": "string",
+                "description": "Review text content",
+                "example": "This product exceeded my expectations. Great quality and value for money."
+              },
+              "rating": {
+                "type": "integer",
+                "description": "Rating from 1 to 5 stars",
+                "example": 5
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date and time when the review was created",
+                "example": "2023-05-15T10:30:00Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date and time when the review was last updated",
+                "example": "2023-05-15T10:30:00Z"
+              },
+              "userName": {
+                "type": "string",
+                "description": "Name of the user who wrote the review",
+                "example": "John Doe"
+              },
+              "userId": {
+                "type": "string",
+                "description": "Unique identifier of the user who wrote the review",
+                "example": "456e7890-e12b-12d3-a456-426614174000"
+              }
+            }
+          }
+        }
+      },
+      "reviews_list_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Response code indicating success or failure",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the review",
+                  "example": "987e6543-e21b-12d3-a456-426614174000"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Review text content",
+                  "example": "This product exceeded my expectations. Great quality and value for money."
+                },
+                "rating": {
+                  "type": "integer",
+                  "description": "Rating from 1 to 5 stars",
+                  "example": 5
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date and time when the review was created",
+                  "example": "2023-05-15T10:30:00Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Date and time when the review was last updated",
+                  "example": "2023-05-15T10:30:00Z"
+                },
+                "userName": {
+                  "type": "string",
+                  "description": "Name of the user who wrote the review",
+                  "example": "John Doe"
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "Unique identifier of the user who wrote the review",
+                  "example": "456e7890-e12b-12d3-a456-426614174000"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete_review_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Response code indicating success or failure",
+            "example": 1000
+          },
+          "result": {
+            "type": "string",
+            "description": "Success message",
+            "example": "Review deleted successfully"
+          }
+        }
+      },
+      "error_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Error code",
+            "example": 1001
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message describing what went wrong",
+            "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+          }
+        }
+      }
+    }
+  }
+}

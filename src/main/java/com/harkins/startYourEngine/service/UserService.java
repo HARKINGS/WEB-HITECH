@@ -1,5 +1,15 @@
 package com.harkins.startYourEngine.service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.harkins.startYourEngine.dto.request.CreateUserRequest;
 import com.harkins.startYourEngine.dto.request.UpdateUserRequest;
 import com.harkins.startYourEngine.dto.response.UserResponse;
@@ -11,19 +21,11 @@ import com.harkins.startYourEngine.exception.ErrorCode;
 import com.harkins.startYourEngine.mapper.UserMapper;
 import com.harkins.startYourEngine.repository.RoleRepository;
 import com.harkins.startYourEngine.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +40,7 @@ public class UserService {
     //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public UserResponse createUser(CreateUserRequest request, String roleType) {
-        if (userRepository.existsByUsername(request.getUsername()))
-            throw new AppException(ErrorCode.USER_EXISTED);
+        if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
 
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -48,7 +49,8 @@ public class UserService {
 
         System.out.println(roleType);
 
-        if(Objects.equals(roleType, "STAFF")) roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
+        if (Objects.equals(roleType, "STAFF"))
+            roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
         else roleRepository.findById(PredefinedRole.USER).ifPresent(roles::add);
 
         user.setRoles(roles);
@@ -66,7 +68,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-//    Có quyền thay đổi và còn phải tên tài khoản trùng với tài khoản đăng nhập
+    //    Có quyền thay đổi và còn phải tên tài khoản trùng với tài khoản đăng nhập
     @PreAuthorize("hasAuthority('UPDATE_USER')")
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UpdateUserRequest request) {

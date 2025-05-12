@@ -17,6 +17,8 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.MySQLDialect
+                         
+   
 jwt:
     signerKey: "Ftbzo3IFNUZ/gqQhbF7/30/aoOASmg85tzSH/CCNA3XPyxbsi5RuywG/el7iIesc"
     valid-duration: 3600 # Khoảng thời gian valid của 1 Token (s)
@@ -30,3 +32,4 @@ zalopay:
   endpoint: https://sb-openapi.zalopay.vn/v2/create
   orderstatus: https://sb-openapi.zalopay.vn/v2/query
   callback-url: https://1ac8-42-113-215-72.ngrok-free.app/zalopay/callback
+
