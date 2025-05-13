@@ -194,7 +194,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/users/{roleType}": {
@@ -245,7 +250,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/users/myInfo": {
@@ -266,7 +276,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/users/{userId}": {
@@ -298,7 +313,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -337,7 +357,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -367,7 +392,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/roles": {
@@ -388,7 +418,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -426,7 +461,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/roles/{roleName}": {
@@ -458,84 +498,669 @@
               }
             }
           }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/permissions": {
+      "get": {
+        "tags": [
+          "Permission"
+        ],
+        "description": "Get all permission's info",
+        "operationId": "getAllPermissions",
+        "responses": {
+          "200": {
+            "description": "Get all info success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_12"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Permission"
+        ],
+        "description": "Create a new permission",
+        "operationId": "createPermission",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/permissions_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create permission success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_13"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Create permission failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_400_1"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/permissions/{permissionName}": {
+      "delete": {
+        "tags": [
+          "Permission"
+        ],
+        "description": "Delete a permission",
+        "operationId": "deletePermission",
+        "parameters": [
+          {
+            "name": "permissionName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "CREATE_GOODS"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete permission success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_11"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/goods": {
+      "post": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "create a goods",
+        "operationId": "createGoods",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/goods_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create goods success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_14"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Goods existed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_400_2"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/goods/all-goods": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "Get info of all Goods",
+        "operationId": "getGoods",
+        "responses": {
+          "200": {
+            "description": "Get info success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_15"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/goods/{goodsId}": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "get Goods By Id",
+        "operationId": "getGoodsById",
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get Goods By Id success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_14"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong Id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_401"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "delete Goods By Id",
+        "operationId": "deleteGoods",
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete Goods Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_16"
+                }
+              }
+            }
+          }
         }
+      }
+    },
+    "/goods/{goodsName}": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "get Goods By Name",
+        "operationId": "getGoodsByName",
+        "parameters": [
+          {
+            "name": "goodsName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get Goods By Id success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_14"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong Id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_401"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/goods/{goodsCategory}": {
+      "get": {
+        "tags": [
+          "Goods"
+        ],
+        "description": "get Goods By Category",
+        "operationId": "getGoodsByCategory",
+        "parameters": [
+          {
+            "name": "goodsCategory",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get Goods By Id success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_14"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong Id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_401"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/vouchers": {
+      "get": {
+        "tags": [
+          "Voucher"
+        ],
+        "description": "Get All Vouchers Info",
+        "operationId": "getVouchers",
+        "responses": {
+          "200": {
+            "description": "Get All Info Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_17"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Voucher"
+        ],
+        "description": "Create a new Voucher",
+        "operationId": "createVoucher",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/vouchers_body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create Voucher success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_18"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Voucher Existed!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_400_3"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/vouchers/{voucherId}": {
+      "get": {
+        "tags": [
+          "Voucher"
+        ],
+        "description": "Get Voucher by voucherId",
+        "operationId": "getVoucher",
+        "parameters": [
+          {
+            "name": "voucherId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get Info success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_19"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Voucher"
+        ],
+        "description": "Delete Voucher by voucherId",
+        "operationId": "deleteVoucher",
+        "parameters": [
+          {
+            "name": "voucherId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete Voucher success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_200_20"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
-      "auth_token_body": {
+      "users_userId_body": {
         "type": "object",
         "properties": {
+          "password": {
+            "type": "string",
+            "example": "123"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "Ngọc"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Ngọc"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date",
+            "example": "2004-01-01"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "CREATE_GOODS"
+            }
+          }
+        }
+      },
+      "inline_response_200_7_result": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "923651f8-4ad0-4936-b472-372ccf202908"
+          },
           "username": {
             "type": "string",
             "example": "admin"
           },
           "password": {
             "type": "string",
-            "example": "admin"
-          }
-        }
-      },
-      "inline_response_200": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "example": 1000
+            "example": "******"
           },
-          "result": {
-            "type": "object",
-            "properties": {
-              "token": {
-                "type": "string",
-                "example": "123"
-              },
-              "authenticated": {
-                "type": "boolean",
-                "example": true
-              }
+          "firstName": {
+            "type": "string",
+            "example": "null"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "null"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_9_result"
             }
           }
         }
       },
-      "inline_response_401": {
+      "inline_response_200_6_result": {
         "type": "object",
         "properties": {
-          "code": {
-            "type": "integer",
-            "example": 1006
-          },
-          "message": {
+          "userId": {
             "type": "string",
-            "example": "Unauthenticated!"
+            "example": "923651f8-4ad0-4936-b472-372ccf202908"
+          },
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "null"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "null"
+          },
+          "dob": {
+            "type": "string",
+            "format": "date"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_9_result"
+            }
           }
         }
       },
-      "auth_introspect_body": {
+      "inline_response_200_10_result_permissions": {
         "type": "object",
         "properties": {
-          "token": {
+          "name": {
+            "type": "string",
+            "example": "CREATE_GOODS"
+          },
+          "description": {
+            "type": "string",
+            "example": "Create a goods"
+          }
+        }
+      },
+      "inline_response_200_9_result": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ADMIN"
+          },
+          "description": {
+            "type": "string",
+            "example": "Admin role"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_9_permissions"
+            }
+          }
+        }
+      },
+      "goods_body": {
+        "type": "object",
+        "properties": {
+          "goodsName": {
+            "type": "string",
+            "example": "Laptop Dell"
+          },
+          "goodsVersion": {
+            "type": "string",
+            "example": "1.0"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "example": 11082004
+          },
+          "goodsDescription": {
+            "type": "string",
+            "example": "The goods laptop for student"
+          },
+          "goodsCategory": {
+            "type": "string",
+            "example": "Laptop"
+          },
+          "goodsBranch": {
+            "type": "string",
+            "example": "Dell"
+          },
+          "goodsImageURL": {
             "type": "string",
             "example": "123"
-          }
-        }
-      },
-      "inline_response_200_1": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "example": 1000
-          },
-          "result": {
-            "type": "object",
-            "properties": {
-              "valid": {
-                "type": "boolean",
-                "example": true
-              }
-            }
           }
         }
       },
@@ -552,152 +1177,31 @@
           }
         }
       },
-      "auth_refresh_body": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "example": "123"
-          }
-        }
-      },
-      "inline_response_200_2": {
+      "inline_response_200_9": {
         "type": "object",
         "properties": {
           "code": {
-            "type": "string",
-            "example": "1000"
-          },
-          "result": {
-            "type": "object",
-            "properties": {
-              "token": {
-                "type": "string",
-                "example": "234"
-              },
-              "authenticated": {
-                "type": "boolean",
-                "example": true
-              }
-            }
-          }
-        }
-      },
-      "auth_logout_body": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "example": "123"
-          }
-        }
-      },
-      "inline_response_200_3": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "example": "1000"
-          }
-        }
-      },
-      "inline_response_200_4": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "example": "1000"
+            "type": "integer",
+            "example": 1000
           },
           "result": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "userId": {
-                  "type": "string",
-                  "example": ""
-                },
-                "username": {
-                  "type": "string",
-                  "example": "user1"
-                },
-                "password": {
-                  "type": "string",
-                  "example": "abc123"
-                },
-                "firstName": {
-                  "type": "string",
-                  "example": ""
-                },
-                "lastName": {
-                  "type": "string",
-                  "example": ""
-                },
-                "dob": {
-                  "type": "string",
-                  "format": "date",
-                  "example": "2000-01-01"
-                },
-                "roles": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "example": "ADMIN"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "Admin role"
-                      },
-                      "permissions": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "example": "CREATE_PERMISSION"
-                            },
-                            "description": {
-                              "type": "string",
-                              "example": "Create a permission"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/inline_response_200_9_result"
             }
           }
         }
       },
-      "users_roleType_body": {
+      "inline_response_505": {
         "type": "object",
         "properties": {
-          "username": {
-            "type": "string",
-            "example": "user1"
+          "code": {
+            "type": "integer",
+            "example": 1001
           },
-          "password": {
+          "result": {
             "type": "string",
-            "example": "abc123"
-          },
-          "firstName": {
-            "type": "string",
-            "example": ""
-          },
-          "lastName": {
-            "type": "string",
-            "example": ""
-          },
-          "birthDate": {
-            "type": "string",
-            "format": "date",
-            "example": "2000-01-01"
+            "example": "User Existed!"
           }
         }
       },
@@ -731,19 +1235,6 @@
           }
         }
       },
-      "inline_response_505": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "integer",
-            "example": 1001
-          },
-          "result": {
-            "type": "string",
-            "example": "User Existed!"
-          }
-        }
-      },
       "inline_response_200_6": {
         "type": "object",
         "properties": {
@@ -752,90 +1243,7 @@
             "example": 1000
           },
           "result": {
-            "type": "object",
-            "properties": {
-              "userId": {
-                "type": "string",
-                "example": "923651f8-4ad0-4936-b472-372ccf202908"
-              },
-              "username": {
-                "type": "string",
-                "example": "admin"
-              },
-              "firstName": {
-                "type": "string",
-                "example": "null"
-              },
-              "lastName": {
-                "type": "string",
-                "example": "null"
-              },
-              "dob": {
-                "type": "string",
-                "format": "date"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "ADMIN"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Admin role"
-                    },
-                    "permissions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "CREATE_PERMISSION"
-                          },
-                          "description": {
-                            "type": "string",
-                            "example": "Create a permission"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "users_userId_body": {
-        "type": "object",
-        "properties": {
-          "password": {
-            "type": "string",
-            "example": "123"
-          },
-          "firstName": {
-            "type": "string",
-            "example": "Ngọc"
-          },
-          "lastName": {
-            "type": "string",
-            "example": "Ngọc"
-          },
-          "dob": {
-            "type": "string",
-            "format": "date",
-            "example": "2004-01-01"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "example": "CREATE_GOODS"
-            }
+            "$ref": "#/components/schemas/inline_response_200_6_result"
           }
         }
       },
@@ -847,65 +1255,20 @@
             "example": 1000
           },
           "result": {
-            "type": "object",
-            "properties": {
-              "userId": {
-                "type": "string",
-                "example": "923651f8-4ad0-4936-b472-372ccf202908"
-              },
-              "username": {
-                "type": "string",
-                "example": "admin"
-              },
-              "password": {
-                "type": "string",
-                "example": "******"
-              },
-              "firstName": {
-                "type": "string",
-                "example": "null"
-              },
-              "lastName": {
-                "type": "string",
-                "example": "null"
-              },
-              "dob": {
-                "type": "string",
-                "format": "date"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "ADMIN"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Admin role"
-                    },
-                    "permissions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "example": "CREATE_PERMISSION"
-                          },
-                          "description": {
-                            "type": "string",
-                            "example": "Create a permission"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/schemas/inline_response_200_7_result"
+          }
+        }
+      },
+      "inline_response_200_20": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "string",
+            "example": "Voucher deleted!"
           }
         }
       },
@@ -922,7 +1285,56 @@
           }
         }
       },
-      "inline_response_200_9": {
+      "inline_response_200_1_result": {
+        "type": "object",
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "permissions_body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "UPDATE_VOUCHER"
+          },
+          "description": {
+            "type": "string",
+            "example": "Update info of a voucher"
+          }
+        }
+      },
+      "vouchers_body": {
+        "type": "object",
+        "properties": {
+          "identifiedVoucherId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 121
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-11-11"
+          },
+          "validated": {
+            "type": "boolean",
+            "example": true
+          },
+          "voucherName": {
+            "type": "string",
+            "example": "Khuyến mãi 3131"
+          },
+          "voucherDescription": {
+            "type": "string",
+            "example": "Giảm 10% mặt hàng giá từ 10tr trở lên"
+          }
+        }
+      },
+      "inline_response_200_1": {
         "type": "object",
         "properties": {
           "code": {
@@ -930,35 +1342,42 @@
             "example": 1000
           },
           "result": {
+            "$ref": "#/components/schemas/inline_response_200_1_result"
+          }
+        }
+      },
+      "inline_response_200_2": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1000"
+          },
+          "result": {
+            "$ref": "#/components/schemas/inline_response_200_2_result"
+          }
+        }
+      },
+      "inline_response_200_3": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1000"
+          }
+        }
+      },
+      "inline_response_200_4": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "1000"
+          },
+          "result": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "example": "ADMIN"
-                },
-                "description": {
-                  "type": "string",
-                  "example": "Admin role"
-                },
-                "permissions": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "example": "CREATE_PERMISSION"
-                      },
-                      "description": {
-                        "type": "string",
-                        "example": "Create a permission"
-                      }
-                    }
-                  }
-                }
-              }
+              "$ref": "#/components/schemas/inline_response_200_4_result"
             }
           }
         }
@@ -983,6 +1402,15 @@
           }
         }
       },
+      "inline_response_200_11": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          }
+        }
+      },
       "inline_response_200_10": {
         "type": "object",
         "properties": {
@@ -991,33 +1419,367 @@
             "example": 1000
           },
           "result": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "example": "MANAGER"
-              },
-              "description": {
-                "type": "string",
-                "example": "Mânager role"
-              },
-              "permissions": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string",
-                      "example": "CREATE_GOODS"
-                    },
-                    "description": {
-                      "type": "string",
-                      "example": "Create a goods"
-                    }
-                  }
-                }
-              }
+            "$ref": "#/components/schemas/inline_response_200_10_result"
+          }
+        }
+      },
+      "inline_response_400_3": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1014
+          },
+          "message": {
+            "type": "string",
+            "example": "Voucher already exists!"
+          }
+        }
+      },
+      "inline_response_200_13": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "$ref": "#/components/schemas/permissions_body"
+          }
+        }
+      },
+      "inline_response_200_12_result": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ASSIGN_PERMISSION_TO_ROLE"
+          },
+          "description": {
+            "type": "string",
+            "example": "Assign a permission to a role"
+          }
+        }
+      },
+      "inline_response_200_12": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_12_result"
             }
+          }
+        }
+      },
+      "users_roleType_body": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "user1"
+          },
+          "password": {
+            "type": "string",
+            "example": "abc123"
+          },
+          "firstName": {
+            "type": "string",
+            "example": ""
+          },
+          "lastName": {
+            "type": "string",
+            "example": ""
+          },
+          "birthDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2000-01-01"
+          }
+        }
+      },
+      "inline_response_200_19": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "$ref": "#/components/schemas/inline_response_200_19_result"
+          }
+        }
+      },
+      "inline_response_200_18": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "$ref": "#/components/schemas/inline_response_200_18_result"
+          }
+        }
+      },
+      "inline_response_200_10_result": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "MANAGER"
+          },
+          "description": {
+            "type": "string",
+            "example": "Mânager role"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_10_result_permissions"
+            }
+          }
+        }
+      },
+      "inline_response_200_18_result": {
+        "type": "object",
+        "properties": {
+          "voucherId": {
+            "type": "string",
+            "example": "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+          },
+          "identifiedVoucherId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 121
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-11-11"
+          },
+          "validated": {
+            "type": "boolean",
+            "example": true
+          },
+          "voucherName": {
+            "type": "string",
+            "example": "Khuyến mãi 3131"
+          },
+          "voucherDescription": {
+            "type": "string",
+            "example": "Giảm 10% mặt hàng giá từ 10tr trở lên"
+          }
+        }
+      },
+      "inline_response_200_15_result": {
+        "type": "object",
+        "properties": {
+          "goodsId": {
+            "type": "string",
+            "example": "1234"
+          },
+          "goodsName": {
+            "type": "string",
+            "example": "Laptop Dell"
+          },
+          "goodsVersion": {
+            "type": "string",
+            "example": "1.0"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "example": 110822204
+          },
+          "goodsDescription": {
+            "type": "string",
+            "example": "The goods laptop for student"
+          },
+          "goodsCategory": {
+            "type": "string",
+            "example": "Laptop"
+          },
+          "goodsImageUrl": {
+            "type": "string",
+            "example": "1234"
+          }
+        }
+      },
+      "inline_response_200_15": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_15_result"
+            }
+          }
+        }
+      },
+      "inline_response_200_14": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "$ref": "#/components/schemas/inline_response_200_15_result"
+          }
+        }
+      },
+      "inline_response_200_17": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_19_result"
+            }
+          }
+        }
+      },
+      "inline_response_200_16": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "string",
+            "example": "Goods deleted"
+          }
+        }
+      },
+      "inline_response_200_result": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "123"
+          },
+          "authenticated": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "inline_response_200_19_result": {
+        "type": "object",
+        "properties": {
+          "voucherId": {
+            "type": "string",
+            "example": "b1da15e1-7d92-4123-933b-a0b8529d030e"
+          },
+          "identifiedVoucherId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 121
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2025-11-11"
+          },
+          "validated": {
+            "type": "boolean",
+            "example": true
+          },
+          "voucherName": {
+            "type": "string",
+            "example": "Khuyến mãi 3131"
+          },
+          "voucherDescription": {
+            "type": "string",
+            "example": "Giảm 10% mặt hàng giá từ 10tr trở lên"
+          }
+        }
+      },
+      "inline_response_200": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "$ref": "#/components/schemas/inline_response_200_result"
+          }
+        }
+      },
+      "auth_introspect_body": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "123"
+          }
+        }
+      },
+      "inline_response_200_9_permissions": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "CREATE_PERMISSION"
+          },
+          "description": {
+            "type": "string",
+            "example": "Create a permission"
+          }
+        }
+      },
+      "inline_response_401": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1006
+          },
+          "message": {
+            "type": "string",
+            "example": "Unauthenticated!"
+          }
+        }
+      },
+      "auth_refresh_body": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "123"
+          }
+        }
+      },
+      "inline_response_400_2": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1011
+          },
+          "message": {
+            "type": "string",
+            "example": "Goods already exists"
           }
         }
       },
@@ -1033,14 +1795,96 @@
           }
         }
       },
-      "inline_response_200_11": {
+      "inline_response_400_1": {
         "type": "object",
         "properties": {
           "code": {
             "type": "integer",
-            "example": 1000
+            "example": 1011
+          },
+          "message": {
+            "type": "string",
+            "example": "Permission already exists"
           }
         }
+      },
+      "auth_logout_body": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "123"
+          }
+        }
+      },
+      "auth_token_body": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "admin"
+          }
+        }
+      },
+      "inline_response_200_4_result": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": ""
+          },
+          "username": {
+            "type": "string",
+            "example": "user1"
+          },
+          "password": {
+            "type": "string",
+            "example": "abc123"
+          },
+          "firstName": {
+            "type": "string",
+            "example": ""
+          },
+          "lastName": {
+            "type": "string",
+            "example": ""
+          },
+          "dob": {
+            "type": "string",
+            "format": "date",
+            "example": "2000-01-01"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/inline_response_200_9_result"
+            }
+          }
+        }
+      },
+      "inline_response_200_2_result": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "234"
+          },
+          "authenticated": {
+            "type": "boolean",
+            "example": true
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
