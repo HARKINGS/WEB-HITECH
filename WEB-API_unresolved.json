@@ -12,6 +12,15 @@
     "title" : "Web-Hitech-API",
     "description" : "The API for the ECom Website project"
   },
+  "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    }
+  },
   "paths" : {
     "/auth/token" : {
       "post" : {
@@ -297,6 +306,9 @@
         "tags" : [ "User" ],
         "description" : "Get all Accounts",
         "operationId" : "getUsers",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "All User's info",
@@ -387,6 +399,9 @@
         "tags" : [ "User" ],
         "description" : "Create an Account",
         "operationId" : "createUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "parameters" : [ {
           "name" : "roleType",
           "in" : "path",
@@ -494,6 +509,9 @@
         "tags" : [ "User" ],
         "description" : "Get info of this account",
         "operationId" : "getMyInfo",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "Get Info Success",
@@ -586,6 +604,9 @@
             "example" : "123"
           }
         } ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "Create an user success",
@@ -667,6 +688,9 @@
         "tags" : [ "User" ],
         "description" : "update user by Id",
         "operationId" : "updateUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "parameters" : [ {
           "name" : "userId",
           "in" : "path",
@@ -805,6 +829,9 @@
         } ],
         "description" : "Delete an account",
         "operationId" : "deleteUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "Delete success",
@@ -834,6 +861,9 @@
         "tags" : [ "Role" ],
         "description" : "get all roles",
         "operationId" : "getAllRoles",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "responses" : {
           "200" : {
             "description" : "Get info success",
@@ -889,6 +919,9 @@
         "tags" : [ "Role" ],
         "description" : "Create a new role",
         "operationId" : "createRole",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -989,6 +1022,9 @@
         "tags" : [ "Role" ],
         "description" : "Delete a role",
         "operationId" : "deleteRole",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "parameters" : [ {
           "name" : "roleName",
           "in" : "path",
@@ -1009,6 +1045,961 @@
                     "code" : {
                       "type" : "integer",
                       "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permissions" : {
+      "post" : {
+        "tags" : [ "Permission" ],
+        "description" : "Create a new permission",
+        "operationId" : "createPermission",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "example" : "UPDATE_VOUCHER"
+                  },
+                  "description" : {
+                    "type" : "string",
+                    "example" : "Update info of a voucher"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create permission success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "name" : {
+                          "type" : "string",
+                          "example" : "UPDATE_VOUCHER"
+                        },
+                        "description" : {
+                          "type" : "string",
+                          "example" : "Update info of a voucher"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Create permission failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1011
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Permission already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Permission" ],
+        "description" : "Get all permission's info",
+        "operationId" : "getAllPermissions",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get all info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "example" : "ASSIGN_PERMISSION_TO_ROLE"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "example" : "Assign a permission to a role"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permissions/{permissionName}" : {
+      "delete" : {
+        "tags" : [ "Permission" ],
+        "description" : "Delete a permission",
+        "operationId" : "deletePermission",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "permissionName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "CREATE_GOODS"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete permission success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods" : {
+      "post" : {
+        "tags" : [ "Goods" ],
+        "description" : "create a goods",
+        "operationId" : "createGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "goodsName" : {
+                    "type" : "string",
+                    "example" : "Laptop Dell"
+                  },
+                  "goodsVersion" : {
+                    "type" : "string",
+                    "example" : "1.0"
+                  },
+                  "quantity" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 10
+                  },
+                  "price" : {
+                    "type" : "number",
+                    "format" : "double",
+                    "example" : 11082004
+                  },
+                  "goodsDescription" : {
+                    "type" : "string",
+                    "example" : "The goods laptop for student"
+                  },
+                  "goodsCategory" : {
+                    "type" : "string",
+                    "example" : "Laptop"
+                  },
+                  "goodsBranch" : {
+                    "type" : "string",
+                    "example" : "Dell"
+                  },
+                  "goodsImageURL" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create goods success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "number",
+                          "format" : "double",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "The goods laptop for student"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Goods existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1011
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Goods already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/all-goods" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Get info of all Goods",
+        "operationId" : "getGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "number",
+                            "format" : "double",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "The goods laptop for student"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsId}" : {
+      "parameters" : [ {
+        "name" : "goodsId",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string",
+          "example" : "123"
+        }
+      } ],
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "get Goods By Id",
+        "operationId" : "getGoodsById",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get Goods By Id success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "number",
+                          "format" : "double",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "The goods laptop for student"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong Id",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Goods" ],
+        "description" : "delete Goods By Id",
+        "operationId" : "deleteGoods",
+        "responses" : {
+          "200" : {
+            "description" : "Delete Goods Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "Goods deleted"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsName}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "get Goods By Name",
+        "operationId" : "getGoodsByName",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get Goods By Id success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "number",
+                          "format" : "double",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "The goods laptop for student"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong Id",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsCategory}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "get Goods By Category",
+        "operationId" : "getGoodsByCategory",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsCategory",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get Goods By Id success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "number",
+                          "format" : "double",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "The goods laptop for student"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Wrong Id",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vouchers" : {
+      "post" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "description" : "Create a new Voucher",
+        "operationId" : "createVoucher",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "identifiedVoucherId" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 121
+                  },
+                  "expiryDate" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2025-11-11"
+                  },
+                  "validated" : {
+                    "type" : "boolean",
+                    "example" : true
+                  },
+                  "voucherName" : {
+                    "type" : "string",
+                    "example" : "Khuyến mãi 3131"
+                  },
+                  "voucherDescription" : {
+                    "type" : "string",
+                    "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create Voucher success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "voucherId" : {
+                          "type" : "string",
+                          "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+                        },
+                        "identifiedVoucherId" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 121
+                        },
+                        "expiryDate" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "2025-11-11"
+                        },
+                        "validated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        },
+                        "voucherName" : {
+                          "type" : "string",
+                          "example" : "Khuyến mãi 3131"
+                        },
+                        "voucherDescription" : {
+                          "type" : "string",
+                          "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Voucher Existed!",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1014
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Voucher already exists!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "description" : "Get All Vouchers Info",
+        "operationId" : "getVouchers",
+        "responses" : {
+          "200" : {
+            "description" : "Get All Info Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "voucherId" : {
+                            "type" : "string",
+                            "example" : "b1da15e1-7d92-4123-933b-a0b8529d030e"
+                          },
+                          "identifiedVoucherId" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 121
+                          },
+                          "expiryDate" : {
+                            "type" : "string",
+                            "format" : "date",
+                            "example" : "2025-11-11"
+                          },
+                          "validated" : {
+                            "type" : "boolean",
+                            "example" : true
+                          },
+                          "voucherName" : {
+                            "type" : "string",
+                            "example" : "Khuyến mãi 3131"
+                          },
+                          "voucherDescription" : {
+                            "type" : "string",
+                            "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vouchers/{voucherId}" : {
+      "get" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "voucherId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+          }
+        } ],
+        "description" : "Get Voucher by voucherId",
+        "operationId" : "getVoucher",
+        "responses" : {
+          "200" : {
+            "description" : "Get Info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "voucherId" : {
+                          "type" : "string",
+                          "example" : "b1da15e1-7d92-4123-933b-a0b8529d030e"
+                        },
+                        "identifiedVoucherId" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 121
+                        },
+                        "expiryDate" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "2025-11-11"
+                        },
+                        "validated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        },
+                        "voucherName" : {
+                          "type" : "string",
+                          "example" : "Khuyến mãi 3131"
+                        },
+                        "voucherDescription" : {
+                          "type" : "string",
+                          "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "voucherId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+          }
+        } ],
+        "description" : "Delete Voucher by voucherId",
+        "operationId" : "deleteVoucher",
+        "responses" : {
+          "200" : {
+            "description" : "Delete Voucher success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "Voucher deleted!"
                     }
                   }
                 }
