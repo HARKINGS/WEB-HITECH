@@ -1,18 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { FaUserPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import axios from 'axios';
-import UserModal from '../../components/modals/UserModal';
-import '../../styles/AdminPages.css';
+import React, { useState, useEffect } from "react";
+import { FaUserPlus, FaEdit, FaTrash } from "react-icons/fa";
+import axios from "axios";
+import UserModal from "../../components/modals/UserModal";
+import "../../styles/AdminPages.css";
+
+// Helper function to decode JWT token
+const decodeJwt = (token) => {
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+        return null;
+    }
+};
+
+// Helper function to check if user has required permission
+const hasPermission = (token, requiredPermission) => {
+    const decodedToken = decodeJwt(token);
+    if (!decodedToken || !decodedToken.scope) return false;
+    return decodedToken.scope.split(" ").includes(requiredPermission);
+};
 
 const Users = () => {
-    // Add state for modal and users management
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const usersPerPage = 5; // Number of users to display per page
+    const [permissions, setPermissions] = useState({
+        canCreate: false,
+        canView: false,
+        canUpdate: false,
+        canDelete: false,
+    });
+    const usersPerPage = 5;
+
+    // Check permissions on component mount
+    useEffect(() => {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
+
+        if (token) {
+            setPermissions({
+                canCreate: hasPermission(token, "CREATE_USER"),
+                canView: hasPermission(token, "GET_ALL_USERS"),
+                canUpdate: hasPermission(token, "UPDATE_USER"),
+                canDelete: hasPermission(token, "DELETE_USER"),
+            });
+        }
+    }, []);
 
     // Fetch users from API
     useEffect(() => {
@@ -22,30 +60,41 @@ const Users = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            // In a real scenario, this would fetch from your API
-            // For now, we'll use mock data
-            // const response = await axios.get('http://localhost:5000/api/users');
-            // setUsers(response.data);
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
 
-            // Mock data for demonstration
-            const mockUsers = [
-                { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Customer', status: 'Active', joined: '2023-03-15' },
-                { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Admin', status: 'Active', joined: '2023-02-20' },
-                { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Customer', status: 'Inactive', joined: '2023-04-10' },
-                { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Customer', status: 'Active', joined: '2023-01-25' },
-                { id: 5, name: 'Charlie Wilson', email: 'charlie@example.com', role: 'Manager', status: 'Active', joined: '2023-05-05' },
-                { id: 6, name: 'Eva Green', email: 'eva@example.com', role: 'Customer', status: 'Active', joined: '2023-04-18' },
-                { id: 7, name: 'David Miller', email: 'david@example.com', role: 'Customer', status: 'Inactive', joined: '2023-03-30' },
-                { id: 8, name: 'Grace Lee', email: 'grace@example.com', role: 'Customer', status: 'Active', joined: '2023-05-12' },
-                { id: 9, name: 'Frank Thomas', email: 'frank@example.com', role: 'Customer', status: 'Active', joined: '2023-06-01' },
-                { id: 10, name: 'Helen Martinez', email: 'helen@example.com', role: 'Customer', status: 'Active', joined: '2023-06-10' },
-                { id: 11, name: 'Ivan Roberts', email: 'ivan@example.com', role: 'Manager', status: 'Active', joined: '2023-06-15' },
-            ];
-            setUsers(mockUsers);
+            if (!token) {
+                throw new Error("Authentication token not found");
+            }
+
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data.code === "1000") {
+                const mappedUsers = response.data.result.map((user) => ({
+                    id: user.userId || Math.random().toString(36).substr(2, 9), // Fallback ID if userId is empty
+                    name: `${user.firstName} ${user.lastName}`.trim() || user.username,
+                    username: user.username,
+                    email: user.username, // Using username as email since email is not in API response
+                    role: user.roles && user.roles.length > 0 ? user.roles[0].name : "User",
+                    status: "Active", // Default status as it's not in API response
+                    joined: user.dob, // Using DOB as joined date since joined date is not in API response
+                    roles: user.roles || [],
+                }));
+                setUsers(mappedUsers);
+            } else {
+                throw new Error("Failed to fetch users");
+            }
             setLoading(false);
         } catch (err) {
-            console.error('Error fetching users:', err);
-            setError('Failed to load users. Please try again later.');
+            console.error("Error fetching users:", err);
+            setError("Failed to load users. Please try again later.");
             setLoading(false);
         }
     };
@@ -63,30 +112,66 @@ const Users = () => {
     };
 
     // Handle user modal success
-    const handleUserSuccess = (userData) => {
-        if (currentUser) {
-            // Update existing user in the list
-            setUsers(users.map(user =>
-                user.id === userData.id ? { ...user, ...userData } : user
-            ));
-        } else {
-            // Add new user to the list
-            setUsers([...users, userData]);
+    const handleUserSuccess = async (userData) => {
+        try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
+
+            // Format the data according to API requirements
+            const apiData = {
+                username: userData.username,
+                password: userData.password,
+                firstName: userData.firstName || "",
+                lastName: userData.lastName || "",
+                birthDate: userData.birthDate || "2000-01-01",
+            };
+
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_BASE_URL}/user/${userData.roleType}`,
+                apiData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.data.userId) {
+                // Successfully created user
+                const newUser = {
+                    id: response.data.userId,
+                    name: `${response.data.firstName} ${response.data.lastName}`.trim() || response.data.username,
+                    username: response.data.username,
+                    role: userData.roleType,
+                    status: "Active",
+                    joined: new Date().toISOString().split("T")[0],
+                };
+                setUsers([...users, newUser]);
+                setIsModalOpen(false);
+            } else if (response.data.code === 1001) {
+                throw new Error("User already exists");
+            }
+        } catch (err) {
+            console.error("Error creating user:", err);
+            throw err;
         }
     };
 
     // Handle delete user
     const handleDeleteUser = async (userId) => {
-        if (window.confirm('Are you sure you want to delete this user?')) {
+        if (window.confirm("Are you sure you want to delete this user?")) {
             try {
                 // In a real app, this would make an API call
                 // await axios.delete(`http://localhost:5000/api/users/${userId}`);
 
                 // Remove user from local state
-                setUsers(users.filter(user => user.id !== userId));
+                setUsers(users.filter((user) => user.id !== userId));
             } catch (err) {
-                console.error('Error deleting user:', err);
-                alert('Failed to delete user. Please try again.');
+                console.error("Error deleting user:", err);
+                alert("Failed to delete user. Please try again.");
             }
         }
     };
@@ -103,11 +188,11 @@ const Users = () => {
     };
 
     const handlePrevious = () => {
-        setCurrentPage(prev => Math.max(prev - 1, 1));
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
     };
 
     const handleNext = () => {
-        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     };
 
     // Generate page numbers array
@@ -136,9 +221,11 @@ const Users = () => {
 
             <div className="page-header">
                 <h1>Users</h1>
-                <button className="btn btn-primary" onClick={handleAddUser}>
-                    <FaUserPlus /> Add New User
-                </button>
+                {permissions.canCreate && (
+                    <button className="btn btn-primary" onClick={handleAddUser}>
+                        <FaUserPlus /> Add New User
+                    </button>
+                )}
             </div>
 
             <div className="filter-row">
@@ -176,31 +263,27 @@ const Users = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentUsers.map(user => (
+                        {currentUsers.map((user) => (
                             <tr key={user.id}>
                                 <td>{user.id}</td>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.role}</td>
                                 <td>
-                                    <span className={`status-badge ${user.status.toLowerCase()}`}>
-                                        {user.status}
-                                    </span>
+                                    <span className={`status-badge ${user.status.toLowerCase()}`}>{user.status}</span>
                                 </td>
                                 <td>{user.joined}</td>
                                 <td className="actions">
-                                    <button
-                                        className="btn-icon edit"
-                                        onClick={() => handleEditUser(user)}
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        className="btn-icon delete"
-                                        onClick={() => handleDeleteUser(user.id)}
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                    {permissions.canUpdate && (
+                                        <button className="btn-icon edit" onClick={() => handleEditUser(user)}>
+                                            <FaEdit />
+                                        </button>
+                                    )}
+                                    {permissions.canDelete && (
+                                        <button className="btn-icon delete" onClick={() => handleDeleteUser(user.id)}>
+                                            <FaTrash />
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
@@ -209,29 +292,21 @@ const Users = () => {
             </div>
 
             <div className="pagination">
-                <button
-                    className="btn-page"
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                >
+                <button className="btn-page" onClick={handlePrevious} disabled={currentPage === 1}>
                     &laquo;
                 </button>
 
-                {pageNumbers.map(number => (
+                {pageNumbers.map((number) => (
                     <button
                         key={number}
-                        className={`btn-page ${currentPage === number ? 'active' : ''}`}
+                        className={`btn-page ${currentPage === number ? "active" : ""}`}
                         onClick={() => handlePageChange(number)}
                     >
                         {number}
                     </button>
                 ))}
 
-                <button
-                    className="btn-page"
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                >
+                <button className="btn-page" onClick={handleNext} disabled={currentPage === totalPages}>
                     &raquo;
                 </button>
             </div>
