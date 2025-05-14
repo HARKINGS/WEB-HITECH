@@ -16,19 +16,20 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateGoodsReviewRequest {
-    @NotNull(message = "Goods ID is required")
+    @NotBlank(message = "NOT_EMPTY")
     String goodsId;
 
-    @NotNull(message = "User ID is required")
+    @NotBlank(message = "NOT_EMPTY")
     String userId;
 
-    @NotBlank(message = "Content cannot be blank")
+    @NotBlank(message = "NOT_EMPTY")
     String content;
 
-    @NotNull(message = "Rating is required")
+    @NotBlank(message = "NOT_EMPTY")
     @Min(value = 1, message = "Rating must be between 1 and 5")
     @Max(value = 5, message = "Rating must be between 1 and 5")
     Integer rating;
 
+    @NotBlank(message = "NOT_EMPTY")
     Date createdAt;
 }

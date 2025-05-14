@@ -29,9 +29,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(Customizer.withDefaults()).authorizeHttpRequests(request -> request.requestMatchers(
-                        HttpMethod.POST, PUBLIC_ENDPOINTS)
-                .permitAll()
+        httpSecurity.cors(Customizer.withDefaults())
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                 // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
                 // hasAuthority("ROLE_ADMIN")
                 .anyRequest()

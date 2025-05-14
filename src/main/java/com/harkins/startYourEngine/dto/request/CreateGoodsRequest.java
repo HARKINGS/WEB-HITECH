@@ -1,5 +1,6 @@
 package com.harkins.startYourEngine.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,12 +10,20 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateGoodsRequest {
+    @NotBlank(message = "NOT_EMPTY")
     String goodsName;
+    @NotBlank(message = "NOT_EMPTY")
     String goodsVersion;
+    @NotBlank(message = "NOT_EMPTY")
     Long quantity;
-    Double price;
+    @NotBlank(message = "NOT_EMPTY")
+    Long price;
+    @NotBlank(message = "NOT_EMPTY")
     String goodsDescription;
+    @NotBlank(message = "NOT_EMPTY")
     String goodsCategory;
+    @NotBlank(message = "NOT_EMPTY")
     String goodsBrand;
+    @NotBlank(message = "NOT_EMPTY")
     String goodsImageURL;
 }

@@ -3,6 +3,7 @@ package com.harkins.startYourEngine.dto.request;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import com.harkins.startYourEngine.validator.DobConstraint;
@@ -19,7 +20,9 @@ public class UpdateUserRequest {
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 
+    @NotBlank(message = "NOT_EMPTY")
     String firstName;
+    @NotBlank(message = "NOT_EMPTY")
     String lastName;
 
     @DobConstraint(min = 18, message = "INVALID_DOB")
