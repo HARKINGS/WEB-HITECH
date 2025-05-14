@@ -1476,8 +1476,8 @@
             "example": 10
           },
           "price": {
-            "type": "number",
-            "format": "double",
+            "type": "integer",
+            "format": "int64",
             "example": 11082004
           },
           "goodsDescription": {
@@ -1931,8 +1931,8 @@
             "example": 10
           },
           "price": {
-            "type": "number",
-            "format": "double",
+            "type": "integer",
+            "format": "int64",
             "example": 110822204
           },
           "goodsDescription": {
