@@ -1,0 +1,323 @@
+/* src/pages/Checkout/CheckoutPage.css */
+
+.checkout-page {
+    padding: 120px 0; /* Thêm padding trên dưới */
+  }
+  
+  .checkout-page h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+  }
+  
+  .checkout-page h3 {
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-size: 1.3rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+  }
+  
+  /* Layout chính dùng Flexbox */
+  .checkout-form-layout {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+    gap: 40px; /* Khoảng cách giữa 2 cột */
+  }
+  
+  .billing-details {
+    flex: 2; /* Cột thông tin chiếm nhiều không gian hơn */
+    min-width: 300px; /* Chiều rộng tối thiểu */
+  }
+  
+  .order-summary-payment {
+    flex: 1; /* Cột tóm tắt chiếm ít không gian hơn */
+    min-width: 280px;
+  }
+  
+  /* --- Styling cho Form --- */
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="email"],
+  .form-group input[type="tel"],
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    background-color: var(--background-primary);
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb, 13, 110, 253), 0.25); /* Tạo hiệu ứng focus, cần biến --accent-color-rgb */
+    outline: none;
+  }
+  
+  .form-group select {
+    appearance: none; /* Ẩn mũi tên mặc định */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e"); /* Thêm mũi tên tùy chỉnh */
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    cursor: pointer;
+  }
+  
+  .form-group select:disabled {
+      background-color: var(--background-secondary);
+      cursor: not-allowed;
+      opacity: 0.7;
+  }
+  
+  .form-group textarea {
+    resize: vertical; /* Cho phép thay đổi chiều cao textarea */
+    min-height: 80px;
+  }
+  
+  /* --- Styling cho Tóm tắt đơn hàng --- */
+  .order-summary-box {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 20px;
+    background-color: var(--background-secondary);
+    margin-bottom: 30px;
+  }
+  
+  .order-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0;
+  }
+  
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-bottom: 1px dashed var(--border-color);
+  }
+  .order-item:last-child {
+    border-bottom: none;
+  }
+  
+  .order-item .item-name {
+    flex-grow: 1;
+    margin-right: 10px;
+    color: var(--text-primary);
+    max-width: 60%; /* Giới hạn chiều rộng tên SP */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .order-item .item-quantity {
+    flex-shrink: 0;
+    margin-right: 10px;
+    font-size: 0.8rem;
+  }
+  .order-item .item-price {
+    flex-shrink: 0;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  .order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+  }
+  
+  .order-total .total-amount {
+    color: var(--price-color);
+  }
+  
+  
+  /* --- Styling cho Phương thức thanh toán --- */
+  .payment-method {
+    margin-top: 30px;
+  }
+  .payment-method h4 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+  }
+  
+  .payment-option {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--background-primary);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  }
+  .payment-option:hover {
+      border-color: var(--accent-color);
+  }
+  
+  .payment-option input[type="radio"] {
+    margin-right: 10px;
+    vertical-align: top; /* Align radio button với dòng đầu tiên của label */
+    margin-top: 4px;
+    accent-color: var(--accent-color); /* Đổi màu radio button */
+    cursor: pointer;
+  }
+  
+  .payment-option label {
+    display: inline-block; /* Cho phép phần mô tả xuống dòng */
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    width: calc(100% - 30px); /* Để chữ không tràn ra ngoài */
+  }
+  
+  .payment-description {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 5px;
+      margin-left: 25px; /* Thụt vào so với radio */
+      line-height: 1.4;
+  }
+  
+  /* Thông tin chuyển khoản */
+  .bank-transfer-details {
+    margin-top: 15px;
+    margin-left: 25px; /* Thụt vào */
+    padding: 15px;
+    background-color: var(--background-secondary);
+    border: 1px dashed var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .bank-transfer-details hr {
+      margin: 10px 0;
+      border: none;
+      border-top: 1px solid var(--border-color);
+  }
+  .bank-transfer-details p {
+      margin-bottom: 8px;
+      line-height: 1.5;
+  }
+  .bank-transfer-details p strong {
+      color: var(--text-primary);
+  }
+  .bank-transfer-details .order-id-highlight {
+    font-weight: bold;
+    color: var(--price-color); /* Hoặc màu nhấn khác */
+    font-size: 1.2rem;
+    text-align: center;
+    margin: 10px 0;
+    letter-spacing: 1px;
+    background-color: rgba(var(--accent-color-rgb, 13, 110, 253), 0.1); /* Nền nhẹ */
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  .bank-transfer-details .note {
+      font-style: italic;
+      font-size: 0.85rem;
+      margin-top: 10px;
+  }
+  
+  /* Nút Đặt hàng */
+  .place-order-btn {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 20px;
+    background-color: var(--accent-color);
+    color: var(--text-on-accent);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), opacity var(--transition-fast);
+  }
+  
+  .place-order-btn:hover:not(:disabled) {
+    background-color: var(--accent-color-darker);
+  }
+  
+  .place-order-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* Thông báo đặt hàng thành công */
+  .order-success-message {
+      text-align: center;
+      padding: 40px 20px;
+      border: 1px solid var(--new-badge-bg, #198754); /* Màu xanh lá */
+      background-color: rgba(var(--new-badge-bg-rgb, 25, 135, 84), 0.1); /* Nền xanh lá nhạt */
+      border-radius: 5px;
+      color: var(--text-primary);
+  }
+  .order-success-message h2 {
+      color: var(--new-badge-bg, #198754);
+      margin-bottom: 15px;
+  }
+  .order-success-message p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+  }
+  .order-success-message strong {
+      color: var(--price-color); /* Hoặc màu nhấn khác */
+  }
+  .order-success-message .bank-details-summary {
+      margin: 20px auto;
+      padding: 15px;
+      border: 1px dashed var(--border-color);
+      max-width: 400px;
+      background-color: var(--background-secondary);
+  }
+  .order-success-message .bank-details-summary h4 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+  }
+  .order-success-message .bank-details-summary .order-id-highlight {
+      font-weight: bold;
+      color: var(--price-color);
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+  }
+  
+  /* Responsive (Ví dụ đơn giản) */
+  @media (max-width: 768px) {
+    .checkout-form-layout {
+      flex-direction: column-reverse; /* Đảo ngược thứ tự cột trên mobile (tóm tắt lên trên) */
+      gap: 30px;
+    }
+    .billing-details,
+    .order-summary-payment {
+      flex: 1 1 100%; /* Các cột chiếm toàn bộ chiều rộng */
+    }
+    .order-item .item-name {
+      max-width: 50%; /* Điều chỉnh lại chiều rộng tên SP */
+    }
+  } 

@@ -81,48 +81,88 @@
 /* Quantity Selector & Add to Cart */
 .product-actions-detail {
     display: flex;
-    align-items: center;
-    gap: 15px;
+    align-items: center; 
+    gap: 15px; 
     margin-bottom: 20px;
-}
-.quantity-selector {
+  }
+  .quantity-selector {
     display: flex;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-}
-.quantity-selector button {
-    background: var(--background-secondary);
+    align-items: center; /* Align buttons and input vertically */
+    border: 1px solid #ccc; /* Add a border around the whole selector */
+    border-radius: 4px; /* Optional: round the corners */
+    overflow: hidden; /* Ensures children conform to border-radius */
+  }
+  .quantity-selector button,
+  .quantity-selector input {
+    /* Reset default styles */
     border: none;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: var(--text-primary);
-}
-.quantity-selector input {
-    width: 50px;
-    height: 40px;
-    text-align: center;
-    border: none;
-    border-left: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
+    background-color: transparent;
+    margin: 0;
+    padding: 0; /* Reset padding, will add specific below */
+  
+    /* Sizing and Alignment */
+    height: 38px; /* Match this height with the Add to Cart button's effective height */
+    line-height: 38px; /* Helps vertical centering for text */
     font-size: 1rem;
-    background-color: var(--background-primary);
-    color: var(--text-primary);
-    padding: 0 5px;
-    /* Hide number input arrows */
-    /* -moz-appearance: textfield; */
-}
+    text-align: center;
+    color: var(--text-primary, #333); /* Use fallback color */
+  }
+  .quantity-selector button {
+    padding: 0 12px; /* Horizontal padding for +/- buttons */
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease; /* Smooth hover effect */
+  }
 .quantity-selector input::-webkit-outer-spin-button,
 .quantity-selector input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.btn-add-to-cart-detail {
-    /* Kế thừa style từ .btn-add-to-cart nhưng có thể to hơn */
-    padding: 10px 25px;
+.quantity-selector input[type="number"] {
+    width: 50px; /* Adjust width as needed */
+    /* Add vertical borders to separate input from buttons */
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+  }
+  
+  .quantity-selector input[type="number"]::-webkit-outer-spin-button,
+  .quantity-selector input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* Safari */
+  }
+  .btn-add-to-cart-detail {
+    /* Flex for icon alignment */
+    display: inline-flex; /* Use inline-flex to size naturally */
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+  
+    /* Appearance */
+    padding: 0 25px; /* Keep horizontal padding, adjust vertical below if needed */
+    height: 40px; /* Slightly taller to account for potential border */
+    line-height: 40px; /* Match height for text centering */
     font-size: 1rem;
-}
+    font-weight: 500; /* Slightly bolder */
+    color: var(--button-text-color, #fff); /* Use variable or default */
+    background-color: var(--accent-color);
+    border: 1px solid transparent; /* Use transparent border to prevent layout shift on hover border */
+    border-radius: 4px; /* Consistent corner rounding */
+    cursor: pointer;
+    text-decoration: none; /* Remove underline if it's an <a> tag */
+    white-space: nowrap; /* Prevent text wrapping */
+    transition: background-color 0.2s ease, border-color 0.2s ease; /* Smooth hover */
+  }
+  
+  .btn-add-to-cart-detail:hover {
+    background-color: var(--accent-color-darker); /* Darker shade on hover */
+    /* border-color: var(--primary-hover-color, #0056b3); */
+  }
+  
+  /* Adjust icon size and vertical alignment if needed */
+  .btn-add-to-cart-detail svg {
+    /* font-size: 1.1em; /* Slightly larger icon */
+    vertical-align: middle; /* Helps sometimes, but flex align-items is better */
+  }
 
 /* Secondary Actions */
 .product-secondary-actions {

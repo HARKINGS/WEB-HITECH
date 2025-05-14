@@ -13,8 +13,8 @@ const HomePage = () => {
       <section className="hero-section">
         <div className="container">
           {/* Nội dung banner/slider ở đây */}
-          <h1>Welcome to Electech</h1>
-          <p>Your one-stop shop for the latest electronics.</p>
+          <h1>Chào mừng đến với Electech</h1>
+          <p>Điểm đến đúng đắn của bạn cho các thiết bị điện tử HOT nhất.</p>
           {/* <img src="/path/to/hero-banner.jpg" alt="Hero Banner" /> */}
           <div className="hero-placeholder">Hero Banner / Slider Placeholder</div>
         </div>
@@ -23,7 +23,7 @@ const HomePage = () => {
       {/* --- Featured Products Section --- */}
       <section className="featured-products-section">
         <div className="container">
-          <h2>Featured Products</h2>
+          <h2>Những sản phẩm bán chạy</h2>
           <div className="product-grid">
             {featuredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
@@ -34,12 +34,12 @@ const HomePage = () => {
 
        {/* --- Other Sections --- */}
        {/* Thêm các section khác: Featured Categories, Deals, Banners,... */}
-       <section className="other-section">
+       {/* <section className="other-section">
           <div className="container">
             <h2>More Content Here</h2>
             <p>Add featured categories, special offers, etc.</p>
           </div>
-       </section>
+       </section> */}
 
     </div>
   );

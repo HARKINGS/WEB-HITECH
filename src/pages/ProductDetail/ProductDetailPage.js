@@ -2,17 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { mockProducts } from '../../data/mockData'; // Dùng dữ liệu giả
 import ProductCard from '../../components/ProductCard/ProductCard'; // Để hiển thị related products
+import { useCart } from '../../contexts/CartContext'; 
 import './ProductDetailPage.css';
 import { FaStar, FaRegStar, FaShoppingCart, FaHeart, FaExchangeAlt } from 'react-icons/fa';
 
 // Hàm render sao (có thể đưa ra utils)
-const renderStars = (rating) => { /* ... copy từ ProductCard ... */ };
+const renderStars = (rating) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0; // Check if there's a decimal part (not needed for simple full stars)
+
+  for (let i = 0; i < fullStars; i++) {
+      stars.push(<FaStar key={`full-${i}`} />);
+  }
+  // For simplicity here, we'll only use full stars or empty stars based on rounding or floor
+  for (let i = fullStars; i < 5; i++) {
+      stars.push(<FaRegStar key={`empty-${i}`} />);
+  }
+  return stars;
+};
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const { addToCart } = useCart();
 
   useEffect(() => {
     // Tìm sản phẩm trong mock data dựa vào productId từ URL
@@ -33,6 +48,16 @@ const ProductDetailPage = () => {
     setQuantity(prev => Math.max(1, prev + amount)); // Không cho số lượng < 1
   };
 
+  // --- Handler for Add to Cart Button ---
+  const handleAddToCartClick = () => {
+    if (product) {
+      addToCart(product, quantity); // <-- Call context function
+      // Optional: Show a confirmation message to the user
+      // alert(`${quantity} x ${product.name} added to cart!`);
+      // Maybe reset quantity after adding? (Optional)
+      // setQuantity(1);
+    }
+  };
   return (
     <div className="product-detail-page">
       <div className="container">
@@ -59,7 +84,7 @@ const ProductDetailPage = () => {
             <div className="product-meta">
               <div className="rating">
                 {renderStars(product.rating)}
-                {/* <span>(5 Reviews)</span> */}
+                {/* <span>(5 comment)</span> */}
               </div>
               {/* <div className="sku">SKU: {product.sku || 'N/A'}</div> */}
               {/* <div className="availability">Availability: In Stock</div> */}
@@ -83,51 +108,51 @@ const ProductDetailPage = () => {
                    <input type="number" value={quantity} readOnly />
                    <button onClick={() => handleQuantityChange(1)}>+</button>
                </div>
-               <button className="btn btn-add-to-cart-detail">
-                   <FaShoppingCart /> Add to Cart
+               <button className="btn btn-add-to-cart-detail"  onClick={handleAddToCartClick}>
+                   <FaShoppingCart /> Thêm vào giỏ hàng
                </button>
             </div>
 
             {/* Wishlist & Compare */}
-            <div className="product-secondary-actions">
+            {/* <div className="product-secondary-actions">
                <button className="btn-icon"><FaHeart /> Add to Wishlist</button>
-            </div>
+            </div> */}
 
              {/* Meta info: Categories, Tags */}
              {/* <div className="product-meta-info"> ... </div> */}
           </div>
         </div>
 
-        {/* Product Tabs (Description, Reviews, etc.) */}
+        {/* Product Tabs (Description, comment, etc.) */}
         <div className="product-tabs">
           <div className="tab-headers">
             <button
               className={`tab-header ${activeTab === 'description' ? 'active' : ''}`}
               onClick={() => setActiveTab('description')}
             >
-              Description
+              Mô tả
             </button>
             <button
-              className={`tab-header ${activeTab === 'reviews' ? 'active' : ''}`}
-              onClick={() => setActiveTab('reviews')}
+              className={`tab-header ${activeTab === 'comment' ? 'active' : ''}`}
+              onClick={() => setActiveTab('comment')}
             >
-              Reviews ({/* Số lượng review */ 0})
+              Bình luận ({/* Số lượng review */ 0})
             </button>
              {/* Thêm tab Additional Information, Shipping & Returns nếu cần */}
           </div>
           <div className="tab-content">
             {activeTab === 'description' && (
               <div className="tab-pane active">
-                <h4>Product Description</h4>
+                <h4>Mô tả sản phẩm</h4>
                 <p>Detailed description goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
                 {/* Thêm nội dung mô tả */}
               </div>
             )}
-            {activeTab === 'reviews' && (
+            {activeTab === 'comment' && (
               <div className="tab-pane active">
-                <h4>Customer Reviews</h4>
+                <h4>Bình luận từ khách hàng</h4>
                 {/* Hiển thị danh sách review và form để viết review */}
-                <p>No reviews yet.</p>
+                <p>Không có bình luận nào.</p>
                 {/* <div className="review-list"> ... </div> */}
                 {/* <div className="add-review-form"> ... </div> */}
               </div>
@@ -137,7 +162,7 @@ const ProductDetailPage = () => {
 
         {/* Related Products */}
         <div className="related-products">
-           <h2>Related Products</h2>
+           <h2>Các sản phẩm cũng được quan tâm</h2>
            <div className="product-grid related-grid">
               {relatedProducts.map(relProduct => (
                   <ProductCard key={relProduct.id} product={relProduct} />
