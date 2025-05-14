@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaUserPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
+import { Table, Button, Container, Form, Row, Col, Badge, Pagination } from "react-bootstrap";
 import UserModal from "../../components/modals/UserModal";
 import { PERMISSIONS } from "../../constants/permissions";
-import "../../styles/AdminPages.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Helper function to decode JWT token
 const decodeJwt = (token) => {
@@ -289,15 +290,23 @@ const Users = () => {
     }
 
     if (loading) {
-        return <div className="admin-page users">Loading users...</div>;
+        return (
+            <Container className="py-4 bg-dark text-light">
+                <div>Loading users...</div>
+            </Container>
+        );
     }
 
     if (error) {
-        return <div className="admin-page users">Error: {error}</div>;
+        return (
+            <Container className="py-4 bg-dark">
+                <div className="text-danger">Error: {error}</div>
+            </Container>
+        );
     }
 
     return (
-        <div className="admin-page users">
+        <Container fluid className="py-4 bg-dark text-light">
             {/* User creation/edit modal */}
             <UserModal
                 isOpen={isModalOpen}
@@ -306,96 +315,107 @@ const Users = () => {
                 onSuccess={handleUserSuccess}
             />
 
-            <div className="page-header">
-                <h1>Users</h1>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1 className="text-light">Users</h1>
                 {permissions.canCreate && (
-                    <button className="btn btn-primary" onClick={handleAddUser}>
-                        <FaUserPlus /> Add New User
-                    </button>
+                    <Button variant="primary" onClick={handleAddUser}>
+                        <FaUserPlus className="me-2" /> Add New User
+                    </Button>
                 )}
             </div>
 
-            <div className="filter-row">
-                <div className="filter-group">
-                    <input
-                        type="text"
-                        placeholder="Search users..."
-                        className="filter-input"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-                <div className="filter-group">
-                    <select
-                        className="filter-select"
-                        value={selectedRole}
-                        onChange={(e) => setSelectedRole(e.target.value)}
-                    >
-                        <option value="">All Roles</option>
-                        <option value="ADMIN">Admin</option>
-                        <option value="STAFF">Staff</option>
-                    </select>
-                </div>
-            </div>
+            <Row className="mb-4">
+                <Col md={6} lg={4}>
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            placeholder="Search users..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-dark text-light border-secondary"
+                        />
+                    </Form.Group>
+                </Col>
+                <Col md={6} lg={4}>
+                    <Form.Group>
+                        <Form.Select
+                            value={selectedRole}
+                            onChange={(e) => setSelectedRole(e.target.value)}
+                            className="bg-dark text-light border-secondary"
+                        >
+                            <option value="">All Roles</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="STAFF">Staff</option>
+                        </Form.Select>
+                    </Form.Group>
+                </Col>
+            </Row>
 
-            <div className="table-container">
-                <table className="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Joined Date</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentUsers.map((user) => (
-                            <tr key={user.id}>
-                                <td>{user.id}</td>
-                                <td>{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>{user.role}</td>
-                                <td>{user.joined}</td>
-                                <td className="actions">
+            <Table responsive hover variant="dark" className="border-secondary">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentUsers.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.id}</td>
+                            <td>{user.name}</td>
+                            <td>{user.email}</td>
+                            <td>
+                                <Badge bg={user.role === "Admin" ? "info" : "secondary"}>{user.role}</Badge>
+                            </td>
+                            <td>{user.joined}</td>
+                            <td>
+                                <div className="d-flex gap-2">
                                     {permissions.canUpdate && (
-                                        <button className="btn-icon edit" onClick={() => handleEditUser(user)}>
+                                        <Button variant="outline-info" size="sm" onClick={() => handleEditUser(user)}>
                                             <FaEdit />
-                                        </button>
+                                        </Button>
                                     )}
                                     {permissions.canDelete && (
-                                        <button className="btn-icon delete" onClick={() => handleDeleteUser(user.id)}>
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteUser(user.id)}
+                                        >
                                             <FaTrash />
-                                        </button>
+                                        </Button>
                                     )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+            <div className="d-flex justify-content-center mt-4">
+                <Pagination className="pagination-dark">
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                    {pageNumbers.map((number) => (
+                        <Pagination.Item
+                            key={number}
+                            active={number === currentPage}
+                            onClick={() => handlePageChange(number)}
+                            className={number === currentPage ? "active" : "text-light"}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    ))}
+                    <Pagination.Next
+                        onClick={handleNext}
+                        disabled={currentPage === totalPages}
+                        className="text-light"
+                    />
+                </Pagination>
             </div>
-
-            <div className="pagination">
-                <button className="btn-page" onClick={handlePrevious} disabled={currentPage === 1}>
-                    &laquo;
-                </button>
-
-                {pageNumbers.map((number) => (
-                    <button
-                        key={number}
-                        className={`btn-page ${currentPage === number ? "active" : ""}`}
-                        onClick={() => handlePageChange(number)}
-                    >
-                        {number}
-                    </button>
-                ))}
-
-                <button className="btn-page" onClick={handleNext} disabled={currentPage === totalPages}>
-                    &raquo;
-                </button>
-            </div>
-        </div>
+        </Container>
     );
 };
 

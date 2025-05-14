@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { FaTimes, FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { Modal, Form, Button, Row, Col, Container } from "react-bootstrap";
 import { PERMISSIONS } from "../../constants/permissions";
-import "./UserModal.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -118,160 +119,167 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-container">
-                <div className="modal-header">
-                    <h2>{isEditMode ? "Edit User" : "Add New User"}</h2>
-                    <button className="modal-close-btn" onClick={onClose}>
-                        <FaTimes />
-                    </button>
-                </div>
+        <Modal show={isOpen} onHide={onClose} size="lg" className="text-light">
+            <Modal.Header closeButton className="bg-dark text-light border-secondary">
+                <Modal.Title>{isEditMode ? "Edit User" : "Add New User"}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="bg-dark text-light">
+                {submitError && (
+                    <div className="alert alert-danger" role="alert">
+                        {submitError}
+                    </div>
+                )}
 
-                {submitError && <div className="modal-error">{submitError}</div>}
-
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <div className="form-group">
-                        <label htmlFor="username">Username*</label>
-                        <div className="input-with-icon">
-                            <FaUser className="input-icon" />
-                            <input
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                        <Form.Label className="text-light">Username*</Form.Label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-dark text-light border-secondary">
+                                <FaUser />
+                            </span>
+                            <Form.Control
                                 type="text"
-                                id="username"
-                                name="username"
                                 placeholder="Enter username"
                                 value={formData.username}
                                 onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                                className={errors.username ? "error" : ""}
+                                isInvalid={!!errors.username}
+                                className="bg-dark text-light border-secondary"
                             />
+                            <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                         </div>
-                        {errors.username && <span className="error-message">{errors.username}</span>}
-                    </div>
+                    </Form.Group>
 
-                    <div className="form-group">
-                        <label htmlFor="firstName">First Name</label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            placeholder="Enter first name"
-                            value={formData.firstName}
-                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                        />
-                    </div>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label className="text-light">First Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter first name"
+                                    value={formData.firstName}
+                                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                                    className="bg-dark text-light border-secondary"
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label className="text-light">Last Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter last name"
+                                    value={formData.lastName}
+                                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                                    className="bg-dark text-light border-secondary"
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                    <div className="form-group">
-                        <label htmlFor="lastName">Last Name</label>
-                        <input
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            placeholder="Enter last name"
-                            value={formData.lastName}
-                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="birthDate">Birth Date*</label>
-                        <input
+                    <Form.Group className="mb-3">
+                        <Form.Label className="text-light">Birth Date*</Form.Label>
+                        <Form.Control
                             type="date"
-                            id="birthDate"
-                            name="birthDate"
                             value={formData.birthDate}
                             onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                            className={errors.birthDate ? "error" : ""}
+                            isInvalid={!!errors.birthDate}
+                            className="bg-dark text-light border-secondary"
                         />
-                        {errors.birthDate && <span className="error-message">{errors.birthDate}</span>}
-                    </div>
+                        <Form.Control.Feedback type="invalid">{errors.birthDate}</Form.Control.Feedback>
+                    </Form.Group>
 
                     {!isEditMode && (
                         <>
-                            <div className="form-group">
-                                <label htmlFor="password">Password*</label>
-                                <div className="input-with-icon">
-                                    <FaLock className="input-icon" />
-                                    <input
+                            <Form.Group className="mb-3">
+                                <Form.Label className="text-light">Password*</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaLock />
+                                    </span>
+                                    <Form.Control
                                         type={showPassword ? "text" : "password"}
-                                        id="password"
-                                        name="password"
                                         placeholder="Enter password"
                                         value={formData.password}
                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        className={errors.password ? "error" : ""}
+                                        isInvalid={!!errors.password}
+                                        className="bg-dark text-light border-secondary"
                                     />
-                                    <button
-                                        type="button"
-                                        className="toggle-password"
+                                    <Button
+                                        variant="outline-secondary"
                                         onClick={() => setShowPassword(!showPassword)}
+                                        className="text-light"
                                     >
                                         {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
+                                    </Button>
+                                    <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                                 </div>
-                                {errors.password && <span className="error-message">{errors.password}</span>}
-                            </div>
+                            </Form.Group>
 
-                            <div className="form-group">
-                                <label htmlFor="confirmPassword">Confirm Password*</label>
-                                <div className="input-with-icon">
-                                    <FaLock className="input-icon" />
-                                    <input
+                            <Form.Group className="mb-3">
+                                <Form.Label className="text-light">Confirm Password*</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaLock />
+                                    </span>
+                                    <Form.Control
                                         type={showPassword ? "text" : "password"}
-                                        id="confirmPassword"
-                                        name="confirmPassword"
                                         placeholder="Confirm your password"
                                         value={formData.confirmPassword}
                                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                                        className={errors.confirmPassword ? "error" : ""}
+                                        isInvalid={!!errors.confirmPassword}
+                                        className="bg-dark text-light border-secondary"
                                     />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.confirmPassword}
+                                    </Form.Control.Feedback>
                                 </div>
-                                {errors.confirmPassword && (
-                                    <span className="error-message">{errors.confirmPassword}</span>
-                                )}
-                            </div>
+                            </Form.Group>
                         </>
                     )}
 
                     {isEditMode && (
-                        <div className="form-group permissions-section">
-                            <label>Permissions</label>
-                            <div className="permissions-grid">
+                        <div className="mt-4">
+                            <h5 className="mb-3 text-light">Permissions</h5>
+                            <Row>
                                 {Object.entries(permissionGroups).map(([groupName, permissions]) => (
-                                    <div key={groupName} className="permission-group">
-                                        <h3>{groupName} Permissions</h3>
-                                        {permissions.map(([key, value]) => {
-                                            const isChecked =
-                                                Array.isArray(formData.permissions) &&
-                                                formData.permissions.some((p) => p === value);
-                                            return (
-                                                <div key={key} className="permission-item">
-                                                    <label className="checkbox-label">
-                                                        <input
+                                    <Col md={6} key={groupName} className="mb-4">
+                                        <div className="card bg-dark border-secondary">
+                                            <div className="card-header bg-dark border-secondary">
+                                                <h6 className="mb-0 text-light">{groupName} Permissions</h6>
+                                            </div>
+                                            <div className="card-body">
+                                                {permissions.map(([key, value]) => {
+                                                    const isChecked = formData.permissions.includes(value);
+                                                    return (
+                                                        <Form.Check
+                                                            key={key}
                                                             type="checkbox"
+                                                            id={`permission-${key}`}
+                                                            label={key.split("_").join(" ").toLowerCase()}
                                                             checked={isChecked}
                                                             onChange={() => handlePermissionChange(value)}
+                                                            className="mb-2 text-light"
                                                         />
-                                                        <span>{key.split("_").join(" ").toLowerCase()}</span>
-                                                    </label>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </Col>
                                 ))}
-                            </div>
+                            </Row>
                         </div>
                     )}
-
-                    <div className="modal-actions">
-                        <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                            {isSubmitting ? "Saving..." : isEditMode ? "Update User" : "Create User"}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer className="bg-dark border-secondary">
+                <Button variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : isEditMode ? "Update User" : "Create User"}
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
