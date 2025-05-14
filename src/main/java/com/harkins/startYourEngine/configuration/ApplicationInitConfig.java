@@ -69,7 +69,7 @@ public class ApplicationInitConfig {
         addPermission("GET_ALL_ROLES", "Get all roles");
         addPermission("GET_ALL_USERS", "Get info of all accounts");
         addPermission("GET_ALL_GOODS", "Get info of all goods");
-//        addPermission("GET_ALL_VOUCHER", "Get info of all vouchers");
+        //        addPermission("GET_ALL_VOUCHER", "Get info of all vouchers");
 
         addPermission("GET_USER", "Get info of an account");
         addPermission("GET_GOODS", "Get info of a goods");
@@ -94,36 +94,39 @@ public class ApplicationInitConfig {
 
                 Set<String> userPermissions = Set.of("GET_USER", "UPDATE_USER");
                 Set<String> staffPermissions = Set.of(
-                        "CREATE_USER", "GET_USER", "UPDATE_USER", "DELETE_USER",
-                        "CREATE_GOODS", "GET_GOODS", "UPDATE_GOODS", "DELETE_GOODS",
-                        "CREATE_VOUCHER", "GET_VOUCHER", "DELETE_VOUCHER");
+                        "CREATE_USER",
+                        "GET_USER",
+                        "UPDATE_USER",
+                        "DELETE_USER",
+                        "CREATE_GOODS",
+                        "GET_GOODS",
+                        "UPDATE_GOODS",
+                        "DELETE_GOODS",
+                        "CREATE_VOUCHER",
+                        "GET_VOUCHER",
+                        "DELETE_VOUCHER");
                 Set<String> adminPermissions = Set.of(
                         "GET_USER",
                         "GET_GOODS",
                         "GET_VOUCHER",
-
                         "GET_ALL_ROLES",
                         "GET_ALL_PERMISSIONS",
                         "GET_ALL_USERS",
                         "GET_ALL_GOODS",
-
                         "UPDATE_ROLE",
                         "UPDATE_PERMISSION",
                         "UPDATE_USER",
                         "UPDATE_GOODS",
-
                         "DELETE_ROLE",
                         "DELETE_PERMISSION",
                         "DELETE_USER",
                         "DELETE_GOODS",
                         "DELETE_VOUCHER",
-
                         "CREATE_ROLE",
                         "CREATE_PERMISSION",
                         "CREATE_USER",
                         "CREATE_GOODS",
                         "CREATE_VOUCHER",
-
                         "ASSIGN_PERMISSION_TO_ROLE");
 
                 roleRepository.save(Role.builder()

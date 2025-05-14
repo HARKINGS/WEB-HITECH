@@ -13,7 +13,7 @@ public class GoodsResponse {
     String goodsName;
     String goodsVersion;
     Long quantity;
-    Double price;
+    Long price;
     String goodsDescription;
     String goodsCategory;
     String goodsImageURL;
