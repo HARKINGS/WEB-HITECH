@@ -13,7 +13,7 @@ const ContactPage = () => {
     <div className="contact-page">
       <div className="container">
         {/* Có thể thêm Breadcrumbs ở đây */}
-        <h2>Contact Us</h2>
+        <h2>Liên hệ chúng tôi</h2>
 
         {/* Map Section */}
         <section className="contact-map">
@@ -37,22 +37,22 @@ const ContactPage = () => {
         <section className="contact-content">
           {/* Contact Form */}
           <div className="contact-form-container">
-            <h3>Get In Touch With Us</h3>
-            <p>If you wish to directly reach us, please fill out the form below -</p>
+            <h3>Kết nối cùng chúng tôi</h3>
+            <p>Nếu khách hàng muốn liên hệ trực tiếp với chúng tôi, vui lòng điền vào mẫu dưới đây</p>
             <form onSubmit={handleSubmit} className="contact-form">
               <div className="form-group">
-                <label htmlFor="name">Your name</label>
+                <label htmlFor="name">Họ/ Tên</label>
                 <input type="text" id="name" name="name" required />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Your email</label>
+                <label htmlFor="email">Email</label>
                 <input type="email" id="email" name="email" required />
               </div>
               <div className="form-group">
-                <label htmlFor="message">Your message (optional)</label>
+                <label htmlFor="message">Lời nhắn gửi (tùy chọn)</label>
                 <textarea id="message" name="message" rows="5"></textarea>
               </div>
-              <button type="submit" className="btn btn-submit">Submit</button>
+              <button type="submit" className="btn btn-submit">Gửi</button>
             </form>
           </div>
 
@@ -61,29 +61,29 @@ const ContactPage = () => {
             <div className="detail-item">
               <FaMapMarkerAlt className="detail-icon" />
               <div>
-                <strong>Address:</strong>
-                <p>62 29th San Francisco, 807 - Union Trade Center</p>
+                <strong>Địa chỉ:</strong>
+                <p>Số 1 Đại Cồ Việt</p>
               </div>
             </div>
             <div className="detail-item">
               <FaPhone className="detail-icon" />
               <div>
-                <strong>Call us:</strong>
-                <p>(+91) 123-456-789</p> {/* Sử dụng số từ ảnh */}
+                <strong>Số điện thoại liên hệ:</strong>
+                <p>0123456789</p> {/* Sử dụng số từ ảnh */}
               </div>
             </div>
             <div className="detail-item">
               <FaEnvelope className="detail-icon" />
               <div>
-                <strong>Mail us:</strong>
-                <p>demomail@example.com</p> {/* Sử dụng mail từ ảnh */}
+                <strong>Gửi mail đến chúng tôi:</strong>
+                <p>huster@example.com</p> {/* Sử dụng mail từ ảnh */}
               </div>
             </div>
             <div className="detail-item">
               <FaClock className="detail-icon" />
               <div>
-                <strong>Open time:</strong>
-                <p>Monday - Sunday: 8:00AM - 6:00PM</p>
+                <strong>Giờ làm việc:</strong>
+                <p>Thứ 2 - Chủ Nhật: 8:00 sáng - 6:00 chiều</p>
               </div>
             </div>
           </div>

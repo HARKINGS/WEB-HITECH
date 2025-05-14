@@ -17,9 +17,9 @@ const ShopPage = () => {
       {/* **NEW**: Shop Page Header */}
       <div className="shop-header container">
         <div className="breadcrumbs">
-          <Link to="/">Home</Link> / <span>Shop</span>
+          <Link to="/">Trang chủ </Link> / <span>Cửa hàng</span>
         </div>
-        <h1 className="page-title">Shop</h1>
+        <h1 className="page-title">Cửa hàng</h1>
       </div>
 
       <div className="container shop-container">
@@ -35,19 +35,19 @@ const ShopPage = () => {
           <div className="shop-controls">
             <div className="controls-left">
               {/* Hiển thị số lượng kết quả */}
-              <p className="shop-info">Showing all {totalProducts} results</p>
+              <p className="shop-info">Tìm được {totalProducts} kết quả</p>
             </div>
             <div className="controls-right">
                {/* Select sắp xếp */}
               <div className="sort-options">
-                  <select name="orderby" className="orderby" aria-label="Shop order">
-                      <option value="menu_order" >Default sorting</option>
-                      <option value="popularity">Sort by popularity</option>
-                      <option value="rating">Sort by average rating</option>
-                      <option value="date">Sort by latest</option>
-                      <option value="price">Sort by price: low to high</option>
-                      <option value="price-desc">Sort by price: high to low</option>
-                  </select>
+                  <select name="orderby" className="orderby" aria-label="Sắp xếp sản phẩm">
+                    <option value="menu_order">Sắp xếp mặc định</option>
+                    <option value="popularity">Sắp xếp theo độ phổ biến</option>
+                    <option value="rating">Sắp xếp theo điểm đánh giá</option>
+                    <option value="date">Sắp xếp theo mới nhất</option>
+                    <option value="price">Sắp xếp theo giá: thấp đến cao</option>
+                    <option value="price-desc">Sắp xếp theo giá: cao đến thấp</option>
+                </select>
               </div>
               {/* Nút chuyển đổi view */}
                <div className="view-options">

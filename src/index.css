@@ -52,7 +52,6 @@ html.dark {
   --price-color: #ff6b81; /* Brighter red price */
   --sale-badge-bg: var(--price-color);
   --sale-badge-text: #ffffff;
-  --star-color: #ffc107; /* Keep star color */
   --new-badge-bg: #20c997; /* Brighter green */
   --new-badge-text: #ffffff;
 

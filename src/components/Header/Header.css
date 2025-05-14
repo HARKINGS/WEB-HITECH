@@ -1,17 +1,17 @@
 :root {
-  --text-primary: #212529; /* Chữ đen/xám đậm */
-  --text-secondary: #6c757d; /* Chữ xám nhạt */
-  --text-accent: var(--primary-color); /* Màu nhấn là màu xanh chính */
+  --text-primary: #212529; 
+  --text-secondary: #6c757d; 
+  --text-accent: var(--primary-color); 
   --border-color: #dee2e6;
   --price-color: #dc3545;
   --star-color: #ffb900;
-  --badge-sale-bg: #716e66; /* Màu badge sale */
-  --badge-sale-text: #fff;   /* Chữ trắng cho badge sale */
-  --badge-hot-bg: #dc3545;  /* Màu badge hot */
+  --badge-sale-bg: #716e66; 
+  --badge-sale-text: #fff; 
+  --badge-hot-bg: #dc3545; 
   --badge-hot-text: #fff;
-  --badge-new-bg: #198754;  /* Màu badge new */
+  --badge-new-bg: #198754; 
   --badge-new-text: #fff;
-  --badge-ask-bg: #6c757d;  /* Màu badge ask */
+  --badge-ask-bg: #6c757d; 
   --badge-ask-text: #fff;
   --transition-fast: all 0.2s ease-in-out;
 }
@@ -87,16 +87,346 @@
   display: flex; align-items: center; gap: 8px;
   color: var(--text-secondary); font-size: 0.9rem;
   transition: color 0.2s ease;
+  cursor: pointer;
+  position: relative;
 }
+.cart-shake {
+  animation: cart-shake 0.5s ease-in-out;
+}
+.header-action-item .cart-link-icon svg {
+  font-size: 1.3rem; 
+}
+
+.header-action-item .cart-link-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-accent, #ffc107);
+  text-decoration: none;
+  padding: 5px; /* Add some padding so the shake doesn't feel cramped */
+  border-radius: 4px; /* Optional: Slightly round corners */
+  transition: background-color 0.2s ease; /* Optional: Smooth hover */
+}
+.header-action-item .cart-link-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Optional: Subtle hover */
+}
+.header-action-item .cart-link-icon span.noselect {
+  font-weight: 500;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  -ms-user-select: none; 
+  -webkit-user-select: none; 
+  -moz-user-select: none; 
+  user-select: none; 
+}
+.header-action-item .cart-count {
+  background-color: var(--primary-color, red); /* Use your theme color */
+  color: white;
+  border-radius: 50%;
+  padding: 5px 7px;
+  font-size: 0.8em;
+  min-width: 18px; /* Ensure circle shape even for single digit */
+  text-align: center;
+  line-height: 1;
+  display: inline-block; /* Or inline-flex if needed */
+}
+
+
 .header-action-item svg { font-size: 1.2rem; }
 .header-action-item:hover { color: var(--text-accent); }
 .header-action-item span { 
   
   -webkit-user-select: none;user-select: none; }
-.cart-count {
-  background-color: var(--price-color); color: white; border-radius: 10px;
-  padding: 1px 7px; font-size: 0.75rem; margin: 0 4px; font-weight: 500;
+  .cart-count {
+    background-color: var(--price-color, #dc3545); /* <<< MÀU HỒNG/ĐỎ */
+    color: var(--text-on-price, #fff); /* <<< MÀU CHỮ TRẮNG */
+    border-radius: 50%; /* <<< LÀM TRÒN HOÀN TOÀN */
+    padding: 0; /* Reset padding */
+    font-size: 0.75rem; /* Kích thước chữ số */
+    font-weight: 600; /* Chữ số đậm hơn */
+    /* margin: 0 5px; */ /* Bỏ margin, dùng gap của span cha */
+    display: inline-flex; /* Sử dụng flex để căn giữa số */
+    align-items: center;
+    justify-content: center;
+    min-width: 20px; /* <<< Chiều rộng tối thiểu */
+    height: 20px; /* <<< Chiều cao cố định */
+    line-height: 20px; /* <<< Căn chữ số vào giữa theo chiều dọc */
+    text-align: center;
+    box-sizing: border-box; /* Đảm bảo padding/border không làm tăng kích thước */
+  }
+/* ============================================ */
+/* =========== CART PREVIEW DROPDOWN ========== */
+/* ============================================ */
+
+/* Wrapper for positioning */
+.cart-action-wrapper {
+  position: relative; /* Needed for absolute positioning of the dropdown */
+  cursor: pointer;    /* Indicate it's clickable */
 }
+
+.cart-preview-dropdown {
+  position: absolute;  top: 100%;   right: 0;          
+  width: 340px;        
+  background-color: var(--background-secondary, #2a2a2a);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); 
+  z-index: 1050;         padding: 15px;  opacity: 1;  visibility: visible;
+  transform: translateY(5px); 
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+  cursor: default; 
+  margin-top: 5px; 
+}
+
+.cart-preview-empty {
+  text-align: center;
+  color: var(--text-secondary-on-dark, #aaa);
+  padding: 30px 10px;
+  font-size: 0.95rem;
+}
+
+.cart-preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0; /* Space below list */
+  max-height: 350px; /* Limit height */
+  overflow-y: auto;
+}
+
+/* Scrollbar styling (optional) */
+.cart-preview-list::-webkit-scrollbar {
+width: 6px;
+}
+.cart-preview-list::-webkit-scrollbar-track {
+background: var(--background-secondary, #f1f1f1);
+border-radius: 3px;
+}
+.cart-preview-list::-webkit-scrollbar-thumb {
+background: var(--border-color, #ccc);
+border-radius: 3px;
+}
+.cart-preview-list::-webkit-scrollbar-thumb:hover {
+background: var(--text-secondary, #999);
+}
+
+
+.cart-preview-item {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  gap: 12px; /* Space between image, info, button */
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color-dark, #444); /* Darker border */
+}
+.cart-preview-item:last-child {
+  border-bottom: none;
+  padding-bottom: 5px; /* Less padding at the very bottom */
+}
+.cart-preview-item:first-child {
+  padding-top: 5px; /* Less padding at the very top */
+}
+
+
+.cart-preview-image {
+  width: 60px; /* Slightly larger image */
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border-color-darker, #555); /* Subtle border */
+  flex-shrink: 0;
+}
+
+/* Renamed from cart-preview-details */
+.cart-preview-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cart-preview-details {
+  flex-grow: 1; /* Take remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: 3px; /* Small gap between lines */
+}
+
+.cart-preview-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  line-height: 1.3; /* Slightly adjust line height if needed */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+  margin-bottom: 2px; /* Small space below name */
+}
+.cart-preview-name:hover {
+  color: var(--text-accent, #007bff);
+}
+.cart-preview-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between buttons and number */
+}
+.cart-preview-quantity,
+.cart-preview-price {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #6c757d);
+}
+
+.cart-preview-price {
+  font-size: 0.85rem;
+  color: var(--text-secondary-on-dark, #bbb);
+  font-weight: 400;
+}
+.cart-preview-price strong { /* Make price part stand out */
+  font-weight: 600;
+  color: var(--price-color-on-dark, #f07777); /* Price color */
+}
+
+.cart-preview-remove {
+  background: none;
+  border: none;
+  color: var(--text-secondary-on-dark, #999);
+  cursor: pointer;
+  padding: 8px; /* Larger clickable area */
+  margin-left: 5px; /* Space from info */
+  line-height: 1;
+  border-radius: 50%; /* Make it round */
+  transition: color 0.2s ease, background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.cart-preview-remove:hover {
+  color: var(--price-color, #dc3545); /* Red color on hover */
+}
+.cart-preview-remove svg {
+  display: block; /* Fix potential alignment issues */
+}
+.cart-preview-footer {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color, #eee);
+  text-align: center;
+}
+.cart-preview-summary {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--border-color-dark, #444);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+.cart-preview-subtotal { /* Optional subtotal styles */
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+
+.btn-view-cart {
+  display: block; /* Make button full width */
+  width: 100%;
+  background-color: var(--accent-color, #007bff); /* Use your accent color */
+  color: var(--text-on-accent, #fff);
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.btn-view-cart:hover {
+  background-color: var(--accent-color-darker, #0056b3); /* Darker accent on hover */
+}
+.cart-preview-total {
+  font-size: 1rem;
+  color: var(--price-color-on-dark, #f07777); /* Price color */
+}
+
+/* Container for buttons */
+.cart-preview-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px; /* Space between buttons if you add more */
+    justify-content: center; /* Center button(s) */
+}
+
+/* General button styling (assuming you have base .btn styles) */
+.cart-preview-actions .btn {
+  flex-grow: 1; /* Make buttons take equal width */
+  padding: 8px 15px; /* Adjust padding */
+  font-size: 0.9rem;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Primary button (Checkout) - Adapt colors */
+.cart-preview-actions .btn-primary {
+  background-color: var(--accent-color, #007bff); /* Use your primary color */
+  color: var(--text-on-primary, #fff);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.cart-preview-actions .btn-primary:hover {
+  background-color: var(--primary-color-darker, #0056b3);
+  border-color: var(--primary-color-darker, #0056b3);
+  color: var(--text-on-primary, #fff);
+}
+
+/* Secondary button (View Cart - if added) - Adapt colors */
+.cart-preview-actions .btn-secondary {
+   background-color: transparent;
+   color: var(--text-primary, #eee);
+   border: 1px solid var(--border-color-dark, #555);
+}
+.cart-preview-actions .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-color-darker, #777);
+    color: var(--text-primary-on-dark, #fff);
+}
+
+/* Utility classes potentially needed in JS (add if not present) */
+.btn { /* Base button */
+    /* display: inline-block; */
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none; user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-sm { /* Smaller button variant */
+    padding: 0.25rem 0.5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
+/* --- End Cart Preview --- */
 
 /* ============================================ */
 /* ============= NAVIGATION BAR =============== */
@@ -129,7 +459,6 @@
   height: 100%;
   flex-shrink: 0;
   position: relative;
-  /* border-right: 1px solid var(--primary-color-darker); -> Bỏ border ở wrapper */
 }
 .browse-categories {
   background-color: var(--accent-color);
@@ -139,12 +468,8 @@
   height: 100%;
   display: flex; align-items: center; gap: 10px;
   font-weight: 600;
-  cursor: pointer;
-  
-  
+  cursor: pointer;  
   -webkit-user-select: none;user-select: none; white-space: nowrap;
-  transition: background-color 0.2s ease;
-  border-right: 1px solid var(--accent-color-darker); /* Thêm border cho nút */
 }
 .browse-categories:hover {
   background-color: var(--primary-color-darker);
@@ -355,8 +680,6 @@
 }
 /* CSS cho các link bên trong Categories menu sẽ tự động kế thừa từ .dropdown-menu .dropdown-list li a */
 
-
-/* --- Specific Mega Menu Layouts & Positioning (Shop, Products, Top Deals) --- */
 /* Shop Menu */
 .shop-menu.mega-menu,
 .categories-menu.mega-menu,
@@ -365,58 +688,11 @@
 .shop-menu.mega-menu .mega-menu-grid,
 .categories-menu.mega-menu .mega-menu-grid, 
 .elements-menu.mega-menu .mega-menu-grid { grid-template-columns: repeat(3, 1fr) 1.5fr; }
-/* Style .shop-menu .image-ad và các thành phần con */
-/* .shop-menu .image-ad { }
-.shop-menu .image-ad img { }
-.shop-menu .image-ad .ad-content span { }
-.shop-menu .image-ad h4 { }
-.shop-menu .image-ad .btn-shop-now { }
-.shop-menu .image-ad .btn-shop-now:hover { } */
 
-/* Product showcase mini (dùng chung) */
-/* .product-showcase-mini { }
-.product-showcase-mini:hover { }
-.product-showcase-mini img { }
-.product-showcase-mini div { }
-.product-showcase-mini a { }
-.product-showcase-mini a:hover { }
-.product-showcase-mini .price { } */
-
-/* Products Menu */
 .products-menu.mega-menu { min-width: 850px; left: 50%; transform: translateX(-55%); }
-/* Style .product-style-grid, .product-grid-mini, etc. */
-/* .product-style-grid h4 { }
-.product-grid-mini { }
-.product-card-mini { }
-.product-card-mini:hover { }
-.product-image-link-mini { }
-.product-image-link-mini img { }
-.product-image-link-mini .badge { }
-.product-image-link-mini .badge-sale { }
-.product-info-mini .product-name-mini { }
-.product-info-mini .product-name-mini a { }
-.product-info-mini .product-rating-mini { }
-.product-info-mini .product-rating-mini .star-icon { }
-.product-info-mini .product-price-mini .current-price { }
-.product-info-mini .product-price-mini .old-price { } */
 
-/* Top Deals Menu */
 .top-deals-menu.mega-menu { min-width: 850px; left: auto; right: 15px; }
-/* Style .shop-by-grid, .category-icons-grid, etc. */
-/* .shop-by-grid { } */
-/* .shop-by-categories h4 { }
-.top-rated-products h4 { }
-.category-icons-grid { }
-.category-icon-item { }
-.category-icon-item img { }
-.category-icon-item span { }
-.category-icon-item:hover { }
-.category-icon-item:hover span { }
-.top-rated-products .product-showcase-mini.horizontal { }
-.top-rated-products .product-showcase-mini.horizontal:hover { }
-.top-rated-products .product-showcase-mini.horizontal img { }
-.top-rated-products .product-showcase-mini.horizontal a { }
-.top-rated-products .product-showcase-mini.horizontal .price { } */
+
 
 /* Elements Menu */
 .elements-menu {

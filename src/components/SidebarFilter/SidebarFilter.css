@@ -1,105 +1,175 @@
+/* SidebarFilter.css - Đã điều chỉnh để khớp với CSS cung cấp */
+
 .sidebar-filters {
-    border: 1px solid var(--border-color);
-    padding: 20px;
-    background-color: var(--background-primary);
-    border-radius: 5px;
-  }
-  
-  .filter-section {
-    margin-bottom: 25px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid var(--border-color);
-  }
-  .filter-section:last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-  
-  .filter-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-top: 0;
-    margin-bottom: 15px;
-    color: var(--text-primary);
-     /* Prevent selection */
-     -webkit-user-select: none;
-     -moz-user-select: none;
-     -ms-user-select: none;
-     user-select: none;
-  }
-  
-  .filter-content ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .filter-content ul li {
-    margin-bottom: 8px;
-  }
-  .filter-content ul a {
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-  }
-  .filter-content ul a:hover {
-    color: var(--text-accent);
-  }
-  /* Style cho checkbox, label */
-  .filter-content div label {
-      margin-left: 8px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-  }
-  .filter-content div input[type="checkbox"] {
-      cursor: pointer;
-  }
-  
-  /* Color Filter */
-  .color-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .color-swatch {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid var(--border-color);
-    transition: var(--transition-fast);
-  }
-  .color-swatch:hover, .color-swatch.active {
-    border-color: var(--text-accent);
-    transform: scale(1.1);
-  }
-  
-  /* Placeholder for Price Slider */
-  .price-slider-placeholder {
-      height: 40px;
-      background-color: var(--background-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-bottom: 10px;
-  }
-  
-  /* Rating Filter */
-  .rating-filter div {
-      margin-bottom: 8px;
-      cursor: pointer;
-      color: var(--text-secondary);
-  }
-  .rating-filter div:hover {
-      color: var(--text-accent);
-  }
-  .rating-filter .star-icon {
-      color: var(--star-color);
-      margin-right: 2px;
-  }
-  .rating-filter .fa-star + span { /* Số lượng review */
-      margin-left: 5px;
-      font-size: 0.85rem;
-  }
+  border: 1px solid var(--border-color);
+  padding: 20px;
+  background-color: var(--background-primary);
+  border-radius: 5px;
+}
+
+.filter-section {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--border-color);
+}
+.filter-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.filter-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: var(--text-primary);
+  /* Prevent selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.filter-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.filter-content ul li {
+  margin-bottom: 8px; /* Đã có từ CSS của bạn */
+}
+
+/* Styling cho category items (input checkbox + label bên trong li) */
+.filter-content ul li label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.filter-content ul li label:hover {
+  color: var(--text-accent);
+}
+.filter-content ul li input[type="checkbox"] {
+  margin-right: 8px; /* Khoảng cách giữa checkbox và text */
+  cursor: pointer;
+}
+
+
+/* Styling cho highlight filters (input checkbox + label bên trong div) */
+.filter-content div > label { /* Target label là con trực tiếp của div trong filter-content */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px; /* Thêm margin nếu cần */
+}
+.filter-content div > label:hover {
+  color: var(--text-accent);
+}
+.filter-content div > input[type="checkbox"] { /* Nếu input đứng riêng, không trong label */
+  cursor: pointer;
+  margin-right: 8px;
+}
+.filter-content div > label input[type="checkbox"] { /* Target input bên trong label */
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+
+/* Color Filter */
+.color-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.color-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--border-color); /* Sử dụng border-color từ CSS của bạn */
+  transition: var(--transition-fast);
+}
+.color-swatch.has-border { /* Dành cho màu trắng hoặc màu rất sáng, có thể cần điều chỉnh */
+    /* Nếu var(--border-color) đã đủ tương phản thì không cần thêm gì
+       Hoặc có thể dùng một màu border khác nếu cần:
+       border-color: #ccc; (nếu var(--border-color) quá sáng)
+    */
+}
+.color-swatch:hover, .color-swatch.active {
+  border-color: var(--text-accent); /* Thay đổi border-color khi hover/active */
+  transform: scale(1.1);
+}
+
+
+/* Price Filter - Sử dụng các class đã tạo trong JS */
+.price-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa các input và dấu gạch nối */
+  margin-bottom: 10px;
+}
+
+.price-input {
+  width: 80px; /* Hoặc dùng flex-grow: 1 nếu muốn co giãn */
+  padding: 8px;
+  border: 1px solid var(--border-color); /* Sử dụng biến CSS */
+  border-radius: 4px; /* Giữ lại border-radius */
+  font-size: 0.9rem;
+  text-align: center;
+  background-color: var(--background-secondary); /* Thêm background nếu cần */
+  color: var(--text-primary); /* Thêm màu chữ nếu cần */
+}
+.price-input::-webkit-outer-spin-button,
+.price-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.price-separator {
+  color: var(--text-secondary);
+}
+
+.price-display-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 5px; /* Thêm margin nếu cần */
+}
+
+
+/* Rating Filter */
+.rating-filter div.rating-option { /* Target class .rating-option đã thêm trong JS */
+  display: flex; /* Thêm để các sao và text căn chỉnh tốt hơn */
+  align-items: center; /* Căn giữa các item theo chiều dọc */
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 5px; /* Thêm padding để dễ click hơn */
+  border-radius: 4px; /* Thêm border-radius */
+  transition: color var(--transition-fast), background-color var(--transition-fast); /* Thêm transition */
+}
+.rating-filter div.rating-option:hover {
+  color: var(--text-accent);
+  background-color: var(--background-secondary); /* Thêm background hover nhẹ */
+}
+.rating-filter div.rating-option.selected { /* Class 'selected' đã thêm trong JS */
+  color: var(--text-accent); /* Hoặc một màu khác để nổi bật khi chọn */
+  font-weight: 600; /* Làm đậm chữ khi chọn */
+  background-color: var(--background-highlight, #e9ecef); /* Màu nền khi chọn, fallback nếu biến không có */
+}
+
+.rating-filter .star-icon { /* Class này được gán cho FaStar/FaRegStar trong JS */
+  color: var(--star-color);
+  margin-right: 2px;
+}
+
+/* Target span chứa chữ "& Up" hoặc số lượng reviews */
+.rating-filter div.rating-option > span {
+  margin-left: 8px; /* Tăng khoảng cách */
+  font-size: 0.85rem;
+  /* color: var(--text-secondary); -- đã có ở parent */
+}
