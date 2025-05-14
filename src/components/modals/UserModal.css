@@ -62,11 +62,12 @@
 
 .modal-form .form-group {
     margin-bottom: 20px;
+    width: 100%;
 }
 
 .modal-form label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     font-size: 0.9rem;
     font-weight: 500;
     color: var(--text-primary, #333);
@@ -82,33 +83,122 @@
     position: absolute;
     left: 12px;
     color: var(--text-secondary, #6b7280);
+    font-size: 1rem;
 }
 
+/* Input styles */
 .modal-form input[type="text"],
 .modal-form input[type="email"],
 .modal-form input[type="password"],
+.modal-form input[type="date"],
 .modal-form select {
     width: 100%;
-    padding: 10px 12px 10px 40px;
+    padding: 12px 16px;
     border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 0.95rem;
+    line-height: 1.5;
     color: var(--text-primary, #333);
     background-color: var(--background-primary, #fff);
+    transition: border-color 0.2s ease;
+}
+
+.input-with-icon input {
+    padding-left: 40px !important;
+}
+
+.modal-form input[type="date"] {
+    padding-left: 12px;
 }
 
 .modal-form select {
-    padding: 10px 12px;
+    padding: 12px 16px;
     cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3e%3cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+    outline: none;
+    border-color: var(--accent-color, #0d6efd);
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1);
+}
+
+/* Permissions select styles */
+.modal-form select[multiple] {
+    height: 200px;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+.modal-form select[multiple] optgroup {
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 4px;
+    background-color: var(--background-secondary, #f3f4f6);
+}
+
+.modal-form select[multiple] option {
+    padding: 8px;
+    margin: 2px 0;
+    border-radius: 4px;
+}
+
+.modal-form select[multiple] option:checked {
+    background-color: var(--accent-color, #0d6efd);
+    color: white;
+}
+
+.modal-form select[multiple] option:hover:not(:checked) {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+/* Permissions select styles */
+.modal-form .permissions-select {
+    height: 200px;
+    padding: 8px;
+    overflow-y: auto;
+}
+
+.modal-form optgroup {
+    padding: 4px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background-color: var(--background-secondary, #f3f4f6);
+    margin-top: 8px;
+}
+
+.modal-form optgroup option {
+    padding: 8px 16px;
+    color: var(--text-primary);
+    background-color: var(--background-primary, #fff);
+    margin: 2px 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.modal-form optgroup option:checked {
+    background-color: var(--accent-color, #0d6efd);
+    color: white;
+}
+
+.modal-form optgroup option:hover {
+    background-color: rgba(13, 110, 253, 0.1);
 }
 
 .form-row {
     display: flex;
-    gap: 20px;
+    gap: 24px;
+    margin-bottom: 0;
 }
 
 .form-row .form-group {
     flex: 1;
+    margin-bottom: 24px;
 }
 
 .toggle-password {
@@ -141,8 +231,18 @@ input.error {
 .error-message {
     color: #dc3545;
     font-size: 0.8rem;
-    margin-top: 4px;
+    margin-top: 6px;
     display: block;
+}
+
+/* Error state styling */
+.modal-form input.error {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.modal-form input.error:focus {
+    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1);
 }
 
 /* Modal actions */
@@ -199,5 +299,61 @@ input.error {
     .form-row {
         flex-direction: column;
         gap: 0;
+    }
+}
+
+/* Permissions section styles */
+.permissions-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+    margin-top: 16px;
+}
+
+.permission-group {
+    background-color: var(--background-secondary, #f3f4f6);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.permission-group h3 {
+    font-size: 1rem;
+    color: var(--text-primary, #333);
+    margin: 0 0 12px 0;
+}
+
+.permission-item {
+    margin-bottom: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox-label span {
+    font-size: 0.9rem;
+    color: var(--text-primary, #333);
+    text-transform: capitalize;
+}
+
+/* For smaller screens */
+@media (max-width: 640px) {
+    .permissions-grid {
+        grid-template-columns: 1fr;
     }
 }

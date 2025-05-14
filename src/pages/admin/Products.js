@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import ProductModal from "../../components/modals/ProductModal";
+import { PERMISSIONS } from "../../constants/permissions";
 import "../../styles/AdminPages.css";
 
 // Helper function to decode JWT token
@@ -44,9 +45,9 @@ const Products = () => {
 
         if (token) {
             setPermissions({
-                canEdit: hasPermission(token, "UPDATE_GOODS"),
-                canDelete: hasPermission(token, "DELETE_GOODS"),
-                canCreate: hasPermission(token, "CREATE_GOODS"),
+                canEdit: hasPermission(token, PERMISSIONS.UPDATE_GOODS),
+                canDelete: hasPermission(token, PERMISSIONS.DELETE_GOODS),
+                canCreate: hasPermission(token, PERMISSIONS.CREATE_GOODS),
             });
         }
     }, []);
@@ -64,7 +65,7 @@ const Products = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            if (response.data.code === 1000) {
+            if (response.data.code.toString() === "1000") {
                 const mappedProducts = response.data.result.map((product) => ({
                     id: product.goodsId,
                     name: product.goodsName,
@@ -137,7 +138,7 @@ const Products = () => {
                     apiData,
                     config
                 );
-                if (response.data.code === 1000) {
+                if (response.data.code.toString() === "1000") {
                     await fetchProducts();
                 } else {
                     throw new Error("Failed to update product");
@@ -155,7 +156,7 @@ const Products = () => {
                 };
 
                 const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/goods`, apiData, config);
-                if (response.data.code === 1000) {
+                if (response.data.code.toString() === "1000") {
                     await fetchProducts();
                 } else {
                     throw new Error("Failed to create product");

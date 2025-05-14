@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaUserPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import UserModal from "../../components/modals/UserModal";
+import { PERMISSIONS } from "../../constants/permissions";
 import "../../styles/AdminPages.css";
 
 // Helper function to decode JWT token
@@ -44,10 +45,10 @@ const Users = () => {
 
         if (token) {
             setPermissions({
-                canCreate: hasPermission(token, "CREATE_USER"),
-                canView: hasPermission(token, "GET_ALL_USERS"),
-                canUpdate: hasPermission(token, "UPDATE_USER"),
-                canDelete: hasPermission(token, "DELETE_USER"),
+                canCreate: hasPermission(token, PERMISSIONS.CREATE_USER),
+                canView: hasPermission(token, PERMISSIONS.GET_ALL_USERS),
+                canUpdate: hasPermission(token, PERMISSIONS.UPDATE_USER),
+                canDelete: hasPermission(token, PERMISSIONS.DELETE_USER),
             });
         }
     }, []);
@@ -76,16 +77,20 @@ const Users = () => {
                 },
             });
 
-            if (response.data.code === "1000") {
+            if (response.data.code.toString() === "1000") {
                 const mappedUsers = response.data.result.map((user) => ({
-                    id: user.userId || Math.random().toString(36).substr(2, 9), // Fallback ID if userId is empty
+                    id: user.userId,
                     name: `${user.firstName} ${user.lastName}`.trim() || user.username,
                     username: user.username,
-                    email: user.username, // Using username as email since email is not in API response
-                    role: user.roles && user.roles.length > 0 ? user.roles[0].name : "User",
-                    status: "Active", // Default status as it's not in API response
-                    joined: user.dob, // Using DOB as joined date since joined date is not in API response
-                    roles: user.roles || [],
+                    email: user.username,
+                    firstName: user.firstName || "",
+                    lastName: user.lastName || "",
+                    birthDate: user.dob || "",
+                    role: user.roles?.[0]?.name || "User",
+                    status: "Active",
+                    joined: user.dob || new Date().toISOString().split("T")[0],
+                    // Get permissions from the first role's scope
+                    permissions: user.roles?.[0]?.permissions?.map((perm) => perm.name) || [],
                 }));
                 setUsers(mappedUsers);
             } else {
@@ -107,7 +112,14 @@ const Users = () => {
 
     // Handle editing a user
     const handleEditUser = (user) => {
-        setCurrentUser(user);
+        const userToEdit = {
+            ...user,
+            firstName: user.name?.split(" ")[0] || "",
+            lastName: user.name?.split(" ").slice(1).join(" ") || "",
+            permissions: user.permissions || [], // Use permissions directly from user object
+            birthDate: user.joined, // Using joined date as birth date since we're using it that way
+        };
+        setCurrentUser(userToEdit);
         setIsModalOpen(true);
     };
 
@@ -119,43 +131,82 @@ const Users = () => {
                 .find((row) => row.startsWith("token="))
                 ?.split("=")[1];
 
+            if (!token) {
+                throw new Error("Authentication token not found");
+            }
+
             // Format the data according to API requirements
             const apiData = {
                 username: userData.username,
-                password: userData.password,
                 firstName: userData.firstName || "",
                 lastName: userData.lastName || "",
                 birthDate: userData.birthDate || "2000-01-01",
             };
 
-            const response = await axios.post(
-                `${process.env.REACT_APP_API_BASE_URL}/user/${userData.roleType}`,
-                apiData,
-                {
+            let response;
+
+            if (!currentUser) {
+                // Create new user
+                apiData.password = userData.password;
+                const roleType = "staff"; // Set default role type for new users
+                response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/user/${roleType}`, apiData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                }
-            );
+                });
+            } else {
+                // Update existing user
+                response = await axios.put(
+                    `${process.env.REACT_APP_API_BASE_URL}/users/${currentUser.id}`,
+                    {
+                        ...apiData,
+                        permissions: userData.permissions,
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+            }
 
-            if (response.data.userId) {
-                // Successfully created user
-                const newUser = {
-                    id: response.data.userId,
-                    name: `${response.data.firstName} ${response.data.lastName}`.trim() || response.data.username,
-                    username: response.data.username,
-                    role: userData.roleType,
-                    status: "Active",
-                    joined: new Date().toISOString().split("T")[0],
-                };
-                setUsers([...users, newUser]);
+            if (response.data.code.toString() === "1000") {
+                if (currentUser) {
+                    // Update user in the list
+                    setUsers(
+                        users.map((user) =>
+                            user.id === currentUser.id
+                                ? {
+                                      ...user,
+                                      name: `${apiData.firstName} ${apiData.lastName}`.trim() || apiData.username,
+                                      username: apiData.username,
+                                      email: apiData.username,
+                                      permissions: userData.permissions,
+                                  }
+                                : user
+                        )
+                    );
+                } else {
+                    // Add new user to the list
+                    const newUser = {
+                        id: response.data.userId,
+                        name: `${apiData.firstName} ${apiData.lastName}`.trim() || apiData.username,
+                        username: apiData.username,
+                        email: apiData.username,
+                        role: "Staff",
+                        status: "Active",
+                        joined: new Date().toISOString().split("T")[0],
+                    };
+                    setUsers([...users, newUser]);
+                }
                 setIsModalOpen(false);
-            } else if (response.data.code === 1001) {
-                throw new Error("User already exists");
+            } else {
+                throw new Error(response.data.message || "Failed to save user");
             }
         } catch (err) {
-            console.error("Error creating user:", err);
+            console.error("Error saving user:", err);
             throw err;
         }
     };
@@ -164,11 +215,27 @@ const Users = () => {
     const handleDeleteUser = async (userId) => {
         if (window.confirm("Are you sure you want to delete this user?")) {
             try {
-                // In a real app, this would make an API call
-                // await axios.delete(`http://localhost:5000/api/users/${userId}`);
+                const token = document.cookie
+                    .split("; ")
+                    .find((row) => row.startsWith("token="))
+                    ?.split("=")[1];
 
-                // Remove user from local state
-                setUsers(users.filter((user) => user.id !== userId));
+                if (!token) {
+                    throw new Error("Authentication token not found");
+                }
+
+                const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/users/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data.code.toString() === "1000") {
+                    // Remove user from local state
+                    setUsers(users.filter((user) => user.id !== userId));
+                } else {
+                    throw new Error("Failed to delete user");
+                }
             } catch (err) {
                 console.error("Error deleting user:", err);
                 alert("Failed to delete user. Please try again.");
@@ -235,9 +302,8 @@ const Users = () => {
                 <div className="filter-group">
                     <select className="filter-select">
                         <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="customer">Customer</option>
+                        <option value="Admin">Admin</option>
+                        <option value="Staff">Staff</option>
                     </select>
                 </div>
                 <div className="filter-group">

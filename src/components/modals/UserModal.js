@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes, FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { PERMISSIONS } from "../../constants/permissions";
 import "./UserModal.css";
 
 const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
@@ -10,7 +11,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
         firstName: "",
         lastName: "",
         birthDate: "",
-        roleType: "Staff",
+        permissions: [],
     });
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
@@ -29,7 +30,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                 firstName: user.firstName || "",
                 lastName: user.lastName || "",
                 birthDate: user.birthDate || "",
-                roleType: user.role || "Staff",
+                permissions: Array.isArray(user.permissions) ? user.permissions : [],
             });
         } else {
             setFormData({
@@ -39,12 +40,32 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                 firstName: "",
                 lastName: "",
                 birthDate: "",
-                roleType: "Staff",
+                permissions: [],
             });
         }
         setErrors({});
         setSubmitError("");
     }, [user, isOpen]);
+
+    // Group permissions by category
+    const permissionGroups = {
+        Product: Object.entries(PERMISSIONS).filter(([key]) => key.includes("GOODS")),
+        User: Object.entries(PERMISSIONS).filter(([key]) => key.includes("USER")),
+        Role: Object.entries(PERMISSIONS).filter(([key]) => key.includes("ROLE")),
+        Permission: Object.entries(PERMISSIONS).filter(([key]) => key.includes("PERMISSION") && !key.includes("ROLE")),
+        Voucher: Object.entries(PERMISSIONS).filter(([key]) => key.includes("VOUCHER")),
+    };
+
+    const handlePermissionChange = (permission) => {
+        console.log("Current permissions:", formData.permissions);
+        console.log("Toggling permission:", permission);
+        setFormData((prev) => ({
+            ...prev,
+            permissions: prev.permissions.includes(permission)
+                ? prev.permissions.filter((p) => p !== permission)
+                : [...prev.permissions, permission],
+        }));
+    };
 
     const validate = () => {
         const newErrors = {};
@@ -126,30 +147,28 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                         {errors.username && <span className="error-message">{errors.username}</span>}
                     </div>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="firstName">First Name</label>
-                            <input
-                                type="text"
-                                id="firstName"
-                                name="firstName"
-                                placeholder="Enter first name"
-                                value={formData.firstName}
-                                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                            />
-                        </div>
+                    <div className="form-group">
+                        <label htmlFor="firstName">First Name</label>
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            placeholder="Enter first name"
+                            value={formData.firstName}
+                            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                        />
+                    </div>
 
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last Name</label>
-                            <input
-                                type="text"
-                                id="lastName"
-                                name="lastName"
-                                placeholder="Enter last name"
-                                value={formData.lastName}
-                                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                            />
-                        </div>
+                    <div className="form-group">
+                        <label htmlFor="lastName">Last Name</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            placeholder="Enter last name"
+                            value={formData.lastName}
+                            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                        />
                     </div>
 
                     <div className="form-group">
@@ -199,7 +218,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                                         type={showPassword ? "text" : "password"}
                                         id="confirmPassword"
                                         name="confirmPassword"
-                                        placeholder="Confirm password"
+                                        placeholder="Confirm your password"
                                         value={formData.confirmPassword}
                                         onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                                         className={errors.confirmPassword ? "error" : ""}
@@ -212,19 +231,35 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                         </>
                     )}
 
-                    <div className="form-group">
-                        <label htmlFor="roleType">Role Type*</label>
-                        <select
-                            id="roleType"
-                            name="roleType"
-                            value={formData.roleType}
-                            onChange={(e) => setFormData({ ...formData, roleType: e.target.value })}
-                            className="form-select"
-                        >
-                            <option value="Staff">Staff</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
+                    {isEditMode && (
+                        <div className="form-group permissions-section">
+                            <label>Permissions</label>
+                            <div className="permissions-grid">
+                                {Object.entries(permissionGroups).map(([groupName, permissions]) => (
+                                    <div key={groupName} className="permission-group">
+                                        <h3>{groupName} Permissions</h3>
+                                        {permissions.map(([key, value]) => {
+                                            const isChecked =
+                                                Array.isArray(formData.permissions) &&
+                                                formData.permissions.some((p) => p === value);
+                                            return (
+                                                <div key={key} className="permission-item">
+                                                    <label className="checkbox-label">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={isChecked}
+                                                            onChange={() => handlePermissionChange(value)}
+                                                        />
+                                                        <span>{key.split("_").join(" ").toLowerCase()}</span>
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="modal-actions">
                         <button type="button" className="btn btn-secondary" onClick={onClose}>

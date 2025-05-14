@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBoxOpen, FaShoppingCart, FaUsers, FaDollarSign } from "react-icons/fa";
 import axios from "axios";
+import { PERMISSIONS } from "../../constants/permissions";
 import "../../styles/AdminPages.css";
 
 // Helper function to decode JWT token
@@ -44,8 +45,8 @@ const Dashboard = () => {
 
         if (token) {
             setPermissions({
-                canViewUsers: hasPermission(token, "GET_ALL_USERS"),
-                canViewProducts: hasPermission(token, "GET_ALL_GOODS"),
+                canViewUsers: hasPermission(token, PERMISSIONS.GET_ALL_USERS),
+                canViewProducts: hasPermission(token, PERMISSIONS.GET_ALL_GOODS),
             });
         }
     }, []);
@@ -94,7 +95,7 @@ const Dashboard = () => {
                 if (permissions.canViewUsers) {
                     try {
                         const usersResponse = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/users`, config);
-                        if (usersResponse.data.code === "1000") {
+                        if (usersResponse.data.code.toString() === "1000") {
                             const usersCount = usersResponse.data.result.length;
                             setStats((currentStats) => {
                                 const newStats = [...currentStats];
