@@ -1,8 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
-import axios from 'axios';
-import ProductModal from '../../components/modals/ProductModal';
-import '../../styles/AdminPages.css';
+import React, { useState, useEffect, useCallback } from "react";
+import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import axios from "axios";
+import ProductModal from "../../components/modals/ProductModal";
+import "../../styles/AdminPages.css";
+
+// Helper function to decode JWT token
+const decodeJwt = (token) => {
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+        return null;
+    }
+};
+
+// Helper function to check if user has required permission
+const hasPermission = (token, requiredPermission) => {
+    const decodedToken = decodeJwt(token);
+    if (!decodedToken || !decodedToken.scope) return false;
+    return decodedToken.scope.split(" ").includes(requiredPermission);
+};
 
 const Products = () => {
     // Add state for modal and products management
@@ -12,40 +28,70 @@ const Products = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 5; // Number of products to display per page
+    const [permissions, setPermissions] = useState({
+        canEdit: false,
+        canDelete: false,
+        canCreate: false,
+    });
+    const productsPerPage = 5;
+
+    // Check permissions on component mount
+    useEffect(() => {
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
+
+        if (token) {
+            setPermissions({
+                canEdit: hasPermission(token, "UPDATE_GOODS"),
+                canDelete: hasPermission(token, "DELETE_GOODS"),
+                canCreate: hasPermission(token, "CREATE_GOODS"),
+            });
+        }
+    }, []);
+
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/goods/all-goods`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (response.data.code === 1000) {
+                const mappedProducts = response.data.result.map((product) => ({
+                    id: product.goodsId,
+                    name: product.goodsName,
+                    category: product.goodsCategory,
+                    price: product.price,
+                    stock: product.quantity,
+                    description: product.goodsDescription,
+                    image: product.goodsImageUrl,
+                    version: product.goodsVersion,
+                    status: determineStatus(product.quantity),
+                }));
+                setProducts(mappedProducts);
+            } else {
+                throw new Error("Failed to fetch products");
+            }
+            setLoading(false);
+        } catch (err) {
+            console.error("Error fetching products:", err);
+            setError("Failed to load products. Please try again later.");
+            setLoading(false);
+        }
+    }, []); // No dependencies as it only uses functions from props
 
     // Fetch products from API or use mock data
     useEffect(() => {
         fetchProducts();
-    }, []);
-
-    const fetchProducts = async () => {
-        setLoading(true);
-        try {
-            // In a real scenario, this would fetch from your API
-            // For now, we'll use mock data
-            // const response = await axios.get('http://localhost:5000/api/products');
-            // setProducts(response.data);
-
-            // Mock data for demonstration
-            const mockProducts = [
-                { id: 1, name: 'Smartphone X', category: 'Phones', price: '$799.99', stock: 24, status: 'In Stock', description: 'Latest smartphone with advanced features.' },
-                { id: 2, name: 'Laptop Pro', category: 'Laptops', price: '$1299.99', stock: 8, status: 'In Stock', description: 'Powerful laptop for professionals.' },
-                { id: 3, name: 'Wireless Earbuds', category: 'Audio', price: '$129.99', stock: 42, status: 'In Stock', description: 'Premium sound quality with noise cancellation.' },
-                { id: 4, name: 'Smart Watch', category: 'Wearables', price: '$249.99', stock: 0, status: 'Out of Stock', description: 'Track your fitness and stay connected.' },
-                { id: 5, name: 'Bluetooth Speaker', category: 'Audio', price: '$89.99', stock: 15, status: 'In Stock', description: 'Portable speaker with excellent bass.' },
-                { id: 6, name: 'Gaming Console', category: 'Gaming', price: '$499.99', stock: 3, status: 'Low Stock', description: 'Next-gen gaming with realistic graphics.' },
-                { id: 7, name: 'Digital Camera', category: 'Cameras', price: '$649.99', stock: 7, status: 'In Stock', description: 'Capture memories in high resolution.' },
-                { id: 8, name: 'Tablet Pro', category: 'Tablets', price: '$399.99', stock: 18, status: 'In Stock', description: 'Portable and powerful for productivity on the go.' }
-            ];
-            setProducts(mockProducts);
-            setLoading(false);
-        } catch (err) {
-            console.error('Error fetching products:', err);
-            setError('Failed to load products. Please try again later.');
-            setLoading(false);
-        }
-    };
+    }, [fetchProducts]);
 
     // Handle adding a new product
     const handleAddProduct = () => {
@@ -60,35 +106,85 @@ const Products = () => {
     };
 
     // Handle product modal success
-    const handleProductSuccess = (productData) => {
-        if (currentProduct) {
-            // Update existing product in the list
-            setProducts(products.map(product =>
-                product.id === productData.id ? { ...product, ...productData } : product
-            ));
-        } else {
-            // Add new product to the list
-            // In a real app, the API would return the new product with an ID
-            const newProduct = {
-                ...productData,
-                id: Math.max(...products.map(p => p.id)) + 1
+    const handleProductSuccess = async (productData) => {
+        try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
             };
-            setProducts([...products, newProduct]);
+
+            if (currentProduct) {
+                // Update existing product - map to API format
+                const apiData = {
+                    goodsId: currentProduct.id,
+                    goodsName: productData.name,
+                    goodsDescription: productData.description,
+                    goodsCategory: productData.category,
+                    price: productData.price,
+                    quantity: productData.stock,
+                    goodsImageUrl: productData.image,
+                    goodsVersion: currentProduct.version || "1.0",
+                };
+
+                const response = await axios.put(
+                    `${process.env.REACT_APP_API_BASE_URL}/goods/${currentProduct.id}`,
+                    apiData,
+                    config
+                );
+                if (response.data.code === 1000) {
+                    await fetchProducts();
+                } else {
+                    throw new Error("Failed to update product");
+                }
+            } else {
+                // Add new product - map to API format
+                const apiData = {
+                    goodsName: productData.name,
+                    goodsDescription: productData.description,
+                    goodsCategory: productData.category,
+                    price: productData.price,
+                    quantity: productData.stock,
+                    goodsImageUrl: productData.image,
+                    goodsVersion: "1.0",
+                };
+
+                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/goods`, apiData, config);
+                if (response.data.code === 1000) {
+                    await fetchProducts();
+                } else {
+                    throw new Error("Failed to create product");
+                }
+            }
+        } catch (err) {
+            console.error("Error saving product:", err);
+            alert("Failed to save product. Please try again.");
         }
     };
 
     // Handle delete product
     const handleDeleteProduct = async (productId) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
+        if (window.confirm("Are you sure you want to delete this product?")) {
             try {
-                // In a real app, this would make an API call
-                // await axios.delete(`http://localhost:5000/api/products/${productId}`);
-
-                // Remove product from local state
-                setProducts(products.filter(product => product.id !== productId));
+                const token = document.cookie
+                    .split("; ")
+                    .find((row) => row.startsWith("token="))
+                    ?.split("=")[1];
+                await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/goods/${productId}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setProducts(products.filter((product) => product.id !== productId));
             } catch (err) {
-                console.error('Error deleting product:', err);
-                alert('Failed to delete product. Please try again.');
+                console.error("Error deleting product:", err);
+                alert("Failed to delete product. Please try again.");
             }
         }
     };
@@ -105,11 +201,11 @@ const Products = () => {
     };
 
     const handlePrevious = () => {
-        setCurrentPage(prev => Math.max(prev - 1, 1));
+        setCurrentPage((prev) => Math.max(prev - 1, 1));
     };
 
     const handleNext = () => {
-        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+        setCurrentPage((prev) => Math.min(prev + 1, totalPages));
     };
 
     // Generate page numbers array
@@ -117,6 +213,13 @@ const Products = () => {
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
     }
+
+    // Helper function to determine status
+    const determineStatus = (quantity) => {
+        if (quantity <= 0) return "Out of Stock";
+        if (quantity <= 5) return "Low Stock";
+        return "In Stock";
+    };
 
     if (loading) {
         return <div className="admin-page products">Loading products...</div>;
@@ -138,9 +241,11 @@ const Products = () => {
 
             <div className="page-header">
                 <h1>Products</h1>
-                <button className="btn btn-primary" onClick={handleAddProduct}>
-                    <FaPlus /> Add New Product
-                </button>
+                {permissions.canCreate && (
+                    <button className="btn btn-primary" onClick={handleAddProduct}>
+                        <FaPlus /> Add New Product
+                    </button>
+                )}
             </div>
 
             <div className="filter-row">
@@ -183,7 +288,7 @@ const Products = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentProducts.map(product => (
+                        {currentProducts.map((product) => (
                             <tr key={product.id}>
                                 <td>{product.id}</td>
                                 <td>{product.name}</td>
@@ -191,23 +296,24 @@ const Products = () => {
                                 <td>{product.price}</td>
                                 <td>{product.stock}</td>
                                 <td>
-                                    <span className={`status-badge ${product.status.toLowerCase().replace(' ', '-')}`}>
+                                    <span className={`status-badge ${product.status.toLowerCase().replace(" ", "-")}`}>
                                         {product.status}
                                     </span>
                                 </td>
                                 <td className="actions">
-                                    <button
-                                        className="btn-icon edit"
-                                        onClick={() => handleEditProduct(product)}
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        className="btn-icon delete"
-                                        onClick={() => handleDeleteProduct(product.id)}
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                    {permissions.canEdit && (
+                                        <button className="btn-icon edit" onClick={() => handleEditProduct(product)}>
+                                            <FaEdit />
+                                        </button>
+                                    )}
+                                    {permissions.canDelete && (
+                                        <button
+                                            className="btn-icon delete"
+                                            onClick={() => handleDeleteProduct(product.id)}
+                                        >
+                                            <FaTrash />
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
@@ -216,29 +322,21 @@ const Products = () => {
             </div>
 
             <div className="pagination">
-                <button
-                    className="btn-page"
-                    onClick={handlePrevious}
-                    disabled={currentPage === 1}
-                >
+                <button className="btn-page" onClick={handlePrevious} disabled={currentPage === 1}>
                     &laquo;
                 </button>
 
-                {pageNumbers.map(number => (
+                {pageNumbers.map((number) => (
                     <button
                         key={number}
-                        className={`btn-page ${currentPage === number ? 'active' : ''}`}
+                        className={`btn-page ${currentPage === number ? "active" : ""}`}
                         onClick={() => handlePageChange(number)}
                     >
                         {number}
                     </button>
                 ))}
 
-                <button
-                    className="btn-page"
-                    onClick={handleNext}
-                    disabled={currentPage === totalPages}
-                >
+                <button className="btn-page" onClick={handleNext} disabled={currentPage === totalPages}>
                     &raquo;
                 </button>
             </div>

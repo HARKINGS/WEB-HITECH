@@ -1,61 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { FaTimes, FaBox, FaTag, FaLayerGroup, FaDollarSign, FaWarehouse, FaImage } from 'react-icons/fa';
-import axios from 'axios';
-import './ProductModal.css';
+import React, { useState, useEffect } from "react";
+import { FaTimes, FaBox, FaLayerGroup, FaDollarSign, FaWarehouse, FaImage } from "react-icons/fa";
+import "./ProductModal.css";
 
 const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     const [formData, setFormData] = useState({
-        name: '',
-        description: '',
-        category: '',
-        price: '',
-        stock: '',
-        imageUrl: '',
-        status: 'In Stock'
+        name: "",
+        description: "",
+        category: "",
+        price: "",
+        stock: "",
+        imageUrl: "",
+        status: "In Stock",
     });
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitError, setSubmitError] = useState('');
+    const [submitError, setSubmitError] = useState("");
 
     // If product is provided, this is an edit operation
     const isEditMode = !!product;
 
     useEffect(() => {
         if (product) {
-            // Remove currency symbol for price
-            const priceValue = product.price ? product.price.replace(/[^0-9.]/g, '') : '';
-
             setFormData({
-                name: product.name || '',
-                description: product.description || '',
-                category: product.category || '',
-                price: priceValue,
-                stock: product.stock?.toString() || '',
-                imageUrl: product.imageUrl || '',
-                status: product.status || 'In Stock'
+                name: product.name || "",
+                description: product.description || "",
+                category: product.category || "",
+                price: product.price?.toString() || "",
+                stock: product.stock?.toString() || "",
+                imageUrl: product.image || "", // Updated to match API field name
+                status: determineStatus(product.stock) || "In Stock",
             });
         } else {
-            // Reset form for new product
             setFormData({
-                name: '',
-                description: '',
-                category: '',
-                price: '',
-                stock: '',
-                imageUrl: '',
-                status: 'In Stock'
+                name: "",
+                description: "",
+                category: "",
+                price: "",
+                stock: "",
+                imageUrl: "",
+                status: "In Stock",
             });
         }
-        // Clear errors when modal opens/closes
         setErrors({});
-        setSubmitError('');
+        setSubmitError("");
     }, [product, isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
@@ -64,26 +58,30 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
 
         // Name validation
         if (!formData.name.trim()) {
-            newErrors.name = 'Product name is required';
+            newErrors.name = "Product name is required";
         }
 
         // Category validation
         if (!formData.category.trim()) {
-            newErrors.category = 'Category is required';
+            newErrors.category = "Category is required";
         }
 
         // Price validation
         if (!formData.price) {
-            newErrors.price = 'Price is required';
+            newErrors.price = "Price is required";
         } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
-            newErrors.price = 'Price must be a positive number';
+            newErrors.price = "Price must be a positive number";
         }
 
         // Stock validation
         if (!formData.stock) {
-            newErrors.stock = 'Stock quantity is required';
-        } else if (isNaN(Number(formData.stock)) || !Number.isInteger(Number(formData.stock)) || Number(formData.stock) < 0) {
-            newErrors.stock = 'Stock must be a non-negative integer';
+            newErrors.stock = "Stock quantity is required";
+        } else if (
+            isNaN(Number(formData.stock)) ||
+            !Number.isInteger(Number(formData.stock)) ||
+            Number(formData.stock) < 0
+        ) {
+            newErrors.stock = "Stock must be a non-negative integer";
         }
 
         setErrors(newErrors);
@@ -92,47 +90,27 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitError('');
+        setSubmitError("");
 
         if (validate()) {
             setIsSubmitting(true);
 
             try {
-                // Format the price with dollar sign for display
-                const formattedPrice = `$${Number(formData.price).toFixed(2)}`;
-
-                // Create submission data
+                // Format the data for API
                 const submissionData = {
                     name: formData.name,
                     description: formData.description,
                     category: formData.category,
-                    price: formattedPrice,
+                    price: Number(formData.price),
                     stock: Number(formData.stock),
-                    imageUrl: formData.imageUrl,
-                    status: determineStatus(Number(formData.stock))
+                    image: formData.imageUrl, // Updated to match API field name
                 };
 
-                let response;
-                const apiUrl = 'http://localhost:5000/api/products';
-
-                if (isEditMode) {
-                    // Update existing product
-                    response = await axios.put(`${apiUrl}/${product.id}`, submissionData);
-                } else {
-                    // Create new product
-                    response = await axios.post(apiUrl, submissionData);
-                }
-
-                if (response.status === 200 || response.status === 201) {
-                    onSuccess(response.data);
-                    onClose();
-                }
+                onSuccess(submissionData);
+                onClose();
             } catch (error) {
-                console.error('API error:', error);
-                setSubmitError(
-                    error.response?.data?.message ||
-                    'Failed to save product. Please try again.'
-                );
+                console.error("Form submission error:", error);
+                setSubmitError(error.response?.data?.message || "Failed to save product. Please try again.");
             } finally {
                 setIsSubmitting(false);
             }
@@ -141,9 +119,9 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
 
     // Helper function to determine product status based on stock quantity
     const determineStatus = (stock) => {
-        if (stock <= 0) return 'Out of Stock';
-        if (stock <= 5) return 'Low Stock';
-        return 'In Stock';
+        if (stock <= 0) return "Out of Stock";
+        if (stock <= 5) return "Low Stock";
+        return "In Stock";
     };
 
     if (!isOpen) return null;
@@ -152,7 +130,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         <div className="modal-overlay">
             <div className="modal-container">
                 <div className="modal-header">
-                    <h2>{isEditMode ? 'Edit Product' : 'Add New Product'}</h2>
+                    <h2>{isEditMode ? "Edit Product" : "Add New Product"}</h2>
                     <button className="modal-close-btn" onClick={onClose}>
                         <FaTimes />
                     </button>
@@ -172,7 +150,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 placeholder="Enter product name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className={errors.name ? 'error' : ''}
+                                className={errors.name ? "error" : ""}
                             />
                         </div>
                         {errors.name && <span className="error-message">{errors.name}</span>}
@@ -200,7 +178,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className={errors.category ? 'error' : ''}
+                                className={errors.category ? "error" : ""}
                             >
                                 <option value="">Select a category</option>
                                 <option value="Phones">Phones</option>
@@ -227,7 +205,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     placeholder="0.00"
                                     value={formData.price}
                                     onChange={handleChange}
-                                    className={errors.price ? 'error' : ''}
+                                    className={errors.price ? "error" : ""}
                                 />
                             </div>
                             {errors.price && <span className="error-message">{errors.price}</span>}
@@ -244,7 +222,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     placeholder="0"
                                     value={formData.stock}
                                     onChange={handleChange}
-                                    className={errors.stock ? 'error' : ''}
+                                    className={errors.stock ? "error" : ""}
                                 />
                             </div>
                             {errors.stock && <span className="error-message">{errors.stock}</span>}
@@ -271,7 +249,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                             Cancel
                         </button>
                         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                            {isSubmitting ? 'Saving...' : isEditMode ? 'Update Product' : 'Create Product'}
+                            {isSubmitting ? "Saving..." : isEditMode ? "Update Product" : "Create Product"}
                         </button>
                     </div>
                 </form>
