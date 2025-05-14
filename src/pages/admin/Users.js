@@ -28,6 +28,8 @@ const Users = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedRole, setSelectedRole] = useState("");
     const [permissions, setPermissions] = useState({
         canCreate: false,
         canView: false,
@@ -148,8 +150,8 @@ const Users = () => {
             if (!currentUser) {
                 // Create new user
                 apiData.password = userData.password;
-                const roleType = "staff"; // Set default role type for new users
-                response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/user/${roleType}`, apiData, {
+                const roleType = "STAFF"; // Set default role type for new users
+                response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/${roleType}`, apiData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
@@ -243,11 +245,29 @@ const Users = () => {
         }
     };
 
-    // Calculate pagination values
+    // Filter users based on search term and selected role
+    const filteredUsers = users.filter((user) => {
+        const matchesSearch =
+            searchTerm.trim() === "" ||
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesRole = selectedRole === "" || user.role === selectedRole;
+
+        return matchesSearch && matchesRole;
+    });
+
+    // Update pagination calculation to use filtered users
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
-    const totalPages = Math.ceil(users.length / usersPerPage);
+    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+    const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+    // Reset to first page when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm, selectedRole]);
 
     // Pagination handlers
     const handlePageChange = (pageNumber) => {
@@ -297,20 +317,23 @@ const Users = () => {
 
             <div className="filter-row">
                 <div className="filter-group">
-                    <input type="text" placeholder="Search users..." className="filter-input" />
+                    <input
+                        type="text"
+                        placeholder="Search users..."
+                        className="filter-input"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
                 <div className="filter-group">
-                    <select className="filter-select">
+                    <select
+                        className="filter-select"
+                        value={selectedRole}
+                        onChange={(e) => setSelectedRole(e.target.value)}
+                    >
                         <option value="">All Roles</option>
-                        <option value="Admin">Admin</option>
-                        <option value="Staff">Staff</option>
-                    </select>
-                </div>
-                <div className="filter-group">
-                    <select className="filter-select">
-                        <option value="">All Status</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
+                        <option value="ADMIN">Admin</option>
+                        <option value="STAFF">Staff</option>
                     </select>
                 </div>
             </div>
@@ -323,7 +346,6 @@ const Users = () => {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Status</th>
                             <th>Joined Date</th>
                             <th>Actions</th>
                         </tr>
@@ -335,9 +357,6 @@ const Users = () => {
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.role}</td>
-                                <td>
-                                    <span className={`status-badge ${user.status.toLowerCase()}`}>{user.status}</span>
-                                </td>
                                 <td>{user.joined}</td>
                                 <td className="actions">
                                     {permissions.canUpdate && (
