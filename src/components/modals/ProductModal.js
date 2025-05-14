@@ -181,13 +181,13 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 className={errors.category ? "error" : ""}
                             >
                                 <option value="">Select a category</option>
-                                <option value="Phones">Phones</option>
-                                <option value="Laptops">Laptops</option>
-                                <option value="Tablets">Tablets</option>
+                                <option value="Phones">Phone</option>
+                                <option value="Laptops">Laptop</option>
+                                <option value="Tablets">Tablet</option>
                                 <option value="Audio">Audio</option>
-                                <option value="Wearables">Wearables</option>
+                                <option value="Wearables">Wearable</option>
                                 <option value="Gaming">Gaming</option>
-                                <option value="Cameras">Cameras</option>
+                                <option value="Cameras">Camera</option>
                             </select>
                         </div>
                         {errors.category && <span className="error-message">{errors.category}</span>}
