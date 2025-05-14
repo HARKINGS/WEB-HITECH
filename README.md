@@ -47,3 +47,4 @@
 ## 01/04/2025
 - Đã làm: Tạo Header và logic đổi Theme Light/Dark
 - Chưa làm: Tạo Category (danh mục sản phẩm) và Footer
+- 
