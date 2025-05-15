@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
@@ -28,6 +29,7 @@ public class GoodsService {
     GoodsRepository goodsRepository;
     GoodsMapper goodsMapper;
 
+    @PreAuthorize("hasAuthority('CREATE_GOODS')")
     public GoodsResponse createGoods(CreateGoodsRequest request) {
         if (goodsRepository.existsByGoodsName(request.getGoodsName()))
             throw new RuntimeException("Goods already exists");
@@ -35,11 +37,13 @@ public class GoodsService {
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
 
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_ID')")
     public GoodsResponse getGoodsById(String goodsId) {
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new RuntimeException("Goods not found!"));
         return goodsMapper.toGoodsResponse(goods);
     }
 
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_NAME')")
     public List<GoodsResponse> getGoodsByName(String goodsName) {
         List<Goods> goodsList = goodsRepository.findByGoodsNameContainingIgnoreCase(goodsName);
 
@@ -50,6 +54,7 @@ public class GoodsService {
         return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_CATEGORY')")
     public List<GoodsResponse> getGoodsByCategory(String goodsCategory) {
         List<Goods> goodsList = goodsRepository.findByGoodsCategory(goodsCategory);
 
@@ -60,18 +65,21 @@ public class GoodsService {
         return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('GET_ALL_GOODS')")
     public List<GoodsResponse> getGoods() {
         return goodsRepository.findAll().stream()
                 .map(goodsMapper::toGoodsResponse)
                 .toList();
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_GOODS')")
     public GoodsResponse updateGoods(String goodsId, UpdateGoodsRequest request) {
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new RuntimeException("Goods not found!"));
         goodsMapper.updateGoods(goods, request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
 
+    @PreAuthorize("hasAuthority('DELETE_GOODS')")
     public void deleteGoods(String goodsId) {
         goodsRepository.deleteById(goodsId);
     }

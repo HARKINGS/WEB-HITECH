@@ -18,11 +18,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import static java.lang.invoke.VarHandle.AccessMode.GET;
+import static javax.swing.text.html.FormSubmitEvent.MethodType.POST;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] PUBLIC_ENDPOINTS = {"/users", "/auth/**"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/reviews", "/reviews/**"};
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -32,10 +35,14 @@ public class SecurityConfig {
         httpSecurity.cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
-                // hasAuthority("ROLE_ADMIN")
-                .anyRequest()
-                .authenticated());
+                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
+                        // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
+                        // hasAuthority("ROLE_ADMIN")
+                        .anyRequest()
+                        .authenticated())
+                .anonymous(anonymous -> anonymous
+                        .authorities("GET_USER"))
+                ;
 
         //        Với kiểu config như này thì sẽ thoả mãn user chỉ cần vào web ko cần đăng nhập
         //        http

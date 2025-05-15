@@ -37,7 +37,6 @@ public class UserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('CREATE_USER')")
     public UserResponse createUser(CreateUserRequest request, String roleType) {
         if (userRepository.existsByUsername(request.getUsername())) throw new AppException(ErrorCode.USER_EXISTED);
@@ -47,11 +46,11 @@ public class UserService {
 
         HashSet<Role> roles = new HashSet<>();
 
-        System.out.println(roleType);
-
         if (Objects.equals(roleType, "STAFF"))
             roleRepository.findById(PredefinedRole.STAFF).ifPresent(roles::add);
-        else roleRepository.findById(PredefinedRole.USER).ifPresent(roles::add);
+        else if (Objects.equals(roleType, "USER"))
+            roleRepository.findById(PredefinedRole.USER).ifPresent(roles::add);
+        else throw new AppException(ErrorCode.WRONG_ROLE);
 
         user.setRoles(roles);
 
@@ -83,20 +82,17 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('DELETE_USER')")
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('GET_ALL_USERS')")
     public List<UserResponse> getUsers() {
         log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('GET_USER')")
     public UserResponse getUser(String id) {
         log.info("In method get user by Id");

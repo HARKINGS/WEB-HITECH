@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public class OrderService {
     VoucherRepository voucherRepo;
     UserRepository userRepository;
 
+    @PreAuthorize("hasAuthority('PLACE_ORDER')")
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse placeOrder(CreateOrderRequest request) throws NotFoundException {
         // Lấy user đang đăng nhập (DTO)
@@ -104,6 +106,7 @@ public class OrderService {
         return orderMapper.toOrderResponse(savedOrder);
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_ORDERITEM')")
     public OrderResponse updateOrderItemStatus(String orderItemId, String status) {
         // Vì OrderItem không có trường status, chúng ta sẽ cập nhật trạng thái của đơn hàng chứa item này
         OrderItem orderItem = orderItemRepo.findById(orderItemId).orElseThrow(() -> new RuntimeException());
@@ -121,6 +124,7 @@ public class OrderService {
         }
     }
 
+    @PreAuthorize("hasAuthority('GET_ORDER_BY_ID')")
     public OrderResponse getOrderById(String orderId) throws NotFoundException {
         log.info("Getting order by ID: {}", orderId);
 
@@ -132,12 +136,14 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
+    @PreAuthorize("hasAuthority('GET_CURRENT_USERORDERS')")
     public List<OrderResponse> getCurrentUserOrders() {
         UserResponse user = userService.getMyInfo();
         List<Order> orders = orderRepo.findByUser_UserId(user.getUserId());
         return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_ORDER_STATUS')")
     @Transactional
     public OrderResponse updateOrderStatus(String orderId, String status) throws NotFoundException {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundException());
@@ -152,6 +158,7 @@ public class OrderService {
         }
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_PAYMENT_STATUS')")
     @Transactional
     public OrderResponse updatePaymentStatus(String orderId, String status) throws Exception {
         try {
@@ -192,11 +199,13 @@ public class OrderService {
         }
     }
 
+    @PreAuthorize("hasAuthority('GET_ALL_ORDERS')")
     public List<OrderResponse> getAllOrders() {
         List<Order> orders = orderRepo.findAll();
         return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('GET_ORDERS_BY_STATUS')")
     public List<OrderResponse> getOrdersByStatus(String status) {
         try {
             log.info("Finding orders with status: {}", status);
@@ -213,11 +222,13 @@ public class OrderService {
         }
     }
 
+    @PreAuthorize("hasAuthority('GET_ORDERS_BY_USERID')")
     public List<OrderResponse> getOrdersByUserId(String userId) {
         List<Order> orders = orderRepo.findByUser_UserId(userId);
         return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAuthority('DELETE_ORDER')")
     public List<OrderResponse> deleteOrder(String orderId) {
         orderRepo.deleteById(orderId);
         return getCurrentUserOrders();

@@ -3,6 +3,7 @@ package com.harkins.startYourEngine.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,7 @@ public class GoodsReviewService {
     UserService userService;
     GoodsReviewMapper goodsReviewMapper;
 
+    @PreAuthorize("hasAuthority('CREATE_REVIEWS')")
     @Transactional
     public GoodsReviewResponse createReview(String goodsId, CreateGoodsReviewRequest request) {
         // Validate goods exists
@@ -74,6 +76,7 @@ public class GoodsReviewService {
         return goodsReviewMapper.toReviewResponse(savedGoodsReview);
     }
 
+    @PreAuthorize("hasAuthority('GET_REVIEWS_BY_ID')")
     public GoodsReviewResponse getReviewById(String reviewId) {
         log.info("Getting review with id: {}", reviewId);
         GoodsReview goodsReview = goodsReviewRepository.findById(reviewId).orElseThrow(() -> {
@@ -83,11 +86,13 @@ public class GoodsReviewService {
         return goodsReviewMapper.toReviewResponse(goodsReview);
     }
 
+    @PreAuthorize("hasAuthority('GET_ALL_REVIEWS')")
     public List<GoodsReviewResponse> getAllReviews() {
         List<GoodsReview> goodsReviews = goodsReviewRepository.findAll();
         return goodsReviews.stream().map(goodsReviewMapper::toReviewResponse).toList();
     }
 
+    @PreAuthorize("hasAuthority('GET_REVIEWS_BY_GOODS')")
     public List<GoodsReviewResponse> getReviewByGoods(String goodsId) {
         if (!goodsRepository.existsById(goodsId)) {
             log.error("Goods not found with id: {}", goodsId);
@@ -101,6 +106,7 @@ public class GoodsReviewService {
         return goodsReviews.stream().map(goodsReviewMapper::toReviewResponse).toList();
     }
 
+    @PreAuthorize("hasAuthority('UPDATE_REVIEWS')")
     @Transactional
     public GoodsReviewResponse updateGoodsReview(String reviewId, UpdateGoodsReviewRequest request) {
         // Tìm review theo ID
@@ -133,6 +139,7 @@ public class GoodsReviewService {
         return goodsReviewMapper.toReviewResponse(updatedGoodsReview);
     }
 
+    @PreAuthorize("hasAuthority('DELETE_REVIEWS')")
     public void deleteGoodsReview(String reviewId) {
         GoodsReview goodsReview = goodsReviewRepository
                 .findById(reviewId)

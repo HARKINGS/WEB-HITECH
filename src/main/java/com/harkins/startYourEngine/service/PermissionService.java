@@ -26,7 +26,8 @@ public class PermissionService {
     PermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('CREATE_PERMISSION')")
     public PermissionResponse createPermission(PermissionRequest request) {
         if (permissionRepository.existsByName(request.getName())) throw new AppException(ErrorCode.PERMISSION_EXISTED);
         Permission permission = permissionMapper.toPermission(request);
@@ -34,14 +35,14 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permission);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('GET_ALL_PERMISSIONS')")
     public List<PermissionResponse> getAllPermissions() {
         return permissionRepository.findAll().stream()
                 .map(permissionMapper::toPermissionResponse)
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('DELETE_PERMISSION')")
     public void deletePermission(String permissionName) {
         permissionRepository.deleteById(permissionName);
     }

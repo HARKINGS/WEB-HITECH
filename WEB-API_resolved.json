@@ -997,7 +997,9 @@
     },
     "/goods/{goodsId}/reviews": {
       "get": {
-        "tags": ["Goods"],
+        "tags": [
+          "Goods"
+        ],
         "description": "Get all reviews for a specific product",
         "operationId": "getGoodsReviews",
         "parameters": [
@@ -1040,7 +1042,9 @@
         ]
       },
       "post": {
-        "tags": ["Goods"],
+        "tags": [
+          "Goods"
+        ],
         "description": "Create a new review for a product",
         "operationId": "createGoodsReview",
         "parameters": [
@@ -1114,7 +1118,9 @@
     },
     "/goods/{goodsId}/reviews/{reviewId}": {
       "get": {
-        "tags": ["Goods"],
+        "tags": [
+          "Goods"
+        ],
         "description": "Get review by ID",
         "operationId": "getGoodsReview",
         "parameters": [
@@ -1166,7 +1172,9 @@
         ]
       },
       "put": {
-        "tags": ["Goods"],
+        "tags": [
+          "Goods"
+        ],
         "description": "Update a review",
         "operationId": "updateGoodsReview",
         "parameters": [
@@ -1257,7 +1265,9 @@
         ]
       },
       "delete": {
-        "tags": ["Goods"],
+        "tags": [
+          "Goods"
+        ],
         "description": "Delete a review",
         "operationId": "deleteGoodsReview",
         "parameters": [

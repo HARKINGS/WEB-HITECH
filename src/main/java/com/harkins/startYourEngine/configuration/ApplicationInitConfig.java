@@ -2,6 +2,7 @@ package com.harkins.startYourEngine.configuration;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
@@ -51,34 +52,70 @@ public class ApplicationInitConfig {
     }
 
     private void initPermission() {
-        addPermission("ASSIGN_PERMISSION_TO_ROLE", "Assign a permission to a role");
+//        AddressService
+        addPermission("SAVE_ADDRESS", "Save and Update Address");
 
-        addPermission("CREATE_PERMISSION", "Create a permission");
-        addPermission("CREATE_ROLE", "Create a role");
-        addPermission("CREATE_USER", "Create an account");
+//        AuthenticationService
+        addPermission("LOGIN", "Login account");
+        addPermission("LOOUT", "Loout account");
+        addPermission("CHECK_TOKEN", "Check token Valid");
+        addPermission("REFRESH_TOKEN", "Refresh token Valid");
+
+//        GoodsReviewService
+        addPermission("CREATE_REVIEWS", "Create goods Review");
+        addPermission("GET_REVIEWS_BY_ID", "Get reviews by id");
+        addPermission("GET_ALL_REVIEWS", "Get all goods reviews");
+        addPermission("GET_REVIEWS_BY_GOODS",  "Get reviews by goods");
+        addPermission("UPDATE_REVIEWS", "Update goods review");
+        addPermission("DELETE_REVIEWS", "Delete goods review");
+
+//        GoodsService
         addPermission("CREATE_GOODS", "Create a goods");
-        addPermission("CREATE_VOUCHER", "Create a voucher");
-
-        addPermission("DELETE_PERMISSION", "Delete a permission");
-        addPermission("DELETE_ROLE", "Delete a role");
-        addPermission("DELETE_USER", "Delete an account");
-        addPermission("DELETE_GOODS", "Delete a goods");
-        addPermission("DELETE_VOUCHER", "Delete a voucher");
-
-        addPermission("GET_ALL_PERMISSIONS", "Get all permissions");
-        addPermission("GET_ALL_ROLES", "Get all roles");
-        addPermission("GET_ALL_USERS", "Get info of all accounts");
         addPermission("GET_ALL_GOODS", "Get info of all goods");
-        //        addPermission("GET_ALL_VOUCHER", "Get info of all vouchers");
+        addPermission("UPDATE_GOODS", "Update goods information");
+        addPermission("DELETE_GOODS", "Delete a goods");
+        addPermission("GET_GOODS_BY_ID", "Get info of a goods by goodsid");
+        addPermission("GET_GOODS_BY_NAME", "Get info of a goods by name");
+        addPermission("GET_GOODS_BY_CATEGORY", "Get info of a goods by category");
 
+//        OrderService
+        addPermission("PLACE_ORDER", "Place order");
+        addPermission("DELETE_ORDER", "Delete order");
+        addPermission("UPDATE_ORDERITEM",  "Update order item");
+        addPermission("GET_ORDER_BY_ID", "Get order by id");
+        addPermission("GET_CURRENT_USERORDERS", "Get current user orders");
+        addPermission("UPDATE_ORDER_STATUS", "Update order status");
+        addPermission("UPDATE_PAYMENT_STATUS",  "Update payment status");
+        addPermission("GET_ALL_ORDERS", "Get all orders");
+        addPermission("GET_ORDERS_BY_STATUS", "Get orders by status");
+        addPermission("GET_ORDERS_BY_USERID", "Get orders by userid");
+
+//        PermissionService
+        addPermission("CREATE_PERMISSION", "Create a permission");
+        addPermission("GET_ALL_PERMISSIONS", "Get all permissions");
+        addPermission("DELETE_PERMISSION", "Delete a permission");
+
+//        RoleService
+        addPermission("CREATE_ROLE", "Create a role");
+        addPermission("DELETE_ROLE", "Delete a role");
+        addPermission("GET_ALL_ROLES", "Get all roles");
+
+//        UserService
+        addPermission("CREATE_USER", "Create an account");
+        addPermission("DELETE_USER", "Delete an account");
+        addPermission("GET_ALL_USERS", "Get info of all accounts");
         addPermission("GET_USER", "Get info of an account");
-        addPermission("GET_GOODS", "Get info of a goods");
+        addPermission("UPDATE_USER", "Update account information");
+
+//        VoucherService
+        addPermission("CREATE_VOUCHER", "Create a voucher");
+        addPermission("DELETE_VOUCHER", "Delete a voucher");
         addPermission("GET_VOUCHER", "Get info of a voucher");
 
-        addPermission("UPDATE_PERMISSION", "Update permission information");
-        addPermission("UPDATE_ROLE", "Update role information");
-        addPermission("UPDATE_USER", "Update account information");
-        addPermission("UPDATE_GOODS", "Update goods information");
+//        ZaloPayService
+        addPermission("CREATE_ORDER", "Create an order");
+        addPermission("GET_ORDER_STATUS", "Get order status");
+        addPermission("UPDATE_ORDER_TRANSACTIONID", "Update order transaction id");
     }
 
     @Bean
@@ -92,42 +129,28 @@ public class ApplicationInitConfig {
             if (userRepository.findByUsername(ADMIN_USER_NAME).isEmpty()) { // chưa có tk admin
                 initPermission();
 
-                Set<String> userPermissions = Set.of("GET_USER", "UPDATE_USER");
+                Set<String> userPermissions = Set.of(
+                        "GET_REVIEWS_BY_GOODS", "GET_ALL_GOODS",
+                        "GET_GOODS_BY_NAME", "GET_GOODS_BY_CATEGORY",
+                        "PLACE_ORDER"
+                );
+
                 Set<String> staffPermissions = Set.of(
-                        "CREATE_USER",
-                        "GET_USER",
-                        "UPDATE_USER",
-                        "DELETE_USER",
-                        "CREATE_GOODS",
-                        "GET_GOODS",
-                        "UPDATE_GOODS",
-                        "DELETE_GOODS",
-                        "CREATE_VOUCHER",
-                        "GET_VOUCHER",
-                        "DELETE_VOUCHER");
-                Set<String> adminPermissions = Set.of(
-                        "GET_USER",
-                        "GET_GOODS",
-                        "GET_VOUCHER",
-                        "GET_ALL_ROLES",
-                        "GET_ALL_PERMISSIONS",
-                        "GET_ALL_USERS",
-                        "GET_ALL_GOODS",
-                        "UPDATE_ROLE",
-                        "UPDATE_PERMISSION",
-                        "UPDATE_USER",
-                        "UPDATE_GOODS",
-                        "DELETE_ROLE",
-                        "DELETE_PERMISSION",
-                        "DELETE_USER",
-                        "DELETE_GOODS",
-                        "DELETE_VOUCHER",
-                        "CREATE_ROLE",
-                        "CREATE_PERMISSION",
-                        "CREATE_USER",
-                        "CREATE_GOODS",
-                        "CREATE_VOUCHER",
-                        "ASSIGN_PERMISSION_TO_ROLE");
+                        "CREATE_REVIEWS", "GET_REVIEWS_BY_ID",
+                        "GET_ALL_REVIEWS", "GET_REVIEWS_BY_GOODS", "DELETE_REVIEWS",
+                        "CREATE_GOODS", "GET_ALL_GOODS", "GET_GOODS_BY_ID",
+                        "GET_GOODS_BY_NAME", "GET_GOODS_BY_CATEGORY", "UPDATE_ORDERITEM",
+                        "GET_ALL_ORDERS", "GET_ORDERS_BY_STATUS", "GET_ORDERS_BY_USERID",
+                        "CREATE_VOUCHER", "DELETE_VOUCHER", "GET_VOUCHER"
+                );
+
+                Set<String> listPermissions = permissionRepository
+                        .findAll()
+                        .stream()
+                        .map(Permission::getName)
+                        .collect(Collectors.toSet());
+
+                Set<String> adminPermissions = listPermissions;
 
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER)

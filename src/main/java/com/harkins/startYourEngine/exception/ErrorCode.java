@@ -29,7 +29,8 @@ public enum ErrorCode {
     REVIEW_ALREADY_EXISTS(1012, "Review already exists!", HttpStatus.BAD_REQUEST),
     VOUCHER_EXISTED(1013, "Voucher already exists!", HttpStatus.BAD_REQUEST),
     VOUCHER_NOT_FOUND(1014, "Voucher not found!", HttpStatus.NOT_FOUND),
-    NOT_EMPTY(1015, "Không được bỏ trống!", HttpStatus.BAD_REQUEST)
+    NOT_EMPTY(1015, "Không được bỏ trống!", HttpStatus.BAD_REQUEST),
+    WRONG_ROLE(1016, "Wrong role!", HttpStatus.BAD_REQUEST),
     ;
 
     int code;

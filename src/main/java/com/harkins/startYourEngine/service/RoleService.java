@@ -29,7 +29,6 @@ public class RoleService {
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('CREATE_ROLE')")
     public RoleResponse createRole(RoleRequest roleRequest) {
         if (roleRepository.existsByName(roleRequest.getName())) throw new AppException(ErrorCode.ROLE_EXISTED);
@@ -43,13 +42,11 @@ public class RoleService {
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('GET_ALL_ROLES')")
     public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
     @PreAuthorize("hasAuthority('DELETE_ROLE')")
     public void deleteRole(String roleName) {
         roleRepository.deleteById(roleName);

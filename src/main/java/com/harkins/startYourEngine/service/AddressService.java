@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,6 +21,7 @@ public class AddressService {
     AddressRepository addressRepository;
     AddressMapper addressMapper;
 
+    @PreAuthorize("hasAuthority('SAVE_ADDRESS')")
     public AddressResponse saveAndUpdateAddress(SaveAndUpdateAddressRequest request) {
         Address address = addressMapper.toAddress(request);
         return addressMapper.toAddressResponse(addressRepository.save(address));
