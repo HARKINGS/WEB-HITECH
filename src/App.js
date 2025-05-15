@@ -16,6 +16,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Products from "./pages/admin/Products";
 import Orders from "./pages/admin/Orders";
 import Users from "./pages/admin/Users";
+import Settings from "./pages/admin/Settings";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -57,14 +58,7 @@ function App() {
                                     <Route path="products" element={<Products />} />
                                     <Route path="orders" element={<Orders />} />
                                     <Route path="users" element={<Users />} />
-                                    <Route
-                                        path="settings"
-                                        element={
-                                            <div className="admin-page">
-                                                <h1>Settings</h1>
-                                            </div>
-                                        }
-                                    />
+                                    <Route path="settings" element={<Settings />} />
                                 </Route>
                             </Route>
 

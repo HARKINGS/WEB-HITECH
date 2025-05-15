@@ -34,15 +34,15 @@
 
 html.dark {
   /* ---- DARK THEME (Yellow Accent) ---- */
-  --background-primary: #1a1a1a;
-  --background-secondary: #2a2a2a;
-  --background-nav: #171d27;
-  --background-header-top: #171d27;
-  --text-primary: #e0e0e0;
-  --text-secondary: #b0b0b0;
+  --background-primary: #121212;
+  --background-secondary: #1e1e1e;
+  --background-nav: #1a1a1a;
+  --background-header-top: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
   --text-accent: #ffd700; /* PRIMARY ACCENT: YELLOW for Dark */
-  --text-on-accent: #333333; /* Darker text on yellow */
-  --border-color: #444444;
+  --text-on-accent: #000000; /* Darker text on yellow */
+  --border-color: #2c2c2c;
 
   /* Accent Color (Now Yellow for Dark Theme) */
   --accent-color: #ffd700; /* Yellow accent */
