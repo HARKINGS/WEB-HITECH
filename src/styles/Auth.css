@@ -230,3 +230,61 @@
         gap: 10px;
     }
 }
+
+.card {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.input-group-text {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control {
+    background-color: var(--bg-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--border-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.form-check-label {
+    color: var(--text-color);
+}
+
+.alert-danger {
+    background-color: rgba(var(--danger-rgb), 0.1);
+    border-color: rgba(var(--danger-rgb), 0.2);
+    color: var(--danger-color);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}

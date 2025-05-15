@@ -1,40 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useAuth } from '../../hooks/useAuth';
-import '../../styles/Auth.css';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { Form, Button } from "react-bootstrap";
+import { useAuth } from "../../hooks/useAuth";
+import "../../styles/Auth.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [loginError, setLoginError] = useState('');
+    const [loginError, setLoginError] = useState("");
 
-    const { login, isAuthenticated } = useAuth();
+    const { login, isAuthenticated, loading } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
-    // If user is already logged in, redirect to intended page or home
+    // Only redirect if user is already authenticated and we've checked localStorage (not loading)
     useEffect(() => {
-        if (isAuthenticated) {
-            const from = location.state?.from?.pathname || '/';
+        if (!loading && isAuthenticated) {
+            const from = location.state?.from?.pathname || "/";
             navigate(from, { replace: true });
         }
-    }, [isAuthenticated, navigate, location]);
+    }, [isAuthenticated, loading, navigate, location]);
 
     const validate = () => {
         const newErrors = {};
 
-        if (!email) {
-            newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            newErrors.email = 'Email is invalid';
+        if (!username) {
+            newErrors.username = "Username is required";
         }
 
         if (!password) {
-            newErrors.password = 'Password is required';
+            newErrors.password = "Password is required";
         }
 
         setErrors(newErrors);
@@ -43,32 +43,21 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoginError('');
+        setLoginError("");
 
         if (validate()) {
             setIsSubmitting(true);
             try {
-                // In a real app, this would make an API call
-                // For now, we'll use the demo function for testing
-                const success = await login({ email, password });
-
+                const success = await login({ username, password });
                 if (success) {
-                    const from = location.state?.from?.pathname || '/';
+                    const from = location.state?.from?.pathname || "/";
                     navigate(from, { replace: true });
                 }
             } catch (error) {
-                setLoginError(error.message || 'Failed to login. Please try again.');
-            } finally {
+                setLoginError(error.message || "Failed to login. Please try again.");
                 setIsSubmitting(false);
             }
         }
-    };
-
-    const handleDemoLogin = () => {
-        login({
-            email: 'admin@example.com',
-            password: 'admin123'
-        });
     };
 
     return (
@@ -77,34 +66,34 @@ const Login = () => {
                 <h1>Login</h1>
                 {loginError && <div className="auth-error">{loginError}</div>}
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                <Form onSubmit={handleSubmit} className="auth-form">
+                    <Form.Group className="mb-3">
+                        <Form.Label>Username</Form.Label>
                         <div className="input-with-icon">
-                            <FaEnvelope className="input-icon" />
-                            <input
-                                type="email"
-                                id="email"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className={errors.email ? 'error' : ''}
+                            <FaUser className="input-icon" />
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter your username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                isInvalid={!!errors.username}
+                                className={errors.username ? "error" : ""}
                             />
+                            <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                         </div>
-                        {errors.email && <span className="error-message">{errors.email}</span>}
-                    </div>
+                    </Form.Group>
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Password</Form.Label>
                         <div className="input-with-icon">
                             <FaLock className="input-icon" />
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                id="password"
+                            <Form.Control
+                                type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className={errors.password ? 'error' : ''}
+                                isInvalid={!!errors.password}
+                                className={errors.password ? "error" : ""}
                             />
                             <button
                                 type="button"
@@ -113,30 +102,21 @@ const Login = () => {
                             >
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
+                            <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                         </div>
-                        {errors.password && <span className="error-message">{errors.password}</span>}
+                    </Form.Group>
+
+                    <div className="remember-forgot">
+                        <Form.Check type="checkbox" label="Remember me" id="remember-me" className="remember-me" />
+                        <Link to="/forgot-password" className="forgot-password">
+                            Forgot Password?
+                        </Link>
                     </div>
 
-                    <div className="form-group remember-forgot">
-                        <div className="remember-me">
-                            <input type="checkbox" id="remember" />
-                            <label htmlFor="remember">Remember me</label>
-                        </div>
-                        <Link to="/forgot-password" className="forgot-password">Forgot password?</Link>
-                    </div>
-
-                    <button type="submit" className="auth-button" disabled={isSubmitting}>
-                        {isSubmitting ? 'Logging in...' : 'Login'}
-                    </button>
-                </form>
-
-                <div className="auth-divider">
-                    <span>OR</span>
-                </div>
-
-                <button onClick={handleDemoLogin} className="demo-button">
-                    Demo Login
-                </button>
+                    <Button type="submit" className="auth-button" disabled={isSubmitting}>
+                        {isSubmitting ? "Logging in..." : "Login"}
+                    </Button>
+                </Form>
 
                 <p className="auth-redirect">
                     Don't have an account? <Link to="/register">Register</Link>
