@@ -43,7 +43,8 @@ public class ApplicationInitConfig {
     }
 
     private void addPermission(String permissionName, String permissionDescription) {
-        if (permissionRepository.existsByName(permissionName)) return;
+        if (permissionRepository.existsByName(permissionName))
+            return;
 
         permissionRepository.save(Permission.builder()
                 .name(permissionName)
@@ -56,8 +57,8 @@ public class ApplicationInitConfig {
         addPermission("SAVE_ADDRESS", "Save and Update Address");
 
 //        AuthenticationService
-        addPermission("LOGIN", "Login account");
-        addPermission("LOOUT", "Loout account");
+//        addPermission("LOGIN", "Login account");
+//        addPermission("LOOUT", "Loout account");
         addPermission("CHECK_TOKEN", "Check token Valid");
         addPermission("REFRESH_TOKEN", "Refresh token Valid");
 
@@ -132,7 +133,7 @@ public class ApplicationInitConfig {
                 Set<String> userPermissions = Set.of(
                         "GET_REVIEWS_BY_GOODS", "GET_ALL_GOODS",
                         "GET_GOODS_BY_NAME", "GET_GOODS_BY_CATEGORY",
-                        "PLACE_ORDER"
+                        "PLACE_ORDER", "REFRESH_TOKEN", "CHECK_TOKEN"
                 );
 
                 Set<String> staffPermissions = Set.of(

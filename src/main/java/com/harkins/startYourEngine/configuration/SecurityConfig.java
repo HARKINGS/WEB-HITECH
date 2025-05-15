@@ -18,45 +18,45 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import static java.lang.invoke.VarHandle.AccessMode.GET;
-import static javax.swing.text.html.FormSubmitEvent.MethodType.POST;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/reviews", "/reviews/**"};
+    private static final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/api/orders/create"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**"};
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(Customizer.withDefaults())
+        httpSecurity
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).permitAll()
-                        // .requestMatchers(HttpMethod.GET, "/users").hasRole(Role.ADMIN.name())
-                        // hasAuthority("ROLE_ADMIN")
-                        .anyRequest()
-                        .authenticated())
-                .anonymous(anonymous -> anonymous
-                        .authorities("GET_USER"))
-                ;
+                        .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .anonymous(anon -> anon
+                        .authorities(
+                                "GET_REVIEWS_BY_GOODS",
+                                "GET_ALL_GOODS",
+                                "GET_GOODS_BY_NAME",
+                                "GET_GOODS_BY_CATEGORY",
+                                "PLACE_ORDER",
+                                "REFRESH_TOKEN",
+                                "CHECK_TOKEN"
+                        )
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        )
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+                )
+                .csrf(AbstractHttpConfigurer::disable);
 
-        //        Với kiểu config như này thì sẽ thoả mãn user chỉ cần vào web ko cần đăng nhập
-        //        http
-        //                .authorizeRequests()
-        //                .antMatchers("/admin/**").hasRole("ADMIN")
-        //                .antMatchers("/staff/**").hasRole("STAFF")
-        //                .antMatchers("/products/**", "/cart/**", "/checkout").permitAll()
-        //                .anyRequest().authenticated()
-
-        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(JwtConfigurer -> JwtConfigurer.decoder(customJwtDecoder)
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
         return httpSecurity.build();
     }
 

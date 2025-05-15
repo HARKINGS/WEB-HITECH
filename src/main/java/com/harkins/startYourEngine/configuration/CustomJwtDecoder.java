@@ -29,6 +29,13 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
+        // Nếu không có token thì trả về null để Spring xử lý tiếp (cho phép anonymous)
+        if (token == null || token.isBlank()) {
+            // Trả về null không được, vì interface yêu cầu return Jwt.
+            // Vậy ném exception đặc biệt:
+            throw new JwtException("Empty token - treat as anonymous");
+        }
+
         //        Check token còn hiệu lực không
         try {
             var response = authenticationService.introspect(
