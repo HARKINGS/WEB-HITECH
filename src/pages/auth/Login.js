@@ -117,10 +117,6 @@ const Login = () => {
                         {isSubmitting ? "Logging in..." : "Login"}
                     </Button>
                 </Form>
-
-                <p className="auth-redirect">
-                    Don't have an account? <Link to="/register">Register</Link>
-                </p>
             </div>
         </div>
     );
