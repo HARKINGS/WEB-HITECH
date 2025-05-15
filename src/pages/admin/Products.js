@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import axios from "axios";
+import { Table, Button, Container, Form, Row, Col, Badge, Pagination } from "react-bootstrap";
 import ProductModal from "../../components/modals/ProductModal";
 import { PERMISSIONS } from "../../constants/permissions";
-import "../../styles/AdminPages.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 // Helper function to decode JWT token
 const decodeJwt = (token) => {
@@ -223,15 +224,23 @@ const Products = () => {
     };
 
     if (loading) {
-        return <div className="admin-page products">Loading products...</div>;
+        return (
+            <Container className="py-4 bg-dark text-light">
+                <div>Loading products...</div>
+            </Container>
+        );
     }
 
     if (error) {
-        return <div className="admin-page products">Error: {error}</div>;
+        return (
+            <Container className="py-4 bg-dark">
+                <div className="text-danger">Error: {error}</div>
+            </Container>
+        );
     }
 
     return (
-        <div className="admin-page products">
+        <Container fluid className="py-4 bg-dark text-light">
             {/* Product creation/edit modal */}
             <ProductModal
                 isOpen={isModalOpen}
@@ -240,108 +249,132 @@ const Products = () => {
                 onSuccess={handleProductSuccess}
             />
 
-            <div className="page-header">
-                <h1>Products</h1>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1 className="text-light">Products</h1>
                 {permissions.canCreate && (
-                    <button className="btn btn-primary" onClick={handleAddProduct}>
-                        <FaPlus /> Add New Product
-                    </button>
+                    <Button variant="primary" onClick={handleAddProduct}>
+                        <FaPlus className="me-2" /> Add New Product
+                    </Button>
                 )}
             </div>
 
-            <div className="filter-row">
-                <div className="filter-group">
-                    <input type="text" placeholder="Search products..." className="filter-input" />
-                </div>
-                <div className="filter-group">
-                    <select className="filter-select">
-                        <option value="">All Categories</option>
-                        <option value="phones">Phones</option>
-                        <option value="laptops">Laptops</option>
-                        <option value="audio">Audio</option>
-                        <option value="wearables">Wearables</option>
-                        <option value="tablets">Tablets</option>
-                        <option value="gaming">Gaming</option>
-                        <option value="cameras">Cameras</option>
-                    </select>
-                </div>
-                <div className="filter-group">
-                    <select className="filter-select">
-                        <option value="">All Status</option>
-                        <option value="in-stock">In Stock</option>
-                        <option value="out-of-stock">Out of Stock</option>
-                        <option value="low-stock">Low Stock</option>
-                    </select>
-                </div>
-            </div>
+            <Row className="mb-4">
+                <Col md={4}>
+                    <Form.Group>
+                        <Form.Control
+                            type="text"
+                            placeholder="Search products..."
+                            className="bg-dark text-light border-secondary"
+                        />
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group>
+                        <Form.Select className="bg-dark text-light border-secondary">
+                            <option value="">All Categories</option>
+                            <option value="phones">Phones</option>
+                            <option value="laptops">Laptops</option>
+                            <option value="audio">Audio</option>
+                            <option value="wearables">Wearables</option>
+                            <option value="tablets">Tablets</option>
+                            <option value="gaming">Gaming</option>
+                            <option value="cameras">Cameras</option>
+                        </Form.Select>
+                    </Form.Group>
+                </Col>
+                <Col md={4}>
+                    <Form.Group>
+                        <Form.Select className="bg-dark text-light border-secondary">
+                            <option value="">All Status</option>
+                            <option value="in-stock">In Stock</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                            <option value="low-stock">Low Stock</option>
+                        </Form.Select>
+                    </Form.Group>
+                </Col>
+            </Row>
 
-            <div className="table-container">
-                <table className="admin-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentProducts.map((product) => (
-                            <tr key={product.id}>
-                                <td>{product.id}</td>
-                                <td>{product.name}</td>
-                                <td>{product.category}</td>
-                                <td>{product.price}</td>
-                                <td>{product.stock}</td>
-                                <td>
-                                    <span className={`status-badge ${product.status.toLowerCase().replace(" ", "-")}`}>
-                                        {product.status}
-                                    </span>
-                                </td>
-                                <td className="actions">
+            <Table responsive hover variant="dark" className="border-secondary">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {currentProducts.map((product) => (
+                        <tr key={product.id}>
+                            <td>{product.id}</td>
+                            <td>{product.name}</td>
+                            <td>{product.category}</td>
+                            <td>${product.price}</td>
+                            <td>{product.stock}</td>
+                            <td>
+                                <Badge
+                                    bg={
+                                        product.status === "In Stock"
+                                            ? "success"
+                                            : product.status === "Out of Stock"
+                                            ? "danger"
+                                            : "warning"
+                                    }
+                                >
+                                    {product.status}
+                                </Badge>
+                            </td>
+                            <td>
+                                <div className="d-flex gap-2">
                                     {permissions.canEdit && (
-                                        <button className="btn-icon edit" onClick={() => handleEditProduct(product)}>
+                                        <Button
+                                            variant="outline-info"
+                                            size="sm"
+                                            onClick={() => handleEditProduct(product)}
+                                        >
                                             <FaEdit />
-                                        </button>
+                                        </Button>
                                     )}
                                     {permissions.canDelete && (
-                                        <button
-                                            className="btn-icon delete"
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
                                             onClick={() => handleDeleteProduct(product.id)}
                                         >
                                             <FaTrash />
-                                        </button>
+                                        </Button>
                                     )}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
+
+            <div className="d-flex justify-content-center mt-4">
+                <Pagination className="pagination-dark">
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                    {pageNumbers.map((number) => (
+                        <Pagination.Item
+                            key={number}
+                            active={number === currentPage}
+                            onClick={() => handlePageChange(number)}
+                            className={number === currentPage ? "active" : "text-light"}
+                        >
+                            {number}
+                        </Pagination.Item>
+                    ))}
+                    <Pagination.Next
+                        onClick={handleNext}
+                        disabled={currentPage === totalPages}
+                        className="text-light"
+                    />
+                </Pagination>
             </div>
-
-            <div className="pagination">
-                <button className="btn-page" onClick={handlePrevious} disabled={currentPage === 1}>
-                    &laquo;
-                </button>
-
-                {pageNumbers.map((number) => (
-                    <button
-                        key={number}
-                        className={`btn-page ${currentPage === number ? "active" : ""}`}
-                        onClick={() => handlePageChange(number)}
-                    >
-                        {number}
-                    </button>
-                ))}
-
-                <button className="btn-page" onClick={handleNext} disabled={currentPage === totalPages}>
-                    &raquo;
-                </button>
-            </div>
-        </div>
+        </Container>
     );
 };
 

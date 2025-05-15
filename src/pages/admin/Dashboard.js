@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaBoxOpen, FaShoppingCart, FaUsers, FaDollarSign } from "react-icons/fa";
 import axios from "axios";
+import { Container, Row, Col, Card, Table } from "react-bootstrap";
 import { PERMISSIONS } from "../../constants/permissions";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/AdminPages.css";
 
 // Helper function to decode JWT token
@@ -139,57 +141,84 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="admin-page dashboard">
-            <h1>Dashboard</h1>
+        <Container fluid className="py-4 bg-dark text-light">
+            <h1 className="mb-4">Dashboard</h1>
 
-            <div className="stats-grid">
+            <Row className="g-4 mb-4">
                 {stats.map((stat) => (
-                    <div className="stat-card" key={stat.id}>
-                        <div className="stat-icon" style={{ backgroundColor: stat.color }}>
-                            {stat.icon}
-                        </div>
-                        <div className="stat-info">
-                            <h3>{stat.title}</h3>
-                            <p>{stat.value}</p>
-                        </div>
-                    </div>
+                    <Col key={stat.id} xs={12} sm={6} xl={3}>
+                        <Card bg="dark" text="light" className="h-100 border-secondary">
+                            <Card.Body className="d-flex align-items-center">
+                                <div
+                                    className="rounded-circle p-3 me-3 d-flex align-items-center justify-content-center"
+                                    style={{
+                                        backgroundColor: stat.color,
+                                        width: "48px",
+                                        height: "48px",
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <div style={{ fontSize: "1.25rem" }}>{stat.icon}</div>
+                                </div>
+                                <div>
+                                    <Card.Title className="mb-1 fs-6">{stat.title}</Card.Title>
+                                    <Card.Text className="fs-4 fw-bold mb-0">{stat.value}</Card.Text>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </div>
+            </Row>
 
-            <div className="dashboard-row">
-                <div className="dashboard-col">
-                    <div className="panel">
-                        <h2>Recent Orders</h2>
-                        <table className="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {recentOrders.map((order) => (
-                                    <tr key={order.id}>
-                                        <td>{order.id}</td>
-                                        <td>{order.customer}</td>
-                                        <td>{order.date}</td>
-                                        <td>
-                                            <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                                {order.status}
-                                            </span>
-                                        </td>
-                                        <td>{order.amount}</td>
+            <Row>
+                <Col>
+                    <Card bg="dark" text="light" className="border-secondary">
+                        <Card.Header className="border-secondary">
+                            <h5 className="mb-0">Recent Orders</h5>
+                        </Card.Header>
+                        <Card.Body className="p-0">
+                            <Table responsive hover variant="dark" className="mb-0">
+                                <thead className="border-secondary">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+                                </thead>
+                                <tbody>
+                                    {recentOrders.map((order) => (
+                                        <tr key={order.id}>
+                                            <td>{order.id}</td>
+                                            <td>{order.customer}</td>
+                                            <td>{order.date}</td>
+                                            <td>
+                                                <span
+                                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${
+                                                        order.status === "Completed"
+                                                            ? "bg-success-subtle text-success-emphasis"
+                                                            : order.status === "Processing"
+                                                            ? "bg-primary-subtle text-primary-emphasis"
+                                                            : order.status === "Pending"
+                                                            ? "bg-warning-subtle text-warning-emphasis"
+                                                            : "bg-danger-subtle text-danger-emphasis"
+                                                    }`}
+                                                    style={{ fontSize: "0.85rem" }}
+                                                >
+                                                    {order.status}
+                                                </span>
+                                            </td>
+                                            <td>{order.amount}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 

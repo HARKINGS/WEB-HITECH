@@ -89,7 +89,7 @@ const Users = () => {
                     firstName: user.firstName || "",
                     lastName: user.lastName || "",
                     birthDate: user.dob || "",
-                    role: user.roles?.[0]?.name || "User",
+                    role: user.roles?.[0]?.name || "STAFF",
                     status: "Active",
                     joined: user.dob || new Date().toISOString().split("T")[0],
                     // Get permissions from the first role's scope
@@ -351,7 +351,7 @@ const Users = () => {
                 </Col>
             </Row>
 
-            <Table responsive hover variant="dark" className="border-secondary">
+            <Table responsive hover variant="dark" className="border-secondary align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -369,7 +369,16 @@ const Users = () => {
                             <td>{user.name}</td>
                             <td>{user.email}</td>
                             <td>
-                                <Badge bg={user.role === "Admin" ? "info" : "secondary"}>{user.role}</Badge>
+                                <span
+                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${
+                                        user.role === "ADMIN"
+                                            ? "bg-primary-subtle text-primary-emphasis"
+                                            : "bg-secondary-subtle text-secondary-emphasis"
+                                    }`}
+                                    style={{ fontSize: "0.85rem" }}
+                                >
+                                    {user.role}
+                                </span>
                             </td>
                             <td>{user.joined}</td>
                             <td>

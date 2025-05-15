@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes, FaBox, FaLayerGroup, FaDollarSign, FaWarehouse, FaImage } from "react-icons/fa";
-import "./ProductModal.css";
+import { Modal, Form, Button, Row, Col } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     const [formData, setFormData] = useState({
@@ -127,58 +128,63 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-container">
-                <div className="modal-header">
-                    <h2>{isEditMode ? "Edit Product" : "Add New Product"}</h2>
-                    <button className="modal-close-btn" onClick={onClose}>
-                        <FaTimes />
-                    </button>
-                </div>
+        <Modal show={isOpen} onHide={onClose} size="lg" className="text-light">
+            <Modal.Header closeButton className="bg-dark text-light border-secondary">
+                <Modal.Title>{isEditMode ? "Edit Product" : "Add New Product"}</Modal.Title>
+            </Modal.Header>
 
-                {submitError && <div className="modal-error">{submitError}</div>}
+            <Modal.Body className="bg-dark text-light">
+                {submitError && (
+                    <div className="alert alert-danger" role="alert">
+                        {submitError}
+                    </div>
+                )}
 
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <div className="form-group">
-                        <label htmlFor="name">Product Name</label>
-                        <div className="input-with-icon">
-                            <FaBox className="input-icon" />
-                            <input
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Product Name</Form.Label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-dark text-light border-secondary">
+                                <FaBox />
+                            </span>
+                            <Form.Control
                                 type="text"
-                                id="name"
                                 name="name"
                                 placeholder="Enter product name"
                                 value={formData.name}
                                 onChange={handleChange}
-                                className={errors.name ? "error" : ""}
+                                isInvalid={!!errors.name}
+                                className="bg-dark text-light border-secondary"
                             />
+                            <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                         </div>
-                        {errors.name && <span className="error-message">{errors.name}</span>}
-                    </div>
+                    </Form.Group>
 
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <textarea
-                            id="description"
+                    <Form.Group className="mb-3">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control
+                            as="textarea"
                             name="description"
-                            rows="3"
+                            rows={3}
                             placeholder="Enter product description"
                             value={formData.description}
                             onChange={handleChange}
-                            className="form-textarea"
+                            className="bg-dark text-light border-secondary"
                         />
-                    </div>
+                    </Form.Group>
 
-                    <div className="form-group">
-                        <label htmlFor="category">Category</label>
-                        <div className="input-with-icon">
-                            <FaLayerGroup className="input-icon" />
-                            <select
-                                id="category"
+                    <Form.Group className="mb-3">
+                        <Form.Label>Category</Form.Label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-dark text-light border-secondary">
+                                <FaLayerGroup />
+                            </span>
+                            <Form.Select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className={errors.category ? "error" : ""}
+                                isInvalid={!!errors.category}
+                                className="bg-dark text-light border-secondary"
                             >
                                 <option value="">Select a category</option>
                                 <option value="Phones">Phone</option>
@@ -188,73 +194,82 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 <option value="Wearables">Wearable</option>
                                 <option value="Gaming">Gaming</option>
                                 <option value="Cameras">Camera</option>
-                            </select>
+                            </Form.Select>
+                            <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
                         </div>
-                        {errors.category && <span className="error-message">{errors.category}</span>}
-                    </div>
+                    </Form.Group>
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="price">Price ($)</label>
-                            <div className="input-with-icon price-input">
-                                <FaDollarSign className="input-icon" />
-                                <input
-                                    type="text"
-                                    id="price"
-                                    name="price"
-                                    placeholder="0.00"
-                                    value={formData.price}
-                                    onChange={handleChange}
-                                    className={errors.price ? "error" : ""}
-                                />
-                            </div>
-                            {errors.price && <span className="error-message">{errors.price}</span>}
-                        </div>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Price ($)</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaDollarSign />
+                                    </span>
+                                    <Form.Control
+                                        type="text"
+                                        name="price"
+                                        placeholder="0.00"
+                                        value={formData.price}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.price}
+                                        className="bg-dark text-light border-secondary"
+                                    />
+                                    <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Stock Quantity</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaWarehouse />
+                                    </span>
+                                    <Form.Control
+                                        type="text"
+                                        name="stock"
+                                        placeholder="0"
+                                        value={formData.stock}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.stock}
+                                        className="bg-dark text-light border-secondary"
+                                    />
+                                    <Form.Control.Feedback type="invalid">{errors.stock}</Form.Control.Feedback>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
-                        <div className="form-group">
-                            <label htmlFor="stock">Stock Quantity</label>
-                            <div className="input-with-icon">
-                                <FaWarehouse className="input-icon" />
-                                <input
-                                    type="text"
-                                    id="stock"
-                                    name="stock"
-                                    placeholder="0"
-                                    value={formData.stock}
-                                    onChange={handleChange}
-                                    className={errors.stock ? "error" : ""}
-                                />
-                            </div>
-                            {errors.stock && <span className="error-message">{errors.stock}</span>}
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="imageUrl">Image URL</label>
-                        <div className="input-with-icon">
-                            <FaImage className="input-icon" />
-                            <input
+                    <Form.Group className="mb-3">
+                        <Form.Label>Image URL</Form.Label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-dark text-light border-secondary">
+                                <FaImage />
+                            </span>
+                            <Form.Control
                                 type="text"
-                                id="imageUrl"
                                 name="imageUrl"
                                 placeholder="https://example.com/image.jpg"
                                 value={formData.imageUrl}
                                 onChange={handleChange}
+                                className="bg-dark text-light border-secondary"
                             />
                         </div>
-                    </div>
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
 
-                    <div className="modal-actions">
-                        <button type="button" className="btn btn-secondary" onClick={onClose}>
-                            Cancel
-                        </button>
-                        <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-                            {isSubmitting ? "Saving..." : isEditMode ? "Update Product" : "Create Product"}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+            <Modal.Footer className="bg-dark border-secondary">
+                <Button variant="secondary" onClick={onClose}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : isEditMode ? "Update Product" : "Create Product"}
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 };
 
