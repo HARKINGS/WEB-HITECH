@@ -2251,9 +2251,6 @@
         "tags" : [ "Review" ],
         "description" : "Get all reviews",
         "operationId" : "getAllReviews",
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
         "responses" : {
           "200" : {
             "description" : "Get all reviews success",
@@ -2271,34 +2268,608 @@
                       "items" : {
                         "type" : "object",
                         "properties" : {
-                          "reviewId" : {
+                          "id" : {
                             "type" : "string",
                             "example" : "1234"
                           },
-                          "userId" : {
+                          "content" : {
                             "type" : "string",
-                            "example" : "456e7890-e12b-12d3-a456-426614174000"
-                          },
-                          "goodsId" : {
-                            "type" : "string",
-                            "example" : "1234"
+                            "example" : "Great product!"
                           },
                           "rating" : {
                             "type" : "integer",
                             "format" : "int64",
                             "example" : 5
                           },
-                          "comment" : {
-                            "type" : "string",
-                            "example" : "Great product!"
-                          },
                           "createdAt" : {
                             "type" : "string",
                             "format" : "date-time",
-                            "example" : "2025-11-11T12:00:00"
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
                           }
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/create": {
+      "post": {
+        "tags": ["Review"],
+        "description": "Create a new review",
+        "operationId": "createReview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["goodsId", "userName", "content", "rating"],
+                "properties": {
+                  "goodsId": {
+                    "type": "string",
+                    "example": "1234"
+                  },
+                  "userName": {
+                    "type": "string",
+                    "example": "john_doe"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Great product!"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "example": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Great product!"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 5
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request parameters"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{reviewId}": {
+      "get": {
+        "tags": ["Review"],
+        "description": "Get review by ID",
+        "operationId": "getReviewById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Great product!"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 5
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Review"],
+        "description": "Update review",
+        "operationId": "updateReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "Updated review content"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "example": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Updated review content"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 4
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:30:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Review"],
+        "description": "Delete review",
+        "operationId": "deleteReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "string",
+                      "example": "Review deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/goods-review/{goodsId}": {
+      "get": {
+        "tags": ["Review"],
+        "description": "Get reviews by goods ID",
+        "operationId": "getReviewByGoods",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "goodsId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get reviews success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "example": "1234"
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "Great product!"
+                          },
+                          "rating": {
+                            "type": "integer",
+                            "format": "int64",
+                            "example": 5
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-03-20T10:00:00"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "example": "2024-03-20T10:00:00"
+                          },
+                          "userName": {
+                            "type": "string",
+                            "example": "john_doe"
+                          },
+                          "goodsId": {
+                            "type": "string",
+                            "example": "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Goods not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Goods not found"
                     }
                   }
                 }

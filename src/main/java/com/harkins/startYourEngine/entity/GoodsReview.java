@@ -4,8 +4,6 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,14 +18,10 @@ public class GoodsReview {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference("user-reviews")
-    User user;
+    String userName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id", nullable = false)
-    @JsonBackReference("goods-reviews")
     Goods goods;
 
     @Column(nullable = false, columnDefinition = "TEXT")

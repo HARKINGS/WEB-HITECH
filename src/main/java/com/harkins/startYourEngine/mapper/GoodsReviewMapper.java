@@ -13,7 +13,7 @@ import com.harkins.startYourEngine.entity.GoodsReview;
 public interface GoodsReviewMapper {
     GoodsReview toReview(CreateGoodsReviewRequest request);
 
-    @Mapping(target = "userId", source = "user.userId")
+    @Mapping(target = "userName", source = "userName")
     GoodsReviewResponse toReviewResponse(GoodsReview goodsReview);
 
     void updateReviewResponse(

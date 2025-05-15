@@ -15,5 +15,5 @@ public class GoodsReviewResponse {
     String createdAt;
     String updatedAt;
     String userName;
-    Long userId;
+    String goodsId;
 }

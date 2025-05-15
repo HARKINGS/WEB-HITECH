@@ -5,7 +5,6 @@ import java.util.Date;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +19,7 @@ public class CreateGoodsReviewRequest {
     String goodsId;
 
     @NotBlank(message = "NOT_EMPTY")
-    String userId;
+    String userName;
 
     @NotBlank(message = "NOT_EMPTY")
     String content;
