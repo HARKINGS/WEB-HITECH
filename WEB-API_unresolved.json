@@ -1336,13 +1336,11 @@
     "/goods" : {
       "post" : {
         "tags" : [ "Goods" ],
-        "description" : "create a goods",
+        "description" : "Tạo sản phẩm mới (Yêu cầu quyền admin)",
         "operationId" : "createGoods",
-        "security" : [
-          {
-            "bearerAuth" : []
-          }
-        ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1369,7 +1367,7 @@
                   },
                   "goodsDescription" : {
                     "type" : "string",
-                    "example" : "The goods laptop for student"
+                    "example" : "Mô tả sản phẩm"
                   },
                   "goodsCategory" : {
                     "type" : "string",
@@ -1390,7 +1388,7 @@
         },
         "responses" : {
           "200" : {
-            "description" : "Create goods success",
+            "description" : "Tạo sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1427,7 +1425,7 @@
                         },
                         "goodsDescription" : {
                           "type" : "string",
-                          "example" : "The goods laptop for student"
+                          "example" : "Mô tả sản phẩm"
                         },
                         "goodsCategory" : {
                           "type" : "string",
@@ -1443,26 +1441,6 @@
                 }
               }
             }
-          },
-          "400" : {
-            "description" : "Goods existed",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object",
-                  "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1011
-                    },
-                    "message" : {
-                      "type" : "string",
-                      "example" : "Goods already exists"
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -1470,14 +1448,11 @@
     "/goods/all-goods" : {
       "get" : {
         "tags" : [ "Goods" ],
-        "description" : "Get info of all Goods",
+        "description" : "Lấy danh sách tất cả sản phẩm",
         "operationId" : "getGoods",
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
         "responses" : {
           "200" : {
-            "description" : "Get info success",
+            "description" : "Lấy danh sách sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1516,7 +1491,7 @@
                           },
                           "goodsDescription" : {
                             "type" : "string",
-                            "example" : "The goods laptop for student"
+                            "example" : "Mô tả sản phẩm"
                           },
                           "goodsCategory" : {
                             "type" : "string",
@@ -1538,22 +1513,22 @@
       }
     },
     "/goods/{goodsId}" : {
-      "parameters" : [ {
-        "name" : "goodsId",
-        "in" : "path",
-        "required" : true,
-        "schema" : {
-          "type" : "string",
-          "example" : "123"
-        }
-      } ],
       "get" : {
         "tags" : [ "Goods" ],
-        "description" : "get Goods By Id",
+        "description" : "Xem thông tin chi tiết sản phẩm",
         "operationId" : "getGoodsById",
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
         "responses" : {
           "200" : {
-            "description" : "Get Goods By Id success",
+            "description" : "Lấy thông tin sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1590,7 +1565,7 @@
                         },
                         "goodsDescription" : {
                           "type" : "string",
-                          "example" : "The goods laptop for student"
+                          "example" : "Mô tả sản phẩm"
                         },
                         "goodsCategory" : {
                           "type" : "string",
@@ -1606,41 +1581,28 @@
                 }
               }
             }
-          },
-          "401" : {
-            "description" : "Wrong Id",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object",
-                  "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1006
-                    },
-                    "message" : {
-                      "type" : "string",
-                      "example" : "Unauthenticated!"
-                    }
-                  }
-                }
-              }
-            }
           }
         }
       },
       "delete" : {
         "tags" : [ "Goods" ],
-        "description" : "delete Goods By Id",
+        "description" : "Xóa sản phẩm (Yêu cầu quyền admin)",
         "operationId" : "deleteGoods",
-        "security" : [
-          {
-            "bearerAuth": []
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
           }
-        ],
+        } ],
         "responses" : {
           "200" : {
-            "description" : "Delete Goods Success",
+            "description" : "Xóa sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1652,7 +1614,7 @@
                     },
                     "result" : {
                       "type" : "string",
-                      "example" : "Goods deleted"
+                      "example" : "Đã xóa sản phẩm"
                     }
                   }
                 }
@@ -1660,21 +1622,175 @@
             }
           }
         }
-      },
+      }
+    },
+    "/goods/goodsName" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Tìm kiếm sản phẩm theo tên",
+        "operationId" : "getGoodsByName",
+        "parameters" : [ {
+          "name" : "goodsName",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Laptop Dell"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Tìm kiếm sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/goodsCategory" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo danh mục",
+        "operationId" : "getGoodsByCategory",
+        "parameters" : [ {
+          "name" : "goodsCategory",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Laptop"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/update" : {
       "put" : {
         "tags" : [ "Goods" ],
-        "description" : "update Goods By Id",
+        "description" : "Cập nhật thông tin sản phẩm (Yêu cầu quyền admin)",
         "operationId" : "updateGoods",
         "security" : [ {
           "bearerAuth" : [ ]
         } ],
         "parameters" : [ {
           "name" : "goodsId",
-          "in" : "path",
+          "in" : "query",
           "required" : true,
           "schema" : {
             "type" : "string",
-            "example" : "123"
+            "example" : "1234"
           }
         } ],
         "requestBody" : {
@@ -1703,7 +1819,7 @@
                   },
                   "goodsDescription" : {
                     "type" : "string",
-                    "example" : "The goods laptop for student"
+                    "example" : "Mô tả sản phẩm"
                   },
                   "goodsCategory" : {
                     "type" : "string",
@@ -1724,7 +1840,7 @@
         },
         "responses" : {
           "200" : {
-            "description" : "Update goods success",
+            "description" : "Cập nhật sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1761,7 +1877,7 @@
                         },
                         "goodsDescription" : {
                           "type" : "string",
-                          "example" : "The goods laptop for student"
+                          "example" : "Mô tả sản phẩm"
                         },
                         "goodsCategory" : {
                           "type" : "string",
@@ -1781,33 +1897,29 @@
         }
       }
     },
-    "/goods/{goodsName}" : {
+    "/goods/details/{goodsId}" : {
       "get" : {
         "tags" : [ "Goods" ],
-        "description" : "get Goods By Name",
-        "operationId" : "getGoodsByName",
+        "description" : "Xem chi tiết sản phẩm kèm đánh giá",
+        "operationId" : "getGoodsWithReviews",
         "parameters" : [ {
-          "name" : "goodsName",
+          "name" : "goodsId",
           "in" : "path",
           "required" : true,
           "schema" : {
             "type" : "string",
-            "example" : "123"
+            "example" : "1234"
           }
         } ],
         "responses" : {
           "200" : {
-            "description" : "Get Goods By Id success",
+            "description" : "Lấy thông tin chi tiết sản phẩm thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
                   "type" : "object",
                   "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1000
-                    },
-                    "result" : {
+                    "goods" : {
                       "type" : "object",
                       "properties" : {
                         "goodsId" : {
@@ -1834,7 +1946,7 @@
                         },
                         "goodsDescription" : {
                           "type" : "string",
-                          "example" : "The goods laptop for student"
+                          "example" : "Mô tả sản phẩm"
                         },
                         "goodsCategory" : {
                           "type" : "string",
@@ -1845,28 +1957,57 @@
                           "example" : "1234"
                         }
                       }
+                    },
+                    "reviews" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "example" : "Sản phẩm tốt!"
+                          },
+                          "rating" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 5
+                          },
+                          "createdAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
                     }
                   }
                 }
               }
             }
           },
-          "401" : {
-            "description" : "Wrong Id",
+          "500" : {
+            "description" : "Lỗi server",
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object",
-                  "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1006
-                    },
-                    "message" : {
-                      "type" : "string",
-                      "example" : "Unauthenticated!"
-                    }
-                  }
+                  "type" : "string"
                 }
               }
             }
@@ -1874,23 +2015,23 @@
         }
       }
     },
-    "/goods/{goodsCategory}" : {
+    "/goods/{goodsId}/reviews" : {
       "get" : {
         "tags" : [ "Goods" ],
-        "description" : "get Goods By Category",
-        "operationId" : "getGoodsByCategory",
+        "description" : "Xem đánh giá của sản phẩm",
+        "operationId" : "getGoodsReviews",
         "parameters" : [ {
-          "name" : "goodsCategory",
+          "name" : "goodsId",
           "in" : "path",
           "required" : true,
           "schema" : {
             "type" : "string",
-            "example" : "123"
+            "example" : "1234"
           }
         } ],
         "responses" : {
           "200" : {
-            "description" : "Get Goods By Id success",
+            "description" : "Lấy đánh giá thành công",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -1901,63 +2042,43 @@
                       "example" : 1000
                     },
                     "result" : {
-                      "type" : "object",
-                      "properties" : {
-                        "goodsId" : {
-                          "type" : "string",
-                          "example" : "1234"
-                        },
-                        "goodsName" : {
-                          "type" : "string",
-                          "example" : "Laptop Dell"
-                        },
-                        "goodsVersion" : {
-                          "type" : "string",
-                          "example" : "1.0"
-                        },
-                        "quantity" : {
-                          "type" : "integer",
-                          "format" : "int64",
-                          "example" : 10
-                        },
-                        "price" : {
-                          "type" : "integer",
-                          "format" : "int64",
-                          "example" : 110822204
-                        },
-                        "goodsDescription" : {
-                          "type" : "string",
-                          "example" : "The goods laptop for student"
-                        },
-                        "goodsCategory" : {
-                          "type" : "string",
-                          "example" : "Laptop"
-                        },
-                        "goodsImageUrl" : {
-                          "type" : "string",
-                          "example" : "1234"
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "example" : "Sản phẩm tốt!"
+                          },
+                          "rating" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 5
+                          },
+                          "createdAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
                         }
                       }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401" : {
-            "description" : "Wrong Id",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object",
-                  "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1006
-                    },
-                    "message" : {
-                      "type" : "string",
-                      "example" : "Unauthenticated!"
                     }
                   }
                 }
@@ -2537,7 +2658,8 @@
             }
           }
         }
-      },
+      }},
+      "/reviews/updateupdate": {
       "put": {
         "tags": ["Review"],
         "description": "Update review",
@@ -2675,6 +2797,7 @@
           }
         }
       },
+      "/reviews/{reviewId}": {
       "delete": {
         "tags": ["Review"],
         "description": "Delete review",
@@ -2758,127 +2881,8 @@
           }
         }
       }
-    },
-    "/reviews/goods-review/{goodsId}": {
-      "get": {
-        "tags": ["Review"],
-        "description": "Get reviews by goods ID",
-        "operationId": "getReviewByGoods",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "goodsId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1234"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get reviews success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1000
-                    },
-                    "result": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "example": "1234"
-                          },
-                          "content": {
-                            "type": "string",
-                            "example": "Great product!"
-                          },
-                          "rating": {
-                            "type": "integer",
-                            "format": "int64",
-                            "example": 5
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time",
-                            "example": "2024-03-20T10:00:00"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time",
-                            "example": "2024-03-20T10:00:00"
-                          },
-                          "userName": {
-                            "type": "string",
-                            "example": "john_doe"
-                          },
-                          "goodsId": {
-                            "type": "string",
-                            "example": "1234"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1006
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Unauthenticated!"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Goods not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1006
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Goods not found"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
+    }},
+    
     "/orders/create": {
       "post": {
         "tags": [ "Order" ],

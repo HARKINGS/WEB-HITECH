@@ -46,14 +46,7 @@ public class GoodsReviewController {
                 .build();
     }
 
-    @GetMapping("/goods-review/{goodsId}")
-    public ApiResponse<List<GoodsReviewResponse>> getReviewByGoods(@PathVariable("goodsId") String goodsId) {
-        return ApiResponse.<List<GoodsReviewResponse>>builder()
-                .result(goodsReviewService.getReviewByGoods(goodsId))
-                .build();
-    }
-
-    @PutMapping("/{reviewId}")
+    @PutMapping("/update")
     public ApiResponse<GoodsReviewResponse> updateReview(
             @PathVariable("reviewId") String reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
         return ApiResponse.<GoodsReviewResponse>builder()

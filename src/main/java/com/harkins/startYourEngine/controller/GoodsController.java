@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
-import com.harkins.startYourEngine.dto.request.CreateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
-import com.harkins.startYourEngine.dto.request.UpdateGoodsReviewRequest;
 import com.harkins.startYourEngine.dto.response.ApiResponse;
 import com.harkins.startYourEngine.dto.response.GoodsDetailsResponse;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
@@ -114,30 +112,6 @@ public class GoodsController {
     public ApiResponse<List<GoodsReviewResponse>> getGoodsReviews(@PathVariable("goodsId") String goodsId) {
         return ApiResponse.<List<GoodsReviewResponse>>builder()
                 .result(goodsReviewService.getReviewByGoods(goodsId))
-                .build();
-    }
-
-    @PostMapping("/{goodsId}/reviews")
-    public ApiResponse<GoodsReviewResponse> createReview(
-            @PathVariable("goodsId") String goodsId, @Valid @RequestBody CreateGoodsReviewRequest request) {
-        return ApiResponse.<GoodsReviewResponse>builder()
-                .result(goodsReviewService.createReview(goodsId, request))
-                .build();
-    }
-
-    @PutMapping("/reviews/{reviewId}")
-    public ApiResponse<GoodsReviewResponse> updateReview(
-            @PathVariable("reviewId") String reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
-        return ApiResponse.<GoodsReviewResponse>builder()
-                .result(goodsReviewService.updateGoodsReview(reviewId, request))
-                .build();
-    }
-
-    @DeleteMapping("/reviews/{reviewId}")
-    public ApiResponse<String> deleteReview(@PathVariable("reviewId") String reviewId) {
-        goodsReviewService.deleteGoodsReview(reviewId);
-        return ApiResponse.<String>builder()
-                .result("Review deleted successfully")
                 .build();
     }
 }
