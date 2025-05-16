@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     container_name: web-soict-backend
     ports:
-      - "8080:8080"
+      - "8888:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webhitech?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
