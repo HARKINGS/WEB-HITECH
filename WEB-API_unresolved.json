@@ -1800,7 +1800,7 @@
         }
       }
     },
-    "/goods/update" : {
+    "/goods/{goodsId}" : {
       "put" : {
         "tags" : [ "Goods" ],
         "description" : "Cập nhật thông tin sản phẩm (Yêu cầu quyền admin)",
