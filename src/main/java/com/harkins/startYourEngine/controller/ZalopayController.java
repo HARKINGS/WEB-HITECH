@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.harkins.startYourEngine.entity.Order;
+import com.harkins.startYourEngine.enums.PaymentStatus;
 import com.harkins.startYourEngine.repository.OrderRepository;
 import com.harkins.startYourEngine.service.OrderService;
 import com.harkins.startYourEngine.service.ZalopayService;
@@ -137,7 +138,7 @@ public class ZalopayController {
                 // Chuyển đổi từ mã ZaloPay sang enum của chúng ta
                 String paymentStatus = "1".equals(statusValue) ? "PAID" : "FAILED";
 
-                orderService.updatePaymentStatus(order.getId(), paymentStatus);
+                orderService.updatePaymentStatus(order.getId(), PaymentStatus.valueOf(paymentStatus));
             } catch (Exception e) {
                 // Không return ở đây để vẫn trả về thành công cho ZaloPay
             }

@@ -15,12 +15,12 @@ public class OrderResponse {
     private String id;
     private List<OrderItemResponse> orderItems;
     private Voucher voucher;
-    private UserResponse user;
+    private String username;
     private String shippingAddress;
     private OrderStatus status;
     private PaymentStatus paymentStatus;
     private String paymentMethod;
-    private Double totalPrice;
-    private Double totalDiscount;
+    private Long totalPrice;
+    private Long totalDiscount;
     private String transactionId;
 }

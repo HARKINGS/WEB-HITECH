@@ -15,6 +15,7 @@ import com.harkins.startYourEngine.dto.response.OrderResponse;
 import com.harkins.startYourEngine.entity.*;
 import com.harkins.startYourEngine.enums.OrderItemStatus;
 import com.harkins.startYourEngine.enums.OrderStatus;
+import com.harkins.startYourEngine.enums.PaymentMethod;
 import com.harkins.startYourEngine.enums.PaymentStatus;
 import com.harkins.startYourEngine.mapper.OrderMapper;
 import com.harkins.startYourEngine.repository.*;
@@ -51,13 +52,14 @@ public class OrderService {
         order.setVoucher(voucher);
         order.setTotalPrice(request.getTotalPrice());
         order.setTotalDiscount(request.getTotalDiscount());
-        if ("ZALOPAY".equalsIgnoreCase(request.getPaymentMethod())
-                || "VNPAY".equalsIgnoreCase(request.getPaymentMethod())) {
+        if (request.getPaymentMethod() == PaymentMethod.ZALOPAY || request.getPaymentMethod() == PaymentMethod.VNPAY) {
             order.setStatus(OrderStatus.PROCESSING);
             order.setPaymentStatus(PaymentStatus.PROCESSING);
+            order.setPaymentMethod(request.getPaymentMethod().toString());
         } else {
             order.setStatus(OrderStatus.PENDING);
             order.setPaymentStatus(PaymentStatus.PENDING);
+            order.setPaymentMethod(request.getPaymentMethod().toString());
         }
 
         // Xử lý các item
@@ -86,20 +88,15 @@ public class OrderService {
     }
 
     @PreAuthorize("hasAuthority('UPDATE_ORDERITEM')")
-    public OrderResponse updateOrderItemStatus(String orderItemId, String status) {
-        // Vì OrderItem không có trường status, chúng ta sẽ cập nhật trạng thái của đơn hàng chứa item này
+    public OrderResponse updateOrderItemStatus(String orderItemId, OrderItemStatus status) {
         OrderItem orderItem = orderItemRepo.findById(orderItemId).orElseThrow(() -> new RuntimeException());
-
-        Order order = orderItem.getOrder();
         try {
-            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-            order.setStatus(orderStatus);
-            orderRepo.save(order);
-
-            // Trả về OrderItemDTO đã cập nhật
-            return orderMapper.toOrderResponse(order);
+            orderItem.setStatus(status);
+            orderItemRepo.save(orderItem);
+            // Trả về OrderResponse của đơn hàng chứa item này
+            return orderMapper.toOrderResponse(orderItem.getOrder());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid order status: " + status);
+            throw new IllegalArgumentException("Invalid order item status: " + status);
         }
     }
 
@@ -124,12 +121,11 @@ public class OrderService {
 
     @PreAuthorize("hasAuthority('UPDATE_ORDER_STATUS')")
     @Transactional
-    public OrderResponse updateOrderStatus(String orderId, String status) throws NotFoundException {
+    public OrderResponse updateOrderStatus(String orderId, OrderStatus status) throws NotFoundException {
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new NotFoundException());
 
         try {
-            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-            order.setStatus(orderStatus);
+            order.setStatus(status);
             Order updatedOrder = orderRepo.save(order);
             return orderMapper.toOrderResponse(updatedOrder);
         } catch (IllegalArgumentException e) {
@@ -139,32 +135,22 @@ public class OrderService {
 
     @PreAuthorize("hasAuthority('UPDATE_PAYMENT_STATUS')")
     @Transactional
-    public OrderResponse updatePaymentStatus(String orderId, String status) throws Exception {
+    public OrderResponse updatePaymentStatus(String orderId, PaymentStatus status) throws Exception {
         try {
             Order order = orderRepo.findById(orderId).orElseThrow(() -> {
                 log.error("Order not found for payment update: {}", orderId);
                 return new NotFoundException();
             });
 
-            // Xử lý trường hợp status không hợp lệ
-            PaymentStatus paymentStatus;
-            try {
-                paymentStatus = PaymentStatus.valueOf(status.toUpperCase());
-                log.info("Converted status string '{}' to enum: {}", status, paymentStatus);
-            } catch (IllegalArgumentException e) {
-                log.error("Invalid payment status: {}, falling back to FAILED", status);
-                paymentStatus = PaymentStatus.FAILED;
-            }
-
-            order.setPaymentStatus(paymentStatus);
+            order.setPaymentStatus(status);
 
             // Nếu thanh toán thành công, cập nhật trạng thái đơn hàng
-            if (paymentStatus == PaymentStatus.PAID) {
+            if (status == PaymentStatus.PAID) {
                 log.info("Payment PAID, updating order status to CONFIRMED");
                 order.setStatus(OrderStatus.CONFIRMED);
             }
             // Nếu thanh toán thất bại, cập nhật trạng thái đơn hàng
-            else if (paymentStatus == PaymentStatus.FAILED) {
+            else if (status == PaymentStatus.FAILED) {
                 log.info("Payment FAILED, updating order status to CANCELLED");
                 order.setStatus(OrderStatus.CANCELLED);
             }
@@ -185,27 +171,18 @@ public class OrderService {
     }
 
     @PreAuthorize("hasAuthority('GET_ORDERS_BY_STATUS')")
-    public List<OrderResponse> getOrdersByStatus(String status) {
+    public List<OrderResponse> getOrdersByStatus(OrderStatus status) {
         try {
             log.info("Finding orders with status: {}", status);
 
-            // Chuyển đổi String thành enum OrderStatus
-            OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-            List<Order> orders = orderRepo.findByStatus(orderStatus);
+            List<Order> orders = orderRepo.findByStatus(status);
 
-            log.info("Found {} orders with status {}", orders.size(), orderStatus);
             return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
         } catch (IllegalArgumentException e) {
             log.error("Invalid order status: {}. Error: {}", status, e.getMessage());
             return new ArrayList<>(); // Trả về danh sách rỗng nếu status không hợp lệ
         }
     }
-
-     @PreAuthorize("hasAuthority('GET_ORDERS_BY_USERID')")
-     public List<OrderResponse> getOrdersByUserId(String userId) {
-         List<Order> orders = orderRepo.findByUser_UserId(userId);
-         return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
-     }
 
     @PreAuthorize("hasAuthority('DELETE_ORDER')")
     public void deleteOrder(String orderId) {

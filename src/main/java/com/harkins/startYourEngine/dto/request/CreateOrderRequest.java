@@ -4,6 +4,8 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 
+import com.harkins.startYourEngine.enums.PaymentMethod;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -22,11 +24,11 @@ public class CreateOrderRequest {
     String voucherId;
 
     @NotBlank(message = "NOT_EMPTY")
-    String paymentMethod;
+    PaymentMethod paymentMethod;
 
-    @NotBlank(message = "NOT_EMPTY")
-    Double totalPrice;
+    @NonNull
+    Long totalPrice;
 
-    @NotBlank(message = "NOT_EMPTY")
-    Double totalDiscount;
+    @NonNull
+    Long totalDiscount;
 }

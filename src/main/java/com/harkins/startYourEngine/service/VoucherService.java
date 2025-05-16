@@ -1,5 +1,8 @@
 package com.harkins.startYourEngine.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +18,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +46,7 @@ public class VoucherService {
 
     @PreAuthorize("hasAuthority('GET_ALL_VOUCHERS')")
     public List<VoucherResponse> getAllVouchers() {
-        return voucherRepository
-                .findAll()
-                .stream()
+        return voucherRepository.findAll().stream()
                 .map(voucherMapper::toVoucherResponse)
                 .collect(Collectors.toList());
     }

@@ -2806,114 +2806,64 @@
 
     "/orders/create": {
       "post": {
-        "tags": [ "Order" ],
-        "description": "Tạo đơn hàng mới",
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Place a new order",
+        "description": "Creates a new order in the system",
         "operationId": "placeOrder",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "items": {
+                  "orderItems": {
                     "type": "array",
-                    "description": "Danh sách sản phẩm trong đơn hàng",
                     "items": {
                       "type": "object",
                       "properties": {
                         "goodsId": {
-                          "type": "string",
-                          "description": "ID sản phẩm"
+                          "type": "string"
                         },
                         "quantity": {
-                          "type": "integer",
-                          "description": "Số lượng"
+                          "type": "integer"
                         }
-                      }
+                      },
+                      "required": ["goodsId", "quantity"]
                     }
                   },
-                  "shippingAddress": {
-                    "type": "object",
-                    "properties": {
-                      "street": { "type": "string" },
-                      "city": { "type": "string" },
-                      "state": { "type": "string" },
-                      "country": { "type": "string" }
-                    }
-                  },
-                  "paymentMethod": {
-                    "type": "string",
-                    "description": "Phương thức thanh toán"
+                  "address": {
+                    "type": "string"
                   },
                   "voucherId": {
-                    "type": "string",
-                    "description": "ID voucher áp dụng (nếu có)"
+                    "type": "string"
                   },
-                  "notes": {
-                    "type": "string",
-                    "description": "Ghi chú thêm cho đơn hàng"
+                  "paymentMethod": {
+                    "type": "string"
+                  },
+                  "totalPrice": {
+                    "type": "integer"
+                  },
+                  "totalDiscount": {
+                    "type": "integer"
                   }
-                }
+                },
+                "required": [
+                  "orderItems",
+                  "address",
+                  "paymentMethod",
+                  "totalPrice",
+                  "totalDiscount"
+                ]
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Tạo đơn hàng thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": { "type": "string", "description": "Order ID" },
-                    "userId": { "type": "string", "description": "ID người đặt" },
-                    "userName": { "type": "string", "description": "Tên người đặt" },
-                    "orderDate": { "type": "string", "format": "date-time" },
-                    "status": { "type": "string" },
-                    "paymentStatus": { "type": "string" },
-                    "totalPrice": { "type": "integer", "format": "int64" },
-                    "totalDiscount": { "type": "integer", "format": "int64" },
-                    "shippingAddress": {
-                      "type": "object",
-                      "properties": {
-                        "street": { "type": "string" },
-                        "city": { "type": "string" },
-                        "state": { "type": "string" },
-                        "country": { "type": "string" }
-                      }
-                    },
-                    "paymentMethod": { "type": "string" },
-                    "transactionId": { "type": "string" },
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": { "type": "string" },
-                          "goodsId": { "type": "string" },
-                          "goodsName": { "type": "string" },
-                          "quantity": { "type": "integer" },
-                          "price": { "type": "integer", "format": "int64" },
-                          "status": { "type": "string" }
-                        }
-                      }
-                    },
-                    "notes": { "type": "string" }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Có lỗi khi tạo đơn hàng",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
+            "description": "Order created successfully"
           }
         }
       }
@@ -2988,24 +2938,7 @@
                       "description": "Total amount of the order"
                     },
                     "shippingAddress": {
-                      "type": "object",
-                      "properties": {
-                        "street": {
-                          "type": "string"
-                        },
-                        "city": {
-                          "type": "string"
-                        },
-                        "state": {
-                          "type": "string"
-                        },
-                        "zipCode": {
-                          "type": "string"
-                        },
-                        "country": {
-                          "type": "string"
-                        }
-                      }
+                      "type": "string"   
                     },
                     "paymentMethod": {
                       "type": "string"
@@ -3136,7 +3069,15 @@
             "required": true,
             "description": "Trạng thái mới của đơn hàng",
             "schema": {
-              "type": "string"
+              "type": "string",
+                "enum": [
+                  "PENDING",
+                  "CONFIRMED",
+                  "SHIPPING",
+                  "DELIVERED",
+                  "CANCELLED",
+                  "PROCESSING"
+                ]
             }
           }
         ],
@@ -3189,7 +3130,8 @@
             "required": true,
             "description": "Trạng thái thanh toán mới",
             "schema": {
-              "type": "string"
+              "type": "string",
+                "enum": ["PENDING", "PROCESSING", "PAID", "CONFIRMED", "FAILED", "CANCELLED"]
             }
           }
         ],
@@ -3236,23 +3178,14 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "id": { "type": "string" },
-                      "userId": { "type": "string" },
+                      "id": { "type": "string" },          
                       "userName": { "type": "string" },
                       "orderDate": { "type": "string", "format": "date-time" },
                       "status": { "type": "string" },
                       "paymentStatus": { "type": "string" },
                       "totalPrice": { "type": "integer", "format": "int64" },
                       "totalDiscount": { "type": "integer", "format": "int64" },
-                      "shippingAddress": {
-                        "type": "object",
-                        "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
-                        }
-                      },
+                      "shippingAddress": { "type": "string"},
                       "paymentMethod": { "type": "string" },
                       "transactionId": { "type": "string" },
                       "items": {
@@ -3261,8 +3194,19 @@
                           "type": "object",
                           "properties": {
                             "id": { "type": "string" },
-                            "goodsId": { "type": "string" },
-                            "goodsName": { "type": "string" },
+                            "goods":{
+                              "type": "object",
+                              "properties": {
+                                "id": { "type": "string" },
+                                "name": { "type": "string" },
+                                "price": { "type": "integer", "format": "int64" },
+                                "quantity": { "type": "integer" },
+                                "goodsVersion": { "type": "string" },
+                                "goodsDescription": { "type": "string" },
+                                "goodsCategory": { "type": "string" },
+                                "goodsImageURL": { "type": "string" }
+                              }
+                            },
                             "quantity": { "type": "integer" },
                             "price": { "type": "integer", "format": "int64" },
                             "status": { "type": "string" }
@@ -3291,7 +3235,15 @@
             "required": true,
             "description": "Trạng thái đơn hàng",
             "schema": {
-              "type": "string"
+              "type": "string",
+                "enum": [
+                  "PENDING",
+                  "CONFIRMED",
+                  "SHIPPING",
+                  "DELIVERED",
+                  "CANCELLED",
+                  "PROCESSING"
+                ]
             }
           }
         ],
@@ -3314,15 +3266,9 @@
                       "totalPrice": { "type": "integer", "format": "int64" },
                       "totalDiscount": { "type": "integer", "format": "int64" },
                       "shippingAddress": {
-                        "type": "object",
-                        "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
-                        }
+                        "type": "string"                    
                       },
-                      "paymentMethod": { "type": "string" },
+                      "paymentMethod": { "type": "" },
                       "transactionId": { "type": "string" },
                       "items": {
                         "type": "array",
@@ -3348,75 +3294,7 @@
         }
       }
     },
-    "/orders/user/{userId}": {
-      "get": {
-        "tags": [ "Order" ],
-        "description": "Lấy đơn hàng theo userId",
-        "operationId": "getOrdersByUserId",
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "ID của người dùng",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Lấy đơn hàng theo userId thành công",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string" },
-                      "userId": { "type": "string" },
-                      "userName": { "type": "string" },
-                      "orderDate": { "type": "string", "format": "date-time" },
-                      "status": { "type": "string" },
-                      "paymentStatus": { "type": "string" },
-                      "totalPrice": { "type": "integer", "format": "int64" },
-                      "totalDiscount": { "type": "integer", "format": "int64" },
-                      "shippingAddress": {
-                        "type": "object",
-                        "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
-                        }
-                      },
-                      "paymentMethod": { "type": "string" },
-                      "transactionId": { "type": "string" },
-                      "items": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": { "type": "string" },
-                            "goodsId": { "type": "string" },
-                            "goodsName": { "type": "string" },
-                            "quantity": { "type": "integer" },
-                            "price": { "type": "integer", "format": "int64" },
-                            "status": { "type": "string" }
-                          }
-                        }
-                      },
-                      "notes": { "type": "string" }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
+    
     "/orders/{orderId}": {
       "delete": {
         "tags": [ "Order" ],
@@ -3494,7 +3372,9 @@
 
     "/zalopay/create-order": {
       "post": {
-        "tags": ["Payment"],
+        "tags": [
+          "Payment"
+        ],
         "summary": "Create Zalopay payment order",
         "description": "Creates a payment order in the Zalopay payment gateway",
         "operationId": "createOrder",
@@ -3503,30 +3383,26 @@
           "content": {
             "application/json": {
               "schema": {
-                "type" : "object",
-                "required" : [ "amount" ],
-                "properties" : {
-                  "amount" : {
-                    "type" : "number",
-                    "description" : "Amount to pay (in VND)"
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "Amount to pay (in VND)"
                   },
-                  "orderId" : {
-                    "type" : "string",
-                    "description" : "ID of the order in the system"
+                  "orderInfo": {
+                    "type": "string",
+                    "description": "Order information/description"
                   },
-                  "description" : {
-                    "type" : "string",
-                    "description" : "Description of the payment"
-                  },
-                  "bankCode" : {
-                    "type" : "string",
-                    "description" : "Bank code for direct banking (optional)"
-                  },
-                  "embedData" : {
-                    "type" : "object",
-                    "description" : "Additional data to embed in the order"
+                  "orderType": {
+                    "type": "string",
+                    "description": "Type of the order"
                   }
-                }
+                },
+                "required": [
+                  "amount",
+                  "orderInfo",
+                  "orderType"
+                ]
               }
             }
           }
@@ -3537,66 +3413,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type" : "object",
-                  "properties" : {
-                    "return_code" : {
-                      "type" : "integer",
-                      "description" : "Response code from Zalopay (1: success)"
+                  "type": "object",
+                  "properties": {
+                    "return_code": {
+                      "type": "integer"
                     },
-                    "return_message" : {
-                      "type" : "string",
-                      "description" : "Response message"
+                    "return_message": {
+                      "type": "string"
                     },
-                    "sub_return_code" : {
-                      "type" : "integer",
-                      "description" : "Sub-response code"
+                    "sub_return_code": {
+                      "type": "integer"
                     },
-                    "sub_return_message" : {
-                      "type" : "string",
-                      "description" : "Sub-response message"
+                    "sub_return_message": {
+                      "type": "string"
                     },
-                    "order_url" : {
-                      "type" : "string",
-                      "description" : "URL to redirect user for payment"
+                    "zp_trans_token": {
+                      "type": "string"
                     },
-                    "zp_trans_token" : {
-                      "type" : "string",
-                      "description" : "Zalopay transaction token"
+                    "order_url": {
+                      "type": "string"
                     },
-                    "app_trans_id" : {
-                      "type" : "string",
-                      "description" : "Application transaction ID"
-                    },
-                    "qr_code" : {
-                      "type" : "string",
-                      "description" : "QR code data for payment (if requested)"
+                    "order_token": {
+                      "type": "string"
                     }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Missing required parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": { "type": "string" }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": { "type": "string" }
                   }
                 }
               }

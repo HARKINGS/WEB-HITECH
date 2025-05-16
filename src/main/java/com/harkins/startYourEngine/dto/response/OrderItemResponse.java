@@ -1,6 +1,6 @@
 package com.harkins.startYourEngine.dto.response;
 
-import com.harkins.startYourEngine.enums.OrderStatus;
+import com.harkins.startYourEngine.enums.OrderItemStatus;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,10 +10,8 @@ import lombok.Data;
 public class OrderItemResponse {
     private String id;
     private String orderId;
-    private OrderStatus status;
-    private String goodsId;
-    private String goodsName;
+    private OrderItemStatus status;
+    private GoodsResponse goods;
     private Integer quantity;
-    private String userId;
     private String username;
 }

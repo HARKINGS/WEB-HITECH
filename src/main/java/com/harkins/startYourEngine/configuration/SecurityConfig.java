@@ -1,5 +1,7 @@
 package com.harkins.startYourEngine.configuration;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,15 +20,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.Set;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final String[] ALL_METHOD_PUBLIC_ENDPOINTS = {"/orders/**", "/zalopay/**"};
     private static final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/reviews/create"};
-    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews", "/vouchers","/vouchers/**"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews", "/vouchers", "/vouchers/**"};
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -37,14 +37,11 @@ public class SecurityConfig {
             "GET_GOODS_BY_ID",
             "GET_GOODS_BY_NAME",
             "GET_GOODS_BY_CATEGORY",
-
             "GET_VOUCHER",
             "GET_ALL_VOUCHERS",
-
             "CREATE_REVIEWS",
             "GET_ALL_REVIEWS",
             "GET_REVIEWS_BY_ID",
-
             "PLACE_ORDER",
             "DELETE_ORDER",
             "UPDATE_ORDERITEM",
@@ -55,7 +52,6 @@ public class SecurityConfig {
             "GET_ALL_ORDERS",
             "GET_ORDERS_BY_STATUS",
             "GET_ORDERS_BY_USERID",
-
             "GET_ORDER_STATUS",
             "CREATE_ORDER",
             "UPDATE_ORDER_TRANSACTIONID");
@@ -64,8 +60,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS)
+                .authorizeHttpRequests(request -> request.requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS)
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
                         .permitAll()
@@ -73,8 +68,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .anonymous(anon -> anon.authorities(
-                        userPermissions.toArray(new String[0])))
+                .anonymous(anon -> anon.authorities(userPermissions.toArray(new String[0])))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                                 jwt.decoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))

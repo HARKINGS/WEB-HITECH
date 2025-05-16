@@ -136,14 +136,11 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_ID",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
-
                         "GET_VOUCHER",
                         "GET_ALL_VOUCHERS",
-
                         "CREATE_REVIEWS",
                         "GET_ALL_REVIEWS",
                         "GET_REVIEWS_BY_ID",
-
                         "PLACE_ORDER",
                         "DELETE_ORDER",
                         "UPDATE_ORDERITEM",
@@ -154,7 +151,6 @@ public class ApplicationInitConfig {
                         "GET_ALL_ORDERS",
                         "GET_ORDERS_BY_STATUS",
                         "GET_ORDERS_BY_USERID",
-
                         "GET_ORDER_STATUS",
                         "CREATE_ORDER",
                         "UPDATE_ORDER_TRANSACTIONID");
@@ -162,25 +158,21 @@ public class ApplicationInitConfig {
                 Set<String> staffPermissions = Set.of(
                         "CHECK_TOKEN",
                         "REFRESH_TOKEN",
-
                         "CREATE_GOODS",
                         "GET_ALL_GOODS",
                         "GET_GOODS_BY_ID",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
                         "GET_REVIEWS_BY_GOODS",
-
                         "CREATE_VOUCHER",
                         "DELETE_VOUCHER",
                         "GET_VOUCHER",
                         "GET_ALL_VOUCHERS",
-
                         "CREATE_REVIEWS",
                         "GET_REVIEWS_BY_ID",
                         "GET_ALL_REVIEWS",
                         "UPDATE_REVIEWS",
                         "DELETE_REVIEWS",
-
                         "PLACE_ORDER",
                         "DELETE_ORDER",
                         "UPDATE_ORDERITEM",
@@ -191,7 +183,6 @@ public class ApplicationInitConfig {
                         "GET_ALL_ORDERS",
                         "GET_ORDERS_BY_STATUS",
                         "GET_ORDERS_BY_USERID",
-
                         "GET_ORDER_STATUS",
                         "CREATE_ORDER",
                         "UPDATE_ORDER_TRANSACTIONID");

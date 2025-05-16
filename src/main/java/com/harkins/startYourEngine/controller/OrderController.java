@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.harkins.startYourEngine.dto.request.CreateOrderRequest;
 import com.harkins.startYourEngine.dto.response.OrderResponse;
+import com.harkins.startYourEngine.enums.OrderItemStatus;
+import com.harkins.startYourEngine.enums.OrderStatus;
+import com.harkins.startYourEngine.enums.PaymentStatus;
 import com.harkins.startYourEngine.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +34,8 @@ public class OrderController {
     }
 
     @PutMapping("/update-item-status/{orderItemId}")
-    public ResponseEntity<?> updateOrderItemStatus(@PathVariable String orderItemId, @RequestParam String status) {
+    public ResponseEntity<?> updateOrderItemStatus(
+            @PathVariable String orderItemId, @RequestParam OrderItemStatus status) {
         try {
             OrderResponse updatedOrder = orderService.updateOrderItemStatus(orderItemId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -57,7 +61,7 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/status")
-    public ResponseEntity<?> updateOrderStatus(@PathVariable String orderId, @RequestParam String status) {
+    public ResponseEntity<?> updateOrderStatus(@PathVariable String orderId, @RequestParam OrderStatus status) {
         try {
             OrderResponse updatedOrder = orderService.updateOrderStatus(orderId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -67,7 +71,7 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}/payment-status")
-    public ResponseEntity<?> updatePaymentStatus(@PathVariable String orderId, @RequestParam String status) {
+    public ResponseEntity<?> updatePaymentStatus(@PathVariable String orderId, @RequestParam PaymentStatus status) {
         try {
             OrderResponse updatedOrder = orderService.updatePaymentStatus(orderId, status);
             return ResponseEntity.ok(updatedOrder);
@@ -83,7 +87,7 @@ public class OrderController {
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<?> getOrdersByStatus(@PathVariable String status) {
+    public ResponseEntity<?> getOrdersByStatus(@PathVariable OrderStatus status) {
         try {
             List<OrderResponse> orders = orderService.getOrdersByStatus(status);
             return ResponseEntity.ok(orders);
@@ -91,12 +95,6 @@ public class OrderController {
             return ResponseEntity.status(500).body(Map.of("success", false, "error", e.getMessage()));
         }
     }
-
-     @GetMapping("/user/{userId}")
-     public ResponseEntity<?> getOrdersByUserId(@PathVariable("userId") String userId) {
-         List<OrderResponse> orders = orderService.getOrdersByUserId(userId);
-         return ResponseEntity.ok(orders);
-     }
 
     @DeleteMapping("/{orderId}")
     public ResponseEntity<?> deleteOrder(@PathVariable String orderId) {
