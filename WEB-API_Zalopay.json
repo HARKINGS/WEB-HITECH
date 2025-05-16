@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Zalopay API",
+    "description": "API for integrating Zalopay payment gateway in the ECom Website project",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/web",
+      "description": "API Server"
+    }
+  ],
+  "paths": {
+    "/zalopay/create-order": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Create Zalopay payment order",
+        "description": "Creates a payment order in the Zalopay payment gateway",
+        "operationId": "createOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "Amount to pay (in VND)"
+                  },
+                  "orderInfo": {
+                    "type": "string",
+                    "description": "Order information/description"
+                  },
+                  "orderType": {
+                    "type": "string",
+                    "description": "Type of the order"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "orderInfo",
+                  "orderType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "return_code": {
+                      "type": "integer"
+                    },
+                    "return_message": {
+                      "type": "string"
+                    },
+                    "sub_return_code": {
+                      "type": "integer"
+                    },
+                    "sub_return_message": {
+                      "type": "string"
+                    },
+                    "zp_trans_token": {
+                      "type": "string"
+                    },
+                    "order_url": {
+                      "type": "string"
+                    },
+                    "order_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zalopay/order-status/{orderId}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Get Zalopay order status",
+        "description": "Retrieves the status of a payment order from Zalopay",
+        "operationId": "getOrderStatus",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "Order ID to check status",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "return_code": {
+                      "type": "integer"
+                    },
+                    "return_message": {
+                      "type": "string"
+                    },
+                    "sub_return_code": {
+                      "type": "integer"
+                    },
+                    "sub_return_message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

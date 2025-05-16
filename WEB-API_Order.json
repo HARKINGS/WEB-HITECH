@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "description": "API for managing orders in the ECom Website project",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/web",
+      "description": "API Server"
+    }
+  ],
+  "paths": {
+    "/orders/create": {
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Place a new order",
+        "description": "Creates a new order in the system",
+        "operationId": "placeOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "goodsId": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["goodsId", "quantity"]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "voucherId": {
+                    "type": "string"
+                  },
+                  "paymentMethod": {
+                    "type": "string"
+                  },
+                  "totalPrice": {
+                    "type": "integer"
+                  },
+                  "totalDiscount": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "orderItems",
+                  "address",
+                  "paymentMethod",
+                  "totalPrice",
+                  "totalDiscount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created successfully"
+          }
+        }
+      }
+    }
+  }
+}

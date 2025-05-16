@@ -40,7 +40,7 @@ public class GoodsController {
     GoodsReviewService goodsReviewService;
 
     @GetMapping("/details/{goodsId}")
-    public ResponseEntity<?> getGoodsWithReviews(@PathVariable String goodsId) {
+    public ResponseEntity<?> getGoodsWithReviews(@PathVariable("goodsId") String goodsId) {
         try {
             // Lấy thông tin sản phẩm
             GoodsResponse goods = goodsService.getGoodsById(goodsId);
@@ -94,7 +94,7 @@ public class GoodsController {
                 .build();
     }
 
-    @PutMapping("/{goodsId}")
+    @PutMapping("/{goodId}")
     ApiResponse<GoodsResponse> updateGoods(
             @PathVariable("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()

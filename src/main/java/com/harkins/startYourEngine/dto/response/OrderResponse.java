@@ -16,7 +16,7 @@ public class OrderResponse {
     private List<OrderItemResponse> orderItems;
     private Voucher voucher;
     private UserResponse user;
-    private AddressResponse address;
+    private String shippingAddress;
     private OrderStatus status;
     private PaymentStatus paymentStatus;
     private String paymentMethod;

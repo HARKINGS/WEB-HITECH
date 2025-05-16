@@ -53,7 +53,7 @@ public class ApplicationInitConfig {
 
     private void initPermission() {
         //        AddressService
-//        addPermission("SAVE_ADDRESS", "Save and Update Address");
+        //        addPermission("SAVE_ADDRESS", "Save and Update Address");
 
         //        AuthenticationService
         //        addPermission("LOGIN", "Login account");
@@ -196,11 +196,9 @@ public class ApplicationInitConfig {
                         "CREATE_ORDER",
                         "UPDATE_ORDER_TRANSACTIONID");
 
-                Set<String> listPermissions = permissionRepository.findAll().stream()
+                Set<String> adminPermissions = permissionRepository.findAll().stream()
                         .map(Permission::getName)
                         .collect(Collectors.toSet());
-
-                Set<String> adminPermissions = listPermissions;
 
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.USER)
