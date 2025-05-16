@@ -133,32 +133,68 @@ public class ApplicationInitConfig {
                 Set<String> userPermissions = Set.of(
                         "GET_REVIEWS_BY_GOODS",
                         "GET_ALL_GOODS",
-                        "GET_ALL_REVIEWS",
+                        "GET_GOODS_BY_ID",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
+
+                        "GET_VOUCHER",
+                        "GET_ALL_VOUCHERS",
+
+                        "CREATE_REVIEWS",
+                        "GET_ALL_REVIEWS",
+                        "GET_REVIEWS_BY_ID",
+
                         "PLACE_ORDER",
-                        "REFRESH_TOKEN",
-                        "CHECK_TOKEN",
-                        "GET_VOUCHER", "GET_ORDER_STATUS");
+                        "DELETE_ORDER",
+                        "UPDATE_ORDERITEM",
+                        "GET_ORDER_BY_ID",
+                        "GET_CURRENT_USERORDERS",
+                        "UPDATE_ORDER_STATUS",
+                        "UPDATE_PAYMENT_STATUS",
+                        "GET_ALL_ORDERS",
+                        "GET_ORDERS_BY_STATUS",
+                        "GET_ORDERS_BY_USERID",
+
+                        "GET_ORDER_STATUS",
+                        "CREATE_ORDER",
+                        "UPDATE_ORDER_TRANSACTIONID");
 
                 Set<String> staffPermissions = Set.of(
-                        "CREATE_REVIEWS",
-                        "GET_REVIEWS_BY_ID",
-                        "GET_ALL_REVIEWS",
-                        "GET_REVIEWS_BY_GOODS",
-                        "DELETE_REVIEWS",
+                        "CHECK_TOKEN",
+                        "REFRESH_TOKEN",
+
                         "CREATE_GOODS",
                         "GET_ALL_GOODS",
                         "GET_GOODS_BY_ID",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
-                        "UPDATE_ORDERITEM",
-                        "GET_ALL_ORDERS", "GET_ORDER_STATUS",
-                        "GET_ORDERS_BY_STATUS",
-                        "GET_ORDERS_BY_USERID",
+                        "GET_REVIEWS_BY_GOODS",
+
                         "CREATE_VOUCHER",
                         "DELETE_VOUCHER",
-                        "GET_VOUCHER");
+                        "GET_VOUCHER",
+                        "GET_ALL_VOUCHERS",
+
+                        "CREATE_REVIEWS",
+                        "GET_REVIEWS_BY_ID",
+                        "GET_ALL_REVIEWS",
+                        "UPDATE_REVIEWS",
+                        "DELETE_REVIEWS",
+
+                        "PLACE_ORDER",
+                        "DELETE_ORDER",
+                        "UPDATE_ORDERITEM",
+                        "GET_ORDER_BY_ID",
+                        "GET_CURRENT_USERORDERS",
+                        "UPDATE_ORDER_STATUS",
+                        "UPDATE_PAYMENT_STATUS",
+                        "GET_ALL_ORDERS",
+                        "GET_ORDERS_BY_STATUS",
+                        "GET_ORDERS_BY_USERID",
+
+                        "GET_ORDER_STATUS",
+                        "CREATE_ORDER",
+                        "UPDATE_ORDER_TRANSACTIONID");
 
                 Set<String> listPermissions = permissionRepository.findAll().stream()
                         .map(Permission::getName)

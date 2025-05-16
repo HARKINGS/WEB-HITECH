@@ -2104,9 +2104,6 @@
       },
       "get" : {
         "tags" : [ "Voucher" ],
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
         "description" : "Get All Vouchers Info",
         "operationId" : "getVouchers",
         "responses" : {
@@ -2166,9 +2163,6 @@
     "/vouchers/{voucherId}" : {
       "get" : {
         "tags" : [ "Voucher" ],
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
         "parameters" : [ {
           "name" : "voucherId",
           "in" : "path",
@@ -2452,11 +2446,6 @@
         "tags": ["Review"],
         "description": "Get review by ID",
         "operationId": "getReviewById",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "parameters": [
           {
             "name": "reviewId",

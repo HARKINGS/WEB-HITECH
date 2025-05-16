@@ -18,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Set;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -28,6 +30,35 @@ public class SecurityConfig {
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
+
+    Set<String> userPermissions = Set.of(
+            "GET_REVIEWS_BY_GOODS",
+            "GET_ALL_GOODS",
+            "GET_GOODS_BY_ID",
+            "GET_GOODS_BY_NAME",
+            "GET_GOODS_BY_CATEGORY",
+
+            "GET_VOUCHER",
+            "GET_ALL_VOUCHERS",
+
+            "CREATE_REVIEWS",
+            "GET_ALL_REVIEWS",
+            "GET_REVIEWS_BY_ID",
+
+            "PLACE_ORDER",
+            "DELETE_ORDER",
+            "UPDATE_ORDERITEM",
+            "GET_ORDER_BY_ID",
+            "GET_CURRENT_USERORDERS",
+            "UPDATE_ORDER_STATUS",
+            "UPDATE_PAYMENT_STATUS",
+            "GET_ALL_ORDERS",
+            "GET_ORDERS_BY_STATUS",
+            "GET_ORDERS_BY_USERID",
+
+            "GET_ORDER_STATUS",
+            "CREATE_ORDER",
+            "UPDATE_ORDER_TRANSACTIONID");
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -43,14 +74,7 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated())
                 .anonymous(anon -> anon.authorities(
-                        "GET_REVIEWS_BY_GOODS",
-                        "GET_ALL_GOODS",
-                        "GET_ALL_VOUCHERS",
-                        "GET_GOODS_BY_NAME",
-                        "GET_GOODS_BY_CATEGORY",
-                        "PLACE_ORDER",
-                        "REFRESH_TOKEN",
-                        "CHECK_TOKEN"))
+                        userPermissions.toArray(new String[0])))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                                 jwt.decoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
