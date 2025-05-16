@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +12,14 @@ import com.harkins.startYourEngine.dto.request.CreateOrderRequest;
 import com.harkins.startYourEngine.dto.response.OrderResponse;
 import com.harkins.startYourEngine.service.OrderService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
-
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     // 1. Đặt hàng mới
     @PostMapping("/create")
@@ -64,16 +61,16 @@ public class OrderController {
         }
     }
 
-    // 4. Lấy đơn hàng của user hiện tại
-    @GetMapping("/user")
-    public ResponseEntity<?> getUserOrders() {
-        try {
-            List<OrderResponse> orders = orderService.getCurrentUserOrders();
-            return ResponseEntity.ok(orders);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error getting user orders: " + e.getMessage());
-        }
-    }
+    // // 4. Lấy đơn hàng của user hiện tại
+    // @GetMapping("/user")
+    // public ResponseEntity<?> getUserOrders() {
+    //     try {
+    //         List<OrderResponse> orders = orderService.getCurrentUserOrders();
+    //         return ResponseEntity.ok(orders);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(500).body("Error getting user orders: " + e.getMessage());
+    //     }
+    // }
 
     // 5. Cập nhật trạng thái đơn hàng
     @PutMapping("/{orderId}/status")
@@ -126,7 +123,7 @@ public class OrderController {
     // 10. Xóa đơn hàng
     @DeleteMapping("/{orderId}")
     public ResponseEntity<?> deleteOrder(@PathVariable String orderId) {
-        List<OrderResponse> deleted = orderService.deleteOrder(orderId);
-        return ResponseEntity.ok(Map.of("deleted", deleted));
+        orderService.deleteOrder(orderId);
+        return ResponseEntity.ok(Map.of("deleted", true));
     }
 }

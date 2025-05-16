@@ -12,7 +12,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +39,7 @@ public class ZalopayService {
         return fmt.format(cal.getTimeInMillis());
     }
 
-//    @PreAuthorize("hasAuthority('CREATE_ORDER')")
+    //    @PreAuthorize("hasAuthority('CREATE_ORDER')")
     public String createOrder(Map<String, Object> orderRequest) {
         try {
             // Lấy orderId nếu có
@@ -133,7 +132,7 @@ public class ZalopayService {
         }
     }
 
-//    @PreAuthorize("hasAuthority('GET_ORDER_STATUS')")
+    //    @PreAuthorize("hasAuthority('GET_ORDER_STATUS')")
     public String getOrderStatus(String appTransId) {
         String data = zalopayConfig.getAppId() + "|" + appTransId + "|" + zalopayConfig.getKey1();
         String mac = HMACUtil.HMacHexStringEncode(HMACUtil.HMACSHA256, zalopayConfig.getKey1(), data);
@@ -171,7 +170,7 @@ public class ZalopayService {
      * @param transactionId ID giao dịch từ ZaloPay (app_trans_id)
      * @return true nếu cập nhật thành công, false nếu không
      */
-//    @PreAuthorize("hasAuthority('UPDATE_ORDER_TRANSACTIONID')")
+    //    @PreAuthorize("hasAuthority('UPDATE_ORDER_TRANSACTIONID')")
     public boolean updateOrderTransactionId(String orderId, String transactionId) {
         try {
             Optional<Order> orderOpt = orderRepo.findById(orderId);

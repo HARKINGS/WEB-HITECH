@@ -33,30 +33,25 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request
-                        .requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
-                        .anyRequest().authenticated()
-                )
-                .anonymous(anon -> anon
-                        .authorities(
-                                "GET_REVIEWS_BY_GOODS",
-                                "GET_ALL_GOODS",
-                                "GET_GOODS_BY_NAME",
-                                "GET_GOODS_BY_CATEGORY",
-                                "PLACE_ORDER",
-                                "REFRESH_TOKEN",
-                                "CHECK_TOKEN"
-                        )
-                )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        )
-                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
-                )
+                .authorizeHttpRequests(request -> request.requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .anonymous(anon -> anon.authorities(
+                        "GET_REVIEWS_BY_GOODS",
+                        "GET_ALL_GOODS",
+                        "GET_GOODS_BY_NAME",
+                        "GET_GOODS_BY_CATEGORY",
+                        "PLACE_ORDER",
+                        "REFRESH_TOKEN",
+                        "CHECK_TOKEN"))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
+                                jwt.decoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .csrf(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();

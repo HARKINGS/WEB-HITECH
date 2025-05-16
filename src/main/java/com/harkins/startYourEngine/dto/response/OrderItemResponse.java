@@ -8,12 +8,12 @@ import lombok.Data;
 @Data
 @Builder
 public class OrderItemResponse {
-    private Long id;
-    private Long orderId;
+    private String id;
+    private String orderId;
     private OrderStatus status;
-    private Long goodsId;
+    private String goodsId;
     private String goodsName;
     private Integer quantity;
-    private Long userId;
+    private String userId;
     private String username;
 }

@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @Builder
 public class OrderResponse {
-    private Long id;
+    private String id;
     private List<OrderItemResponse> orderItems;
     private Voucher voucher;
     private UserResponse user;

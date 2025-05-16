@@ -43,8 +43,7 @@ public class ApplicationInitConfig {
     }
 
     private void addPermission(String permissionName, String permissionDescription) {
-        if (permissionRepository.existsByName(permissionName))
-            return;
+        if (permissionRepository.existsByName(permissionName)) return;
 
         permissionRepository.save(Permission.builder()
                 .name(permissionName)
@@ -53,24 +52,24 @@ public class ApplicationInitConfig {
     }
 
     private void initPermission() {
-//        AddressService
+        //        AddressService
         addPermission("SAVE_ADDRESS", "Save and Update Address");
 
-//        AuthenticationService
-//        addPermission("LOGIN", "Login account");
-//        addPermission("LOOUT", "Loout account");
+        //        AuthenticationService
+        //        addPermission("LOGIN", "Login account");
+        //        addPermission("LOOUT", "Loout account");
         addPermission("CHECK_TOKEN", "Check token Valid");
         addPermission("REFRESH_TOKEN", "Refresh token Valid");
 
-//        GoodsReviewService
+        //        GoodsReviewService
         addPermission("CREATE_REVIEWS", "Create goods Review");
         addPermission("GET_REVIEWS_BY_ID", "Get reviews by id");
         addPermission("GET_ALL_REVIEWS", "Get all goods reviews");
-        addPermission("GET_REVIEWS_BY_GOODS",  "Get reviews by goods");
+        addPermission("GET_REVIEWS_BY_GOODS", "Get reviews by goods");
         addPermission("UPDATE_REVIEWS", "Update goods review");
         addPermission("DELETE_REVIEWS", "Delete goods review");
 
-//        GoodsService
+        //        GoodsService
         addPermission("CREATE_GOODS", "Create a goods");
         addPermission("GET_ALL_GOODS", "Get info of all goods");
         addPermission("UPDATE_GOODS", "Update goods information");
@@ -79,41 +78,41 @@ public class ApplicationInitConfig {
         addPermission("GET_GOODS_BY_NAME", "Get info of a goods by name");
         addPermission("GET_GOODS_BY_CATEGORY", "Get info of a goods by category");
 
-//        OrderService
+        //        OrderService
         addPermission("PLACE_ORDER", "Place order");
         addPermission("DELETE_ORDER", "Delete order");
-        addPermission("UPDATE_ORDERITEM",  "Update order item");
+        addPermission("UPDATE_ORDERITEM", "Update order item");
         addPermission("GET_ORDER_BY_ID", "Get order by id");
         addPermission("GET_CURRENT_USERORDERS", "Get current user orders");
         addPermission("UPDATE_ORDER_STATUS", "Update order status");
-        addPermission("UPDATE_PAYMENT_STATUS",  "Update payment status");
+        addPermission("UPDATE_PAYMENT_STATUS", "Update payment status");
         addPermission("GET_ALL_ORDERS", "Get all orders");
         addPermission("GET_ORDERS_BY_STATUS", "Get orders by status");
         addPermission("GET_ORDERS_BY_USERID", "Get orders by userid");
 
-//        PermissionService
+        //        PermissionService
         addPermission("CREATE_PERMISSION", "Create a permission");
         addPermission("GET_ALL_PERMISSIONS", "Get all permissions");
         addPermission("DELETE_PERMISSION", "Delete a permission");
 
-//        RoleService
+        //        RoleService
         addPermission("CREATE_ROLE", "Create a role");
         addPermission("DELETE_ROLE", "Delete a role");
         addPermission("GET_ALL_ROLES", "Get all roles");
 
-//        UserService
+        //        UserService
         addPermission("CREATE_USER", "Create an account");
         addPermission("DELETE_USER", "Delete an account");
         addPermission("GET_ALL_USERS", "Get info of all accounts");
         addPermission("GET_USER", "Get info of an account");
         addPermission("UPDATE_USER", "Update account information");
 
-//        VoucherService
+        //        VoucherService
         addPermission("CREATE_VOUCHER", "Create a voucher");
         addPermission("DELETE_VOUCHER", "Delete a voucher");
         addPermission("GET_VOUCHER", "Get info of a voucher");
 
-//        ZaloPayService
+        //        ZaloPayService
         addPermission("CREATE_ORDER", "Create an order");
         addPermission("GET_ORDER_STATUS", "Get order status");
         addPermission("UPDATE_ORDER_TRANSACTIONID", "Update order transaction id");
@@ -131,23 +130,34 @@ public class ApplicationInitConfig {
                 initPermission();
 
                 Set<String> userPermissions = Set.of(
-                        "GET_REVIEWS_BY_GOODS", "GET_ALL_GOODS",
-                        "GET_GOODS_BY_NAME", "GET_GOODS_BY_CATEGORY",
-                        "PLACE_ORDER", "REFRESH_TOKEN", "CHECK_TOKEN"
-                );
+                        "GET_REVIEWS_BY_GOODS",
+                        "GET_ALL_GOODS",
+                        "GET_GOODS_BY_NAME",
+                        "GET_GOODS_BY_CATEGORY",
+                        "PLACE_ORDER",
+                        "REFRESH_TOKEN",
+                        "CHECK_TOKEN");
 
                 Set<String> staffPermissions = Set.of(
-                        "CREATE_REVIEWS", "GET_REVIEWS_BY_ID",
-                        "GET_ALL_REVIEWS", "GET_REVIEWS_BY_GOODS", "DELETE_REVIEWS",
-                        "CREATE_GOODS", "GET_ALL_GOODS", "GET_GOODS_BY_ID",
-                        "GET_GOODS_BY_NAME", "GET_GOODS_BY_CATEGORY", "UPDATE_ORDERITEM",
-                        "GET_ALL_ORDERS", "GET_ORDERS_BY_STATUS", "GET_ORDERS_BY_USERID",
-                        "CREATE_VOUCHER", "DELETE_VOUCHER", "GET_VOUCHER"
-                );
+                        "CREATE_REVIEWS",
+                        "GET_REVIEWS_BY_ID",
+                        "GET_ALL_REVIEWS",
+                        "GET_REVIEWS_BY_GOODS",
+                        "DELETE_REVIEWS",
+                        "CREATE_GOODS",
+                        "GET_ALL_GOODS",
+                        "GET_GOODS_BY_ID",
+                        "GET_GOODS_BY_NAME",
+                        "GET_GOODS_BY_CATEGORY",
+                        "UPDATE_ORDERITEM",
+                        "GET_ALL_ORDERS",
+                        "GET_ORDERS_BY_STATUS",
+                        "GET_ORDERS_BY_USERID",
+                        "CREATE_VOUCHER",
+                        "DELETE_VOUCHER",
+                        "GET_VOUCHER");
 
-                Set<String> listPermissions = permissionRepository
-                        .findAll()
-                        .stream()
+                Set<String> listPermissions = permissionRepository.findAll().stream()
                         .map(Permission::getName)
                         .collect(Collectors.toSet());
 

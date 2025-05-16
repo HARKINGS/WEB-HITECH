@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.harkins.startYourEngine.dto.request.CreateOrderItemRequest;
 import com.harkins.startYourEngine.dto.request.CreateOrderRequest;
 import com.harkins.startYourEngine.dto.response.OrderResponse;
-import com.harkins.startYourEngine.dto.response.UserResponse;
 import com.harkins.startYourEngine.entity.*;
+import com.harkins.startYourEngine.enums.OrderItemStatus;
 import com.harkins.startYourEngine.enums.OrderStatus;
 import com.harkins.startYourEngine.enums.PaymentStatus;
 import com.harkins.startYourEngine.mapper.OrderMapper;
@@ -33,28 +33,12 @@ public class OrderService {
     OrderRepository orderRepo;
     OrderItemRepository orderItemRepo;
     GoodsRepository goodsRepo;
-    UserService userService;
     OrderMapper orderMapper;
-    AddressRepository addressRepo;
     VoucherRepository voucherRepo;
-    UserRepository userRepository;
 
     @PreAuthorize("hasAuthority('PLACE_ORDER')")
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse placeOrder(CreateOrderRequest request) throws NotFoundException {
-        // Lấy user đang đăng nhập (DTO)
-        UserResponse userResponse = userService.getMyInfo();
-        // Lấy entity User từ userId
-        User user = userRepository
-                .findById(userResponse.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userResponse.getUserId()));
-
-        // Lấy địa chỉ giao hàng (nếu có)
-        Address address = null;
-        if (request.getAddressId() != null) {
-            address = addressRepo.findById(request.getAddressId()).orElseThrow(() -> new NotFoundException());
-        }
-
         // Lấy voucher (nếu có)
         Voucher voucher = null;
         if (request.getVoucherId() != null) {
@@ -63,14 +47,10 @@ public class OrderService {
 
         // Tạo đơn hàng mới
         Order order = new Order();
-        order.setUser(user);
-        order.setAddress(address);
+        order.setShippingAddress(request.getShippingAddress());
         order.setVoucher(voucher);
         order.setTotalPrice(request.getTotalPrice());
         order.setTotalDiscount(request.getTotalDiscount());
-        order.setPaymentMethod(request.getPaymentMethod());
-
-        // Đảm bảo có status cho Order
         if ("ZALOPAY".equalsIgnoreCase(request.getPaymentMethod())
                 || "VNPAY".equalsIgnoreCase(request.getPaymentMethod())) {
             order.setStatus(OrderStatus.PROCESSING);
@@ -90,9 +70,8 @@ public class OrderService {
             OrderItem item = new OrderItem();
             item.setGoods(goods);
             item.setQuantity(itemReq.getQuantity());
-            item.setUser(user);
             item.setOrder(order);
-            item.setStatus(order.getStatus()); // Lấy status từ Order
+            item.setStatus(OrderItemStatus.PENDING);
 
             orderItems.add(item);
         }
@@ -136,12 +115,12 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
-    @PreAuthorize("hasAuthority('GET_CURRENT_USERORDERS')")
-    public List<OrderResponse> getCurrentUserOrders() {
-        UserResponse user = userService.getMyInfo();
-        List<Order> orders = orderRepo.findByUser_UserId(user.getUserId());
-        return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
-    }
+    // @PreAuthorize("hasAuthority('GET_CURRENT_USERORDERS')")
+    // public List<OrderResponse> getCurrentUserOrders() {
+    //     UserResponse user = userService.getMyInfo();
+    //     List<Order> orders = orderRepo.findByUser_UserId(user.getUserId());
+    //     return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
+    // }
 
     @PreAuthorize("hasAuthority('UPDATE_ORDER_STATUS')")
     @Transactional
@@ -229,8 +208,7 @@ public class OrderService {
     }
 
     @PreAuthorize("hasAuthority('DELETE_ORDER')")
-    public List<OrderResponse> deleteOrder(String orderId) {
+    public void deleteOrder(String orderId) {
         orderRepo.deleteById(orderId);
-        return getCurrentUserOrders();
     }
 }

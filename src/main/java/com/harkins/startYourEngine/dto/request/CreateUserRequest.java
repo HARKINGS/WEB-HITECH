@@ -2,10 +2,10 @@ package com.harkins.startYourEngine.dto.request;
 
 import java.time.LocalDate;
 
-import com.harkins.startYourEngine.validator.DobConstraint;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import com.harkins.startYourEngine.validator.DobConstraint;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -22,9 +22,10 @@ public class CreateUserRequest {
     @Size(min = 6, message = "INVALID_PASSWORD")
     String password;
 
-//    Không được bỏ trống
+    //    Không được bỏ trống
     @NotBlank(message = "NOT_EMPTY")
     String firstName;
+
     @NotBlank(message = "NOT_EMPTY")
     String lastName;
 

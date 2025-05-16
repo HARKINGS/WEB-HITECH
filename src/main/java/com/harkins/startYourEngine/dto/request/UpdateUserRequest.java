@@ -22,6 +22,7 @@ public class UpdateUserRequest {
 
     @NotBlank(message = "NOT_EMPTY")
     String firstName;
+
     @NotBlank(message = "NOT_EMPTY")
     String lastName;
 

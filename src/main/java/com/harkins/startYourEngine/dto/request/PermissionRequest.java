@@ -1,6 +1,7 @@
 package com.harkins.startYourEngine.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class PermissionRequest {
     @NotBlank(message = "NOT_EMPTY")
     String name;
+
     @NotBlank(message = "NOT_EMPTY")
     String description;
 }
