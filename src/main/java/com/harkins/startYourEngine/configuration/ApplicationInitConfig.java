@@ -111,6 +111,7 @@ public class ApplicationInitConfig {
         addPermission("CREATE_VOUCHER", "Create a voucher");
         addPermission("DELETE_VOUCHER", "Delete a voucher");
         addPermission("GET_VOUCHER", "Get info of a voucher");
+        addPermission("GET_ALL_VOUCHERS", "Get info of all vouchers");
 
         //        ZaloPayService
         addPermission("CREATE_ORDER", "Create an order");
@@ -132,11 +133,13 @@ public class ApplicationInitConfig {
                 Set<String> userPermissions = Set.of(
                         "GET_REVIEWS_BY_GOODS",
                         "GET_ALL_GOODS",
+                        "GET_ALL_REVIEWS",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
                         "PLACE_ORDER",
                         "REFRESH_TOKEN",
-                        "CHECK_TOKEN");
+                        "CHECK_TOKEN",
+                        "GET_VOUCHER", "GET_ORDER_STATUS");
 
                 Set<String> staffPermissions = Set.of(
                         "CREATE_REVIEWS",
@@ -150,7 +153,7 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
                         "UPDATE_ORDERITEM",
-                        "GET_ALL_ORDERS",
+                        "GET_ALL_ORDERS", "GET_ORDER_STATUS",
                         "GET_ORDERS_BY_STATUS",
                         "GET_ORDERS_BY_USERID",
                         "CREATE_VOUCHER",

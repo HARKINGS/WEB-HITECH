@@ -24,7 +24,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     private static final String[] ALL_METHOD_PUBLIC_ENDPOINTS = {"/orders/**", "/zalopay/**"};
     private static final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/reviews/create"};
-    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews", "/vouchers","/vouchers/**"};
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -33,7 +33,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS)
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS)
                         .permitAll()
@@ -41,14 +42,14 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-                .anonymous(anon -> anon.authorities(
-                        "GET_REVIEWS_BY_GOODS",
-                        "GET_ALL_GOODS",
-                        "GET_GOODS_BY_NAME",
-                        "GET_GOODS_BY_CATEGORY",
-                        "PLACE_ORDER",
-                        "REFRESH_TOKEN",
-                        "CHECK_TOKEN"))
+//                .anonymous(anon -> anon.authorities(
+//                        "GET_REVIEWS_BY_GOODS",
+//                        "GET_ALL_GOODS",
+//                        "GET_GOODS_BY_NAME",
+//                        "GET_GOODS_BY_CATEGORY",
+//                        "PLACE_ORDER",
+//                        "REFRESH_TOKEN",
+//                        "CHECK_TOKEN"))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                                 jwt.decoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))

@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -39,6 +42,15 @@ public class VoucherService {
         Voucher voucher =
                 voucherRepository.findById(voucherId).orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
         return voucherMapper.toVoucherResponse(voucher);
+    }
+
+    @PreAuthorize("hasAuthority('GET_ALL_VOUCHERS')")
+    public List<VoucherResponse> getAllVouchers() {
+        return voucherRepository
+                .findAll()
+                .stream()
+                .map(voucherMapper::toVoucherResponse)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('DELETE_VOUCHER')")
