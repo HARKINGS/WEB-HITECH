@@ -25,7 +25,26 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/zalopay_create_order_request"
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "Amount to pay (in VND)"
+                  },
+                  "orderInfo": {
+                    "type": "string",
+                    "description": "Order information/description"
+                  },
+                  "orderType": {
+                    "type": "string",
+                    "description": "Type of the order"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "orderInfo",
+                  "orderType"
+                ]
               }
             }
           }
@@ -36,34 +55,27 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/zalopay_create_order_response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Missing required parameters",
-            "content": {
-              "application/json": {
-                "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "return_code": {
+                      "type": "integer"
+                    },
+                    "return_message": {
                       "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
+                    },
+                    "sub_return_code": {
+                      "type": "integer"
+                    },
+                    "sub_return_message": {
+                      "type": "string"
+                    },
+                    "zp_trans_token": {
+                      "type": "string"
+                    },
+                    "order_url": {
+                      "type": "string"
+                    },
+                    "order_token": {
                       "type": "string"
                     }
                   }
@@ -74,7 +86,7 @@
         }
       }
     },
-    "/zalopay/order-status/{appTransId}": {
+    "/zalopay/order-status/{orderId}": {
       "get": {
         "tags": [
           "Payment"
@@ -84,10 +96,10 @@
         "operationId": "getOrderStatus",
         "parameters": [
           {
-            "name": "appTransId",
+            "name": "orderId",
             "in": "path",
             "required": true,
-            "description": "Transaction ID of the payment order",
+            "description": "Order ID to check status",
             "schema": {
               "type": "string"
             }
@@ -95,208 +107,28 @@
         ],
         "responses": {
           "200": {
-            "description": "Order status retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error retrieving order status",
+            "description": "Order status response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
+                    "return_code": {
+                      "type": "integer"
+                    },
+                    "return_message": {
                       "type": "string"
                     },
-                    "message": {
+                    "sub_return_code": {
+                      "type": "integer"
+                    },
+                    "sub_return_message": {
                       "type": "string"
                     }
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/zalopay/callback": {
-      "post": {
-        "tags": [
-          "Payment"
-        ],
-        "summary": "Zalopay payment callback",
-        "description": "Handles payment result callback from Zalopay. This endpoint is meant to be called by Zalopay's server, not by users.",
-        "operationId": "handleZaloPayCallback",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/zalopay_callback_request"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Callback processed successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/zalopay_callback_response"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - Missing required parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Order not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "zalopay_create_order_request": {
-        "type": "object",
-        "required": [
-          "amount"
-        ],
-        "properties": {
-          "amount": {
-            "type": "number",
-            "description": "Amount to pay (in VND)"
-          },
-          "orderId": {
-            "type": "string",
-            "description": "ID of the order in the system"
-          },
-          "description": {
-            "type": "string",
-            "description": "Description of the payment"
-          },
-          "bankCode": {
-            "type": "string",
-            "description": "Bank code for direct banking (optional)"
-          },
-          "embedData": {
-            "type": "object",
-            "description": "Additional data to embed in the order"
-          }
-        }
-      },
-      "zalopay_create_order_response": {
-        "type": "object",
-        "properties": {
-          "return_code": {
-            "type": "integer",
-            "description": "Response code from Zalopay (1: success)"
-          },
-          "return_message": {
-            "type": "string",
-            "description": "Response message"
-          },
-          "sub_return_code": {
-            "type": "integer",
-            "description": "Sub-response code"
-          },
-          "sub_return_message": {
-            "type": "string",
-            "description": "Sub-response message"
-          },
-          "order_url": {
-            "type": "string",
-            "description": "URL to redirect user for payment"
-          },
-          "zp_trans_token": {
-            "type": "string",
-            "description": "Zalopay transaction token"
-          },
-          "app_trans_id": {
-            "type": "string",
-            "description": "Application transaction ID"
-          },
-          "qr_code": {
-            "type": "string",
-            "description": "QR code data for payment (if requested)"
-          }
-        }
-      },
-      "zalopay_callback_request": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "JSON string containing callback data"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "app_trans_id": {
-                    "type": "string",
-                    "description": "Application transaction ID"
-                  },
-                  "status": {
-                    "type": "string",
-                    "description": "Payment status (1: success)"
-                  },
-                  "zp_trans_id": {
-                    "type": "string",
-                    "description": "Zalopay transaction ID"
-                  },
-                  "amount": {
-                    "type": "integer",
-                    "description": "Payment amount"
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "Payment description"
-                  }
-                }
-              }
-            ]
-          },
-          "mac": {
-            "type": "string",
-            "description": "Message Authentication Code (MAC) for data verification"
-          }
-        }
-      },
-      "zalopay_callback_response": {
-        "type": "object",
-        "properties": {
-          "return_code": {
-            "type": "integer",
-            "description": "Return code (1: success)"
-          },
-          "return_message": {
-            "type": "string",
-            "description": "Return message"
           }
         }
       }

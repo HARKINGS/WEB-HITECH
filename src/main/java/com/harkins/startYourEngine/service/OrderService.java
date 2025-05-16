@@ -201,11 +201,11 @@ public class OrderService {
         }
     }
 
-    @PreAuthorize("hasAuthority('GET_ORDERS_BY_USERID')")
-    public List<OrderResponse> getOrdersByUserId(String userId) {
-        List<Order> orders = orderRepo.findByUser_UserId(userId);
-        return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
-    }
+    // @PreAuthorize("hasAuthority('GET_ORDERS_BY_USERID')")
+    // public List<OrderResponse> getOrdersByUserId(String userId) {
+    //     List<Order> orders = orderRepo.findByUser_UserId(userId);
+    //     return orders.stream().map(orderMapper::toOrderResponse).collect(Collectors.toList());
+    // }
 
     @PreAuthorize("hasAuthority('DELETE_ORDER')")
     public void deleteOrder(String orderId) {
