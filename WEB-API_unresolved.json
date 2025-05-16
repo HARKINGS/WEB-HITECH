@@ -421,6 +421,7 @@
         }
       }
     },
+
     "/users" : {
       "get" : {
         "tags" : [ "User" ],
@@ -976,6 +977,7 @@
         }
       }
     },
+
     "/roles" : {
       "get" : {
         "tags" : [ "Role" ],
@@ -1174,6 +1176,7 @@
         }
       }
     },
+
     "/permissions" : {
       "post" : {
         "tags" : [ "Permission" ],
@@ -1333,6 +1336,7 @@
         }
       }
     },
+
     "/goods" : {
       "post" : {
         "tags" : [ "Goods" ],
@@ -1446,6 +1450,21 @@
       }
     },
     "/goods/all-goods" : {
+      "get": {
+        "description": "New endpoint",
+        "responses": {
+          "200": {
+            "description": "New response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "": ""
+                }
+              }
+            }
+          }
+        }
+      },
       "get" : {
         "tags" : [ "Goods" ],
         "description" : "Lấy danh sách tất cả sản phẩm",
@@ -2088,6 +2107,7 @@
         }
       }
     },
+
     "/vouchers" : {
       "post" : {
         "tags" : [ "Voucher" ],
@@ -2367,6 +2387,7 @@
         }
       }
     },
+
     "/reviews" : {
       "get" : {
         "tags" : [ "Review" ],
@@ -2658,8 +2679,120 @@
             }
           }
         }
-      }},
-      "/reviews/updateupdate": {
+      },
+      "delete": {
+        "tags": ["Review"],
+        "summary": "Delete a review",
+        "description": "Deletes an existing review. Requires authentication.",
+        "operationId": "deleteReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the review to delete",
+            "schema": {
+              "type": "string",
+              "example": "987e6543-e21b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Response code indicating success or failure",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "string",
+                      "description": "Success message",
+                      "example": "Review deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to delete this review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": ["Review"],
         "description": "Update review",
@@ -2796,93 +2929,9 @@
             }
           }
         }
-      },
-      "/reviews/{reviewId}": {
-      "delete": {
-        "tags": ["Review"],
-        "description": "Delete review",
-        "operationId": "deleteReview",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "reviewId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "1234"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Delete review success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1000
-                    },
-                    "result": {
-                      "type": "string",
-                      "example": "Review deleted successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1006
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Unauthenticated!"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Review not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "integer",
-                      "example": 1006
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "Review not found"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
       }
-    }},
-    
+    },
+
     "/orders/create": {
       "post": {
         "tags": [ "Order" ],
@@ -3423,6 +3472,7 @@
         }
       }
     },
+
     "/zalopay/create-order": {
       "post": {
         "tags": ["Payment"],

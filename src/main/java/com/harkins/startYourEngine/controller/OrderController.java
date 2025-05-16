@@ -14,7 +14,7 @@ import com.harkins.startYourEngine.dto.response.OrderResponse;
 import com.harkins.startYourEngine.service.OrderService;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;

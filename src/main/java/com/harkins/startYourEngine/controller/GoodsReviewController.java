@@ -39,14 +39,14 @@ public class GoodsReviewController {
                 .build();
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ApiResponse<List<GoodsReviewResponse>> getAllReviews() {
         return ApiResponse.<List<GoodsReviewResponse>>builder()
                 .result(goodsReviewService.getAllReviews())
                 .build();
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{reviewId}")
     public ApiResponse<GoodsReviewResponse> updateReview(
             @PathVariable("reviewId") String reviewId, @Valid @RequestBody UpdateGoodsReviewRequest request) {
         return ApiResponse.<GoodsReviewResponse>builder()
