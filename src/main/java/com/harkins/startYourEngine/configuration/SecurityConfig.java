@@ -42,14 +42,15 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated())
-//                .anonymous(anon -> anon.authorities(
-//                        "GET_REVIEWS_BY_GOODS",
-//                        "GET_ALL_GOODS",
-//                        "GET_GOODS_BY_NAME",
-//                        "GET_GOODS_BY_CATEGORY",
-//                        "PLACE_ORDER",
-//                        "REFRESH_TOKEN",
-//                        "CHECK_TOKEN"))
+                .anonymous(anon -> anon.authorities(
+                        "GET_REVIEWS_BY_GOODS",
+                        "GET_ALL_GOODS",
+                        "GET_ALL_VOUCHERS",
+                        "GET_GOODS_BY_NAME",
+                        "GET_GOODS_BY_CATEGORY",
+                        "PLACE_ORDER",
+                        "REFRESH_TOKEN",
+                        "CHECK_TOKEN"))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                                 jwt.decoder(customJwtDecoder).jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
