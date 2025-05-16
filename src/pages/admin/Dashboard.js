@@ -3,7 +3,6 @@ import { FaBoxOpen, FaShoppingCart, FaUsers, FaDollarSign } from "react-icons/fa
 import axios from "axios";
 import { Container, Row, Col, Card, Table } from "react-bootstrap";
 import { PERMISSIONS } from "../../constants/permissions";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/AdminPages.css";
 
 // Helper function to decode JWT token

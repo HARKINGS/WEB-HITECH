@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { Table, Button, Container, Form, Row, Col, Badge, Pagination } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const Orders = () => {
     // Add state for pagination
