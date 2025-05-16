@@ -19,126 +19,6 @@
         "scheme" : "bearer",
         "bearerFormat" : "JWT"
       }
-    },
-    "schemas" : {
-      "zalopay_create_order_request" : {
-        "type" : "object",
-        "required" : [ "amount" ],
-        "properties" : {
-          "amount" : {
-            "type" : "number",
-            "description" : "Amount to pay (in VND)"
-          },
-          "orderId" : {
-            "type" : "string",
-            "description" : "ID of the order in the system"
-          },
-          "description" : {
-            "type" : "string",
-            "description" : "Description of the payment"
-          },
-          "bankCode" : {
-            "type" : "string",
-            "description" : "Bank code for direct banking (optional)"
-          },
-          "embedData" : {
-            "type" : "object",
-            "description" : "Additional data to embed in the order"
-          }
-        }
-      },
-      "zalopay_create_order_response" : {
-        "type" : "object",
-        "properties" : {
-          "return_code" : {
-            "type" : "integer",
-            "description" : "Response code from Zalopay (1: success)"
-          },
-          "return_message" : {
-            "type" : "string",
-            "description" : "Response message"
-          },
-          "sub_return_code" : {
-            "type" : "integer",
-            "description" : "Sub-response code"
-          },
-          "sub_return_message" : {
-            "type" : "string",
-            "description" : "Sub-response message"
-          },
-          "order_url" : {
-            "type" : "string",
-            "description" : "URL to redirect user for payment"
-          },
-          "zp_trans_token" : {
-            "type" : "string",
-            "description" : "Zalopay transaction token"
-          },
-          "app_trans_id" : {
-            "type" : "string",
-            "description" : "Application transaction ID"
-          },
-          "qr_code" : {
-            "type" : "string",
-            "description" : "QR code data for payment (if requested)"
-          }
-        }
-      },
-      "zalopay_callback_request" : {
-        "type" : "object",
-        "properties" : {
-          "data" : {
-            "oneOf" : [
-              {
-                "type" : "string",
-                "description" : "JSON string containing callback data"
-              },
-              {
-                "type" : "object",
-                "properties" : {
-                  "app_trans_id" : {
-                    "type" : "string",
-                    "description" : "Application transaction ID"
-                  },
-                  "status" : {
-                    "type" : "string",
-                    "description" : "Payment status (1: success)"
-                  },
-                  "zp_trans_id" : {
-                    "type" : "string",
-                    "description" : "Zalopay transaction ID"
-                  },
-                  "amount" : {
-                    "type" : "integer",
-                    "description" : "Payment amount"
-                  },
-                  "description" : {
-                    "type" : "string",
-                    "description" : "Payment description"
-                  }
-                }
-              }
-            ]
-          },
-          "mac" : {
-            "type" : "string",
-            "description" : "Message Authentication Code (MAC) for data verification"
-          }
-        }
-      },
-      "zalopay_callback_response" : {
-        "type" : "object",
-        "properties" : {
-          "return_code" : {
-            "type" : "integer",
-            "description" : "Return code (1: success)"
-          },
-          "return_message" : {
-            "type" : "string",
-            "description" : "Return message"
-          }
-        }
-      }
     }
   },
   "paths" : {
@@ -1646,6 +1526,125 @@
             }
           }
         }
+      },
+      "put" : {
+        "tags" : [ "Goods" ],
+        "description" : "Cập nhật thông tin sản phẩm (Yêu cầu quyền admin)",
+        "operationId" : "updateGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "goodsName" : {
+                    "type" : "string",
+                    "example" : "Laptop Dell"
+                  },
+                  "goodsVersion" : {
+                    "type" : "string",
+                    "example" : "1.0"
+                  },
+                  "quantity" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 10
+                  },
+                  "price" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 11082004
+                  },
+                  "goodsDescription" : {
+                    "type" : "string",
+                    "example" : "Mô tả sản phẩm"
+                  },
+                  "goodsCategory" : {
+                    "type" : "string",
+                    "example" : "Laptop"
+                  },
+                  "goodsBranch" : {
+                    "type" : "string",
+                    "example" : "Dell"
+                  },
+                  "goodsImageURL" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Cập nhật sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 11082004
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "Mô tả sản phẩm"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/goods/goodsName" : {
@@ -1799,130 +1798,6 @@
           }
         }
       }
-    },
-    "/goods/{goodsId}" : {
-      "put" : {
-        "tags" : [ "Goods" ],
-        "description" : "Cập nhật thông tin sản phẩm (Yêu cầu quyền admin)",
-        "operationId" : "updateGoods",
-        "security" : [ {
-          "bearerAuth" : [ ]
-        } ],
-        "parameters" : [ {
-          "name" : "goodsId",
-          "in" : "query",
-          "required" : true,
-          "schema" : {
-            "type" : "string",
-            "example" : "1234"
-          }
-        } ],
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "type" : "object",
-                "properties" : {
-                  "goodsName" : {
-                    "type" : "string",
-                    "example" : "Laptop Dell"
-                  },
-                  "goodsVersion" : {
-                    "type" : "string",
-                    "example" : "1.0"
-                  },
-                  "quantity" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 10
-                  },
-                  "price" : {
-                    "type" : "integer",
-                    "format" : "int64",
-                    "example" : 11082004
-                  },
-                  "goodsDescription" : {
-                    "type" : "string",
-                    "example" : "Mô tả sản phẩm"
-                  },
-                  "goodsCategory" : {
-                    "type" : "string",
-                    "example" : "Laptop"
-                  },
-                  "goodsBranch" : {
-                    "type" : "string",
-                    "example" : "Dell"
-                  },
-                  "goodsImageURL" : {
-                    "type" : "string",
-                    "example" : "123"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses" : {
-          "200" : {
-            "description" : "Cập nhật sản phẩm thành công",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object",
-                  "properties" : {
-                    "code" : {
-                      "type" : "integer",
-                      "example" : 1000
-                    },
-                    "result" : {
-                      "type" : "object",
-                      "properties" : {
-                        "goodsId" : {
-                          "type" : "string",
-                          "example" : "1234"
-                        },
-                        "goodsName" : {
-                          "type" : "string",
-                          "example" : "Laptop Dell"
-                        },
-                        "goodsVersion" : {
-                          "type" : "string",
-                          "example" : "1.0"
-                        },
-                        "quantity" : {
-                          "type" : "integer",
-                          "format" : "int64",
-                          "example" : 10
-                        },
-                        "price" : {
-                          "type" : "integer",
-                          "format" : "int64",
-                          "example" : 11082004
-                        },
-                        "goodsDescription" : {
-                          "type" : "string",
-                          "example" : "Mô tả sản phẩm"
-                        },
-                        "goodsCategory" : {
-                          "type" : "string",
-                          "example" : "Laptop"
-                        },
-                        "goodsImageUrl" : {
-                          "type" : "string",
-                          "example" : "123"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/goods/update" : {
-
     },
     "/goods/details/{goodsId}" : {
       "get" : {
@@ -3056,9 +2931,7 @@
     },
     "/orders/update-item-status/{orderItemId}": {
       "put": {
-        "tags": [
-          "Orders"
-        ],
+        "tags": ["Order"],
         "summary": "Update order item status",
         "description": "Updates the status of a specific item in an order. Requires ADMIN authority.",
         "operationId": "updateOrderItemStatus",
@@ -3641,7 +3514,30 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/zalopay_create_order_request"
+                "type" : "object",
+                "required" : [ "amount" ],
+                "properties" : {
+                  "amount" : {
+                    "type" : "number",
+                    "description" : "Amount to pay (in VND)"
+                  },
+                  "orderId" : {
+                    "type" : "string",
+                    "description" : "ID of the order in the system"
+                  },
+                  "description" : {
+                    "type" : "string",
+                    "description" : "Description of the payment"
+                  },
+                  "bankCode" : {
+                    "type" : "string",
+                    "description" : "Bank code for direct banking (optional)"
+                  },
+                  "embedData" : {
+                    "type" : "object",
+                    "description" : "Additional data to embed in the order"
+                  }
+                }
               }
             }
           }
@@ -3652,7 +3548,41 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/zalopay_create_order_response"
+                  "type" : "object",
+                  "properties" : {
+                    "return_code" : {
+                      "type" : "integer",
+                      "description" : "Response code from Zalopay (1: success)"
+                    },
+                    "return_message" : {
+                      "type" : "string",
+                      "description" : "Response message"
+                    },
+                    "sub_return_code" : {
+                      "type" : "integer",
+                      "description" : "Sub-response code"
+                    },
+                    "sub_return_message" : {
+                      "type" : "string",
+                      "description" : "Sub-response message"
+                    },
+                    "order_url" : {
+                      "type" : "string",
+                      "description" : "URL to redirect user for payment"
+                    },
+                    "zp_trans_token" : {
+                      "type" : "string",
+                      "description" : "Zalopay transaction token"
+                    },
+                    "app_trans_id" : {
+                      "type" : "string",
+                      "description" : "Application transaction ID"
+                    },
+                    "qr_code" : {
+                      "type" : "string",
+                      "description" : "QR code data for payment (if requested)"
+                    }
+                  }
                 }
               }
             }
@@ -3738,7 +3668,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/zalopay_callback_request"
+                "type" : "object",
+                "properties" : {
+                  "data" : {
+                    "oneOf" : [
+                      {
+                        "type" : "string",
+                        "description" : "JSON string containing callback data"
+                      },
+                      {
+                        "type" : "object",
+                        "properties" : {
+                          "app_trans_id" : {
+                            "type" : "string",
+                            "description" : "Application transaction ID"
+                          },
+                          "status" : {
+                            "type" : "string",
+                            "description" : "Payment status (1: success)"
+                          },
+                          "zp_trans_id" : {
+                            "type" : "string",
+                            "description" : "Zalopay transaction ID"
+                          },
+                          "amount" : {
+                            "type" : "integer",
+                            "description" : "Payment amount"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "description" : "Payment description"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "mac" : {
+                    "type" : "string",
+                    "description" : "Message Authentication Code (MAC) for data verification"
+                  }
+                }
               }
             }
           }
@@ -3749,7 +3718,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/zalopay_callback_response"
+                  "type" : "object",
+                  "properties" : {
+                    "return_code" : {
+                      "type" : "integer",
+                      "description" : "Return code (1: success)"
+                    },
+                    "return_message" : {
+                      "type" : "string",
+                      "description" : "Return message"
+                    }
+                  }
                 }
               }
             }
