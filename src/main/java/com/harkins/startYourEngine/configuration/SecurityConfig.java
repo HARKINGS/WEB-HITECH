@@ -22,7 +22,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private static final String[] ALL_METHOD_PUBLIC_ENDPOINTS = {"/orders/**"};
+    private static final String[] ALL_METHOD_PUBLIC_ENDPOINTS = {"/orders/**", "/zalopay/**"};
     private static final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/reviews/create"};
     private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews"};
 

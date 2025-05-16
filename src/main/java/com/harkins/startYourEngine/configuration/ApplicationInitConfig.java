@@ -53,7 +53,7 @@ public class ApplicationInitConfig {
 
     private void initPermission() {
         //        AddressService
-        addPermission("SAVE_ADDRESS", "Save and Update Address");
+//        addPermission("SAVE_ADDRESS", "Save and Update Address");
 
         //        AuthenticationService
         //        addPermission("LOGIN", "Login account");

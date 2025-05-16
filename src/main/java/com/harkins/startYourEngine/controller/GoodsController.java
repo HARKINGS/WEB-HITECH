@@ -94,9 +94,9 @@ public class GoodsController {
                 .build();
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{goodsId}")
     ApiResponse<GoodsResponse> updateGoods(
-            @RequestParam("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
+            @PathVariable("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();
