@@ -68,8 +68,7 @@ public class UserService {
     }
 
     //    Có quyền thay đổi và còn phải tên tài khoản trùng với tài khoản đăng nhập
-    @PreAuthorize("hasAuthority('UPDATE_USER')")
-    @PostAuthorize("returnObject.username == authentication.name")
+    @PreAuthorize("hasRole('ADMIN') or returnObject.username == authentication.name")
     public UserResponse updateUser(String userId, UpdateUserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
