@@ -1445,26 +1445,31 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/goods/all-goods" : {
-      "get": {
-        "description": "New endpoint",
-        "responses": {
-          "200": {
-            "description": "New response",
+          },
+          "401": {
+            "description": "Sản phẩm đã tồn tại",
             "content": {
               "application/json": {
                 "schema": {
-                  "": ""
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1014
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Goods already exists"
+                    }
+                  }
                 }
               }
             }
           }
         }
-      },
+      }
+    },
+    "/goods/all-goods" : {
       "get" : {
         "tags" : [ "Goods" ],
         "description" : "Lấy danh sách tất cả sản phẩm",

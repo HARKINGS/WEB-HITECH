@@ -34,6 +34,7 @@ public class SecurityConfig {
         httpSecurity
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers(ALL_METHOD_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, POST_PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS).permitAll()
                         .anyRequest().authenticated()
