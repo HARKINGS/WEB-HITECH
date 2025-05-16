@@ -87,7 +87,7 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
-    //    @PreAuthorize("hasAuthority('GET_ALL_USERS')")
+    @PreAuthorize("hasAuthority('GET_ALL_USERS')")
     public List<UserResponse> getUsers() {
         log.info("In method get Users");
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
