@@ -36,6 +36,9 @@ const Products = () => {
         canCreate: false,
     });
     const productsPerPage = 5;
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedStatus, setSelectedStatus] = useState("");
 
     // Check permissions on component mount
     useEffect(() => {
@@ -191,11 +194,19 @@ const Products = () => {
         }
     };
 
-    // Calculate pagination values
+    // Filter products based on search, category and status
+    const filteredProducts = products.filter((product) => {
+        const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesCategory = !selectedCategory || product.category === selectedCategory;
+        const matchesStatus = !selectedStatus || product.status.toLowerCase().replace(" ", "-") === selectedStatus;
+        return matchesSearch && matchesCategory && matchesStatus;
+    });
+
+    // Calculate pagination values using filtered products
     const indexOfLastProduct = currentPage * productsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-    const totalPages = Math.ceil(products.length / productsPerPage);
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
     // Pagination handlers
     const handlePageChange = (pageNumber) => {
@@ -265,26 +276,36 @@ const Products = () => {
                             type="text"
                             placeholder="Search products..."
                             className="bg-dark text-light border-secondary"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </Form.Group>
                 </Col>
                 <Col md={4}>
                     <Form.Group>
-                        <Form.Select className="bg-dark text-light border-secondary">
+                        <Form.Select
+                            className="bg-dark text-light border-secondary"
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)}
+                        >
                             <option value="">All Categories</option>
-                            <option value="phones">Phones</option>
-                            <option value="laptops">Laptops</option>
-                            <option value="audio">Audio</option>
-                            <option value="wearables">Wearables</option>
-                            <option value="tablets">Tablets</option>
-                            <option value="gaming">Gaming</option>
-                            <option value="cameras">Cameras</option>
+                            <option value="Phone">Phone</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Audio">Audio</option>
+                            <option value="Wearable">Wearable</option>
+                            <option value="Tablet">Tablet</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="Camera">Camera</option>
                         </Form.Select>
                     </Form.Group>
                 </Col>
                 <Col md={4}>
                     <Form.Group>
-                        <Form.Select className="bg-dark text-light border-secondary">
+                        <Form.Select
+                            className="bg-dark text-light border-secondary"
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                        >
                             <option value="">All Status</option>
                             <option value="in-stock">In Stock</option>
                             <option value="out-of-stock">Out of Stock</option>

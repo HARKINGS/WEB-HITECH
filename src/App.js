@@ -17,6 +17,7 @@ import Products from "./pages/admin/Products";
 import Orders from "./pages/admin/Orders";
 import Users from "./pages/admin/Users";
 import Settings from "./pages/admin/Settings";
+import Vouchers from "./pages/admin/Vouchers";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -59,6 +60,7 @@ function App() {
                                     <Route path="orders" element={<Orders />} />
                                     <Route path="users" element={<Users />} />
                                     <Route path="settings" element={<Settings />} />
+                                    <Route path="vouchers" element={<Vouchers />} />
                                 </Route>
                             </Route>
 

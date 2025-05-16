@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
-import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt } from 'react-icons/fa';
-import '../styles/AdminLayout.css';
+import React, { useState } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
+import "../styles/AdminLayout.css";
 
 const AdminLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const location = useLocation();
 
     const isActive = (path) => {
-        return location.pathname === path ? 'active' : '';
+        return location.pathname === path ? "active" : "";
     };
 
     const toggleSidebar = () => {
@@ -16,41 +16,47 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className={`admin-layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        <div className={`admin-layout ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
             <div className="admin-sidebar">
                 <div className="sidebar-header">
-                    <h2>{sidebarCollapsed ? 'ET' : 'Electech'}</h2>
+                    <h2>{sidebarCollapsed ? "ET" : "Electech"}</h2>
                     <button className="toggle-sidebar" onClick={toggleSidebar}>
                         ☰
                     </button>
                 </div>
                 <nav className="sidebar-nav">
                     <ul>
-                        <li className={isActive('/admin')}>
+                        <li className={isActive("/admin")}>
                             <Link to="/admin">
                                 <FaTachometerAlt />
                                 {!sidebarCollapsed && <span>Dashboard</span>}
                             </Link>
                         </li>
-                        <li className={isActive('/admin/products')}>
+                        <li className={isActive("/admin/products")}>
                             <Link to="/admin/products">
                                 <FaBoxOpen />
                                 {!sidebarCollapsed && <span>Products</span>}
                             </Link>
                         </li>
-                        <li className={isActive('/admin/orders')}>
+                        <li className={isActive("/admin/orders")}>
                             <Link to="/admin/orders">
                                 <FaShoppingCart />
                                 {!sidebarCollapsed && <span>Orders</span>}
                             </Link>
                         </li>
-                        <li className={isActive('/admin/users')}>
+                        <li className={isActive("/admin/users")}>
                             <Link to="/admin/users">
                                 <FaUsers />
                                 {!sidebarCollapsed && <span>Users</span>}
                             </Link>
                         </li>
-                        <li className={isActive('/admin/settings')}>
+                        <li className={isActive("/admin/vouchers")}>
+                            <Link to="/admin/vouchers">
+                                <FaTicketAlt />
+                                {!sidebarCollapsed && <span>Vouchers</span>}
+                            </Link>
+                        </li>
+                        <li className={isActive("/admin/settings")}>
                             <Link to="/admin/settings">
                                 <FaCog />
                                 {!sidebarCollapsed && <span>Settings</span>}
