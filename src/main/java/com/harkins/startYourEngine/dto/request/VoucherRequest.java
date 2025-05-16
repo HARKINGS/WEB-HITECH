@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,15 +14,18 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherRequest {
-    @NotBlank(message = "NOT_EMPTY")
+    @NotNull(message = "NOT_EMPTY")
     Long identifiedVoucherId;
 
-    @NotBlank(message = "NOT_EMPTY")
+    @NotNull(message = "NOT_EMPTY")
     LocalDate expiryDate;
 
-    @NotBlank(message = "NOT_EMPTY")
+    @NotNull(message = "NOT_EMPTY")
     boolean validated;
 
+    @NotBlank(message = "NOT_EMPTY")
     String voucherName;
+
+    @NotBlank(message = "NOT_EMPTY")
     String voucherDescription;
 }

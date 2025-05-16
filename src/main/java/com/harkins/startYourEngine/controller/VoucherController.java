@@ -27,28 +27,28 @@ public class VoucherController {
     VoucherService voucherService;
 
     @PostMapping
-    ApiResponse<VoucherResponse> createVoucher(@Valid VoucherRequest request) {
+    public ApiResponse<VoucherResponse> createVoucher(@Valid @RequestBody VoucherRequest request) {
         return ApiResponse.<VoucherResponse>builder()
                 .result(voucherService.createVoucher(request))
                 .build();
     }
 
     @GetMapping("{voucherId}")
-    ApiResponse<VoucherResponse> getVoucher(@PathVariable("voucherId") String voucherId) {
+    public ApiResponse<VoucherResponse> getVoucher(@PathVariable("voucherId") String voucherId) {
         return ApiResponse.<VoucherResponse>builder()
                 .result(voucherService.getVoucher(voucherId))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<VoucherResponse>> getAllVouchers() {
+    public ApiResponse<List<VoucherResponse>> getAllVouchers() {
         return ApiResponse.<List<VoucherResponse>>builder()
                 .result(voucherService.getAllVouchers())
                 .build();
     }
 
     @DeleteMapping("{voucherId}")
-    ApiResponse<String> deleteVoucher(@PathVariable("voucherId") String voucherId) {
+    public ApiResponse<String> deleteVoucher(@PathVariable("voucherId") String voucherId) {
         voucherService.deleteVoucher(voucherId);
         return ApiResponse.<String>builder().result("Voucher deleted!").build();
     }
