@@ -2939,53 +2939,39 @@
 
     "/orders/create": {
       "post": {
-        "tags": [ "Order" ],
-        "description": "Tạo đơn hàng mới",
+        "tags": ["Order"],
+        "description": "Tạo đơn hàng mới (không cần đăng nhập)",
         "operationId": "placeOrder",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
+                "required": [
+                  "orderItems",
+                  "shippingAddress",
+                  "paymentMethod",
+                  "totalPrice",
+                  "totalDiscount"
+                ],
                 "properties": {
-                  "items": {
+                  "orderItems": {
                     "type": "array",
-                    "description": "Danh sách sản phẩm trong đơn hàng",
                     "items": {
                       "type": "object",
+                      "required": ["goodsId", "quantity"],
                       "properties": {
-                        "goodsId": {
-                          "type": "string",
-                          "description": "ID sản phẩm"
-                        },
-                        "quantity": {
-                          "type": "integer",
-                          "description": "Số lượng"
-                        }
+                        "goodsId": { "type": "string" },
+                        "quantity": { "type": "integer" }
                       }
                     }
                   },
-                  "shippingAddress": {
-                    "type": "object",
-                    "properties": {
-                      "street": { "type": "string" },
-                      "city": { "type": "string" },
-                      "state": { "type": "string" },
-                      "country": { "type": "string" }
-                    }
-                  },
-                  "paymentMethod": {
-                    "type": "string",
-                    "description": "Phương thức thanh toán"
-                  },
-                  "voucherId": {
-                    "type": "string",
-                    "description": "ID voucher áp dụng (nếu có)"
-                  },
-                  "notes": {
-                    "type": "string",
-                    "description": "Ghi chú thêm cho đơn hàng"
-                  }
+                  "shippingAddress": { "type": "string" },
+                  "voucherId": { "type": "string" },
+                  "paymentMethod": { "type": "string" },
+                  "totalPrice": { "type": "number", "format": "double" },
+                  "totalDiscount": { "type": "number", "format": "double" }
                 }
               }
             }
@@ -2999,40 +2985,50 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "id": { "type": "string", "description": "Order ID" },
-                    "userId": { "type": "string", "description": "ID người đặt" },
-                    "userName": { "type": "string", "description": "Tên người đặt" },
-                    "orderDate": { "type": "string", "format": "date-time" },
-                    "status": { "type": "string" },
-                    "paymentStatus": { "type": "string" },
-                    "totalPrice": { "type": "integer", "format": "int64" },
-                    "totalDiscount": { "type": "integer", "format": "int64" },
-                    "shippingAddress": {
-                      "type": "object",
-                      "properties": {
-                        "street": { "type": "string" },
-                        "city": { "type": "string" },
-                        "state": { "type": "string" },
-                        "country": { "type": "string" }
-                      }
-                    },
-                    "paymentMethod": { "type": "string" },
-                    "transactionId": { "type": "string" },
-                    "items": {
+                    "id": { "type": "string" },
+                    "orderItems": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "properties": {
                           "id": { "type": "string" },
                           "goodsId": { "type": "string" },
-                          "goodsName": { "type": "string" },
-                          "quantity": { "type": "integer" },
-                          "price": { "type": "integer", "format": "int64" },
-                          "status": { "type": "string" }
+                          "quantity": { "type": "integer" }
                         }
                       }
                     },
-                    "notes": { "type": "string" }
+                    "voucher": {
+                      "type": "object",
+                      "properties": {
+                        "voucherId": { "type": "string" },
+                        "voucherName": { "type": "string" },
+                        "voucherDescription": { "type": "string" }
+                      }
+                    },
+                    "shippingAddress": { "type": "string" },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PROCESSING",
+                        "SHIPPED",
+                        "DELIVERED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "paymentStatus": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PAID",
+                        "FAILED",
+                        "REFUNDED"
+                      ]
+                    },
+                    "paymentMethod": { "type": "string" },
+                    "totalPrice": { "type": "number", "format": "double" },
+                    "totalDiscount": { "type": "number", "format": "double" },
+                    "transactionId": { "type": "string" }
                   }
                 }
               }
@@ -3042,9 +3038,7 @@
             "description": "Có lỗi khi tạo đơn hàng",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string"
-                }
+                "schema": { "type": "string" }
               }
             }
           }
@@ -3053,18 +3047,15 @@
     },
     "/orders/order-status/{orderId}": {
       "get": {
-        "tags": [ "Order" ],
-        "description": "Lấy trạng thái đơn hàng",
+        "tags": ["Order"],
+        "description": "Lấy trạng thái đơn hàng (không cần đăng nhập)",
         "operationId": "getOrderStatus",
         "parameters": [
           {
             "name": "orderId",
             "in": "path",
             "required": true,
-            "description": "ID của đơn hàng",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -3076,8 +3067,25 @@
                   "type": "object",
                   "properties": {
                     "success": { "type": "boolean" },
-                    "status": { "type": "string" },
-                    "paymentStatus": { "type": "string" },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PROCESSING",
+                        "SHIPPED",
+                        "DELIVERED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "paymentStatus": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PAID",
+                        "FAILED",
+                        "REFUNDED"
+                      ]
+                    },
                     "orderId": { "type": "string" }
                   }
                 }
@@ -3156,7 +3164,7 @@
     },
     "/orders/{orderId}/payment-status": {
       "put": {
-        "tags": [ "Order" ],
+        "tags": ["Order"],
         "description": "Cập nhật trạng thái thanh toán của đơn hàng",
         "operationId": "updatePaymentStatus",
         "parameters": [
@@ -3164,18 +3172,20 @@
             "name": "orderId",
             "in": "path",
             "required": true,
-            "description": "ID của đơn hàng cần cập nhật",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           },
           {
             "name": "status",
             "in": "query",
             "required": true,
-            "description": "Trạng thái thanh toán mới",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "PAID",
+                "FAILED",
+                "REFUNDED"
+              ]
             }
           }
         ],
@@ -3188,7 +3198,49 @@
                   "type": "object",
                   "properties": {
                     "id": { "type": "string" },
-                    "paymentStatus": { "type": "string" }
+                    "orderItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "goodsId": { "type": "string" },
+                          "quantity": { "type": "integer" }
+                        }
+                      }
+                    },
+                    "voucher": {
+                      "type": "object",
+                      "properties": {
+                        "voucherId": { "type": "string" },
+                        "voucherName": { "type": "string" },
+                        "voucherDescription": { "type": "string" }
+                      }
+                    },
+                    "shippingAddress": { "type": "string" },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PROCESSING",
+                        "SHIPPED",
+                        "DELIVERED",
+                        "CANCELLED"
+                      ]
+                    },
+                    "paymentStatus": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "PAID",
+                        "FAILED",
+                        "REFUNDED"
+                      ]
+                    },
+                    "paymentMethod": { "type": "string" },
+                    "totalPrice": { "type": "number", "format": "double" },
+                    "totalDiscount": { "type": "number", "format": "double" },
+                    "transactionId": { "type": "string" }
                   }
                 }
               }
@@ -3198,9 +3250,7 @@
             "description": "Có lỗi khi cập nhật trạng thái thanh toán",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "string"
-                }
+                "schema": { "type": "string" }
               }
             }
           }
@@ -3209,7 +3259,7 @@
     },
     "/orders/all": {
       "get": {
-        "tags": [ "Order" ],
+        "tags": ["Order"],
         "description": "Lấy tất cả đơn hàng",
         "operationId": "getAllOrders",
         "responses": {
@@ -3218,44 +3268,66 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": { "type": "string" },
-                      "userId": { "type": "string" },
-                      "userName": { "type": "string" },
-                      "orderDate": { "type": "string", "format": "date-time" },
-                      "status": { "type": "string" },
-                      "paymentStatus": { "type": "string" },
-                      "totalPrice": { "type": "integer", "format": "int64" },
-                      "totalDiscount": { "type": "integer", "format": "int64" },
-                      "shippingAddress": {
+                  "type": "object",
+                  "properties": {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items": {
                         "type": "object",
                         "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
+                          "id": { "type": "string" },
+                          "orderItems": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": { "type": "string" },
+                                "goodsId": { "type": "string" },
+                                "goodsName": { "type": "string" },
+                                "quantity": { "type": "integer" },
+                                "price": { "type": "number", "format": "double" },
+                                "status": { "type": "string" }
+                              }
+                            }
+                          },
+                          "voucher": {
+                            "type": "object",
+                            "properties": {
+                              "voucherId": { "type": "string" },
+                              "voucherName": { "type": "string" },
+                              "voucherDescription": { "type": "string" }
+                            }
+                          },
+                          "shippingAddress": { "type": "string" },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "PENDING",
+                              "PROCESSING",
+                              "SHIPPED",
+                              "DELIVERED",
+                              "CANCELLED"
+                            ]
+                          },
+                          "paymentStatus": {
+                            "type": "string",
+                            "enum": [
+                              "PENDING",
+                              "PAID",
+                              "FAILED",
+                              "REFUNDED"
+                            ]
+                          },
+                          "paymentMethod": { "type": "string" },
+                          "totalPrice": { "type": "number", "format": "double" },
+                          "totalDiscount": { "type": "number", "format": "double" },
+                          "transactionId": { "type": "string" }
                         }
-                      },
-                      "paymentMethod": { "type": "string" },
-                      "transactionId": { "type": "string" },
-                      "items": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": { "type": "string" },
-                            "goodsId": { "type": "string" },
-                            "goodsName": { "type": "string" },
-                            "quantity": { "type": "integer" },
-                            "price": { "type": "integer", "format": "int64" },
-                            "status": { "type": "string" }
-                          }
-                        }
-                      },
-                      "notes": { "type": "string" }
+                      }
                     }
                   }
                 }
@@ -3267,7 +3339,7 @@
     },
     "/orders/status/{status}": {
       "get": {
-        "tags": [ "Order" ],
+        "tags": ["Order"],
         "description": "Lấy đơn hàng theo trạng thái",
         "operationId": "getOrdersByStatus",
         "parameters": [
@@ -3277,7 +3349,14 @@
             "required": true,
             "description": "Trạng thái đơn hàng",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "PROCESSING",
+                "SHIPPED",
+                "DELIVERED",
+                "CANCELLED"
+              ]
             }
           }
         ],
@@ -3292,25 +3371,7 @@
                     "type": "object",
                     "properties": {
                       "id": { "type": "string" },
-                      "userId": { "type": "string" },
-                      "userName": { "type": "string" },
-                      "orderDate": { "type": "string", "format": "date-time" },
-                      "status": { "type": "string" },
-                      "paymentStatus": { "type": "string" },
-                      "totalPrice": { "type": "integer", "format": "int64" },
-                      "totalDiscount": { "type": "integer", "format": "int64" },
-                      "shippingAddress": {
-                        "type": "object",
-                        "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
-                        }
-                      },
-                      "paymentMethod": { "type": "string" },
-                      "transactionId": { "type": "string" },
-                      "items": {
+                      "orderItems": {
                         "type": "array",
                         "items": {
                           "type": "object",
@@ -3319,12 +3380,43 @@
                             "goodsId": { "type": "string" },
                             "goodsName": { "type": "string" },
                             "quantity": { "type": "integer" },
-                            "price": { "type": "integer", "format": "int64" },
+                            "price": { "type": "number", "format": "double" },
                             "status": { "type": "string" }
                           }
                         }
                       },
-                      "notes": { "type": "string" }
+                      "voucher": {
+                        "type": "object",
+                        "properties": {
+                          "voucherId": { "type": "string" },
+                          "voucherName": { "type": "string" },
+                          "voucherDescription": { "type": "string" }
+                        }
+                      },
+                      "shippingAddress": { "type": "string" },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "PROCESSING",
+                          "SHIPPED",
+                          "DELIVERED",
+                          "CANCELLED"
+                        ]
+                      },
+                      "paymentStatus": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "PAID",
+                          "FAILED",
+                          "REFUNDED"
+                        ]
+                      },
+                      "paymentMethod": { "type": "string" },
+                      "totalPrice": { "type": "number", "format": "double" },
+                      "totalDiscount": { "type": "number", "format": "double" },
+                      "transactionId": { "type": "string" }
                     }
                   }
                 }
@@ -3336,7 +3428,7 @@
     },
     "/orders/user/{userId}": {
       "get": {
-        "tags": [ "Order" ],
+        "tags": ["Order"],
         "description": "Lấy đơn hàng theo userId",
         "operationId": "getOrdersByUserId",
         "parameters": [
@@ -3345,9 +3437,7 @@
             "in": "path",
             "required": true,
             "description": "ID của người dùng",
-            "schema": {
-              "type": "string"
-            }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -3369,12 +3459,7 @@
                       "totalPrice": { "type": "integer", "format": "int64" },
                       "totalDiscount": { "type": "integer", "format": "int64" },
                       "shippingAddress": {
-                        "type": "object",
-                        "properties": {
-                          "street": { "type": "string" },
-                          "city": { "type": "string" },
-                          "state": { "type": "string" },
-                          "country": { "type": "string" }
+                        "type": "string"
                         }
                       },
                       "paymentMethod": { "type": "string" },
@@ -3441,12 +3526,7 @@
                           "totalPrice": { "type": "integer", "format": "int64" },
                           "totalDiscount": { "type": "integer", "format": "int64" },
                           "shippingAddress": {
-                            "type": "object",
-                            "properties": {
-                              "street": { "type": "string" },
-                              "city": { "type": "string" },
-                              "state": { "type": "string" },
-                              "country": { "type": "string" }
+                            "type": "string"
                             }
                           },
                           "paymentMethod": { "type": "string" },
@@ -3470,6 +3550,76 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          }  
+      },
+
+      "/orders/update-item-status/{orderItemId}": {
+      "put": {
+        "tags": ["Order"],
+        "description": "Cập nhật trạng thái của một item trong đơn hàng (Yêu cầu quyền ADMIN)",
+        "operationId": "updateOrderItemStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderItemId",
+            "in": "path",
+            "required": true,
+            "description": "ID của order item cần cập nhật",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "description": "Trạng thái mới của order item",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cập nhật trạng thái order item thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "orderItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "goodsId": { "type": "string" },
+                          "quantity": { "type": "integer" },
+                          "status": { "type": "string" }
+                        }
+                      }
+                    },
+                    "status": { "type": "string" },
+                    "paymentStatus": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Có lỗi khi cập nhật trạng thái order item",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -3621,5 +3771,6 @@
         }
       }
     }
-  }
-}
+    
+  }}
+
