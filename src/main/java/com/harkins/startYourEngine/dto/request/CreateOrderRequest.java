@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import com.harkins.startYourEngine.enums.PaymentMethod;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,18 +16,19 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateOrderRequest {
-    @NotBlank(message = "NOT_EMPTY")
+    @NotNull(message = "NOT_EMPTY")
     List<CreateOrderItemRequest> orderItems;
 
     @NotBlank(message = "NOT_EMPTY")
     String shippingAddress;
 
+    @NotBlank(message = "NOT_EMPTY")
     String voucherId;
 
-    @NotBlank(message = "NOT_EMPTY")
+    @NotNull(message = "NOT_EMPTY")
     PaymentMethod paymentMethod;
 
-    @NonNull
+    @NotNull(message = "NOT_EMPTY")
     Long totalPrice;
 
     @NonNull

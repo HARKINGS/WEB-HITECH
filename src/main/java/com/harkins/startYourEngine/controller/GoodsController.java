@@ -94,9 +94,31 @@ public class GoodsController {
                 .build();
     }
 
-    @PutMapping("/{goodId}")
-    ApiResponse<GoodsResponse> updateGoods(
-            @PathVariable("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
+    @GetMapping("/{goodsBrand}")
+    ApiResponse<List<GoodsResponse>> getGoodsByBrand(@PathVariable("goodsBrand") String goodsBrand) {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsByBrand(goodsBrand))
+                .build();
+    }
+
+    @GetMapping("/{goodsPrice}")
+    ApiResponse<List<GoodsResponse>> getGoodsByPrice(@PathVariable("goodsPrice") Long price) {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsByPrice(price))
+                .build();
+    }
+
+    @GetMapping("/{minPrice}_{maxPrice}")
+    ApiResponse<List<GoodsResponse>> getGoodsByPrice(@PathVariable("minPrice") Long minPrice,
+                                                     @PathVariable("maxPrice") Long maxPrice) {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsByPriceRange(minPrice, maxPrice))
+                .build();
+    }
+
+    @PutMapping("/{goodsId}")
+    ApiResponse<GoodsResponse> updateGoods(@PathVariable("goodsId") String goodsId,
+                                           @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();

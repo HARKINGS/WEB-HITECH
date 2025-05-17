@@ -15,4 +15,10 @@ public interface GoodsRepository extends JpaRepository<Goods, String> {
     List<Goods> findByGoodsNameContainingIgnoreCase(String goodsName);
 
     List<Goods> findByGoodsCategory(String goodsCategory);
+
+    List<Goods> findByGoodsBrand(String goodsBrand);
+
+    List<Goods> findByPrice(Long price);
+
+    List<Goods> findByPriceBetween(Long minPrice, Long maxPrice);
 }

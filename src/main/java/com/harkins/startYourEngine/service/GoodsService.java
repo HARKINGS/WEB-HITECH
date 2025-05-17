@@ -83,4 +83,22 @@ public class GoodsService {
     public void deleteGoods(String goodsId) {
         goodsRepository.deleteById(goodsId);
     }
+
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_PRICE')")
+    public List<GoodsResponse> getGoodsByPrice(Long price) {
+        List<Goods> goodsList = goodsRepository.findByPrice(price);
+        return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_PRICE_RANGE')")
+    public List<GoodsResponse> getGoodsByPriceRange(Long minPrice, Long maxPrice) {
+        List<Goods> goodsList = goodsRepository.findByPriceBetween(minPrice, maxPrice);
+        return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_BRANCH')")
+    public List<GoodsResponse> getGoodsByBrand(String goodsBrand) {
+        List<Goods> goodsList = goodsRepository.findByGoodsBrand(goodsBrand);
+        return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
+    }
 }

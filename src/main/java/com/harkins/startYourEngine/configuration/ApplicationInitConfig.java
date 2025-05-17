@@ -52,12 +52,6 @@ public class ApplicationInitConfig {
     }
 
     private void initPermission() {
-        //        AddressService
-        //        addPermission("SAVE_ADDRESS", "Save and Update Address");
-
-        //        AuthenticationService
-        //        addPermission("LOGIN", "Login account");
-        //        addPermission("LOOUT", "Loout account");
         addPermission("CHECK_TOKEN", "Check token Valid");
         addPermission("REFRESH_TOKEN", "Refresh token Valid");
 
@@ -72,6 +66,9 @@ public class ApplicationInitConfig {
         //        GoodsService
         addPermission("CREATE_GOODS", "Create a goods");
         addPermission("GET_ALL_GOODS", "Get info of all goods");
+        addPermission("GET_GOODS_BY_PRICE", "Get GoodsList by Price");
+        addPermission("GET_GOODS_BY_PRICE_RANGE", "Get GoodsList By Price Range");
+        addPermission("GET_GOODS_BY_BRANCH", "Get GoodsList By Brand Name");
         addPermission("UPDATE_GOODS", "Update goods information");
         addPermission("DELETE_GOODS", "Delete a goods");
         addPermission("GET_GOODS_BY_ID", "Get info of a goods by goodsid");
@@ -136,6 +133,9 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_ID",
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
+                        "GET_GOODS_BY_BRANCH",
+                        "GET_GOODS_BY_PRICE_RANGE",
+                        "GET_GOODS_BY_PRICE",
                         "GET_VOUCHER",
                         "GET_ALL_VOUCHERS",
                         "CREATE_REVIEWS",
@@ -164,6 +164,9 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_NAME",
                         "GET_GOODS_BY_CATEGORY",
                         "GET_REVIEWS_BY_GOODS",
+                        "GET_GOODS_BY_BRANCH",
+                        "GET_GOODS_BY_PRICE_RANGE",
+                        "GET_GOODS_BY_PRICE",
                         "CREATE_VOUCHER",
                         "DELETE_VOUCHER",
                         "GET_VOUCHER",

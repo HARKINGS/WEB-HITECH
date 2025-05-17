@@ -18,7 +18,7 @@ public class UpdateGoodsReviewRequest {
 
     @Min(value = 1, message = "Rating must be between 1 and 5")
     @Max(value = 5, message = "Rating must be between 1 and 5")
-    Integer rating;
+    double rating;
 
     Date createdAt;
 }

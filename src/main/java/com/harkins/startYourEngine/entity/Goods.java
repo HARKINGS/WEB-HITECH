@@ -30,6 +30,7 @@ public class Goods {
     String goodsVersion;
     Long quantity;
     Long price;
+    String goodsBrand;
     String goodsDescription;
     String goodsCategory;
     String goodsImageURL;

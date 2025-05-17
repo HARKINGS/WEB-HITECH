@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class GoodsReviewResponse {
     String id;
     String content;
-    int rating;
+    double rating;
     String createdAt;
     String updatedAt;
     String userName;
