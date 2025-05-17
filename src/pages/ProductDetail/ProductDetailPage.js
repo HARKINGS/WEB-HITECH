@@ -43,6 +43,7 @@
       const [activeTab, setActiveTab] = useState('description');
       const { addToCart } = useCart();
 
+
       useEffect(() => {
           const fetchProductData = async () => {
               if (productId) {
@@ -54,15 +55,16 @@
                       setProduct(mainProductData);
                       console.log("Fetched main product:", mainProductData);
 
-                      // Fetch các sản phẩm liên quan (ví dụ: lấy tất cả rồi lọc ra, hoặc API riêng)
-                      // Cách đơn giản: Lấy tất cả sản phẩm, loại trừ sản phẩm hiện tại và lấy 4 sản phẩm đầu
+                      // Fetch các sản phẩm liên quan
                       if (mainProductData) { // Chỉ fetch related nếu có sản phẩm chính
-                          const allProductsData = await getAllGoods(); // Giả sử getAllGoods trả về tất cả sản phẩm
-                          const filteredRelated = allProductsData
-                              .filter(p => p.goodsId !== mainProductData.goodsId)
-                              .slice(0, 4);
-                          setRelatedProducts(filteredRelated);
-                          console.log("Fetched related products:", filteredRelated);
+                          const allProductsData = await getAllGoods();
+                          let related = allProductsData
+                              .filter(p => p.goodsId !== mainProductData.goodsId && p.goodsCategory === mainProductData.goodsCategory);
+
+                          // Xáo trộn mảng related và lấy 4 phần tử đầu
+                          related.sort(() => 0.5 - Math.random()); // Xáo trộn đơn giản
+                          setRelatedProducts(related.slice(0, 4));
+                          console.log("Fetched related products:", related);
                       }
 
                   } catch (err) {

@@ -1,7 +1,8 @@
 // src/components/SidebarFilter/SidebarFilter.js
-import React, { useState } from 'react';
-import { useNavigate, createSearchParams, useLocation } from 'react-router-dom'; // Thêm useNavigate, createSearchParams, useLocation
+import React, { useState, useEffect, useCallback } from 'react';
 import './SidebarFilter.css';
+// FaStar and FaRegStar are no longer needed if rating filter is removed
+// import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const FilterSection = ({ title, children }) => (
   <div className="filter-section">
@@ -10,61 +11,119 @@ const FilterSection = ({ title, children }) => (
   </div>
 );
 
-// Giả sử availableCategories là một mảng các object { id: 'electronics', name: 'Đồ điện tử' }
-// Hoặc là mảng các string nếu BE trả về như vậy
-const SidebarFilter = ({ availableCategories = [] }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const currentParams = new URLSearchParams(location.search);
-  const currentCategory = currentParams.get('category') || ''; // Lấy category hiện tại từ URL
+// DANH MỤC SẢN PHẨM ĐƯỢC ĐỊNH NGHĨA SẴN Ở ĐÂY
+// Ensure these 'id' values match what your product data uses for 'goodsCategory'
+const CATEGORIES_DATA = [
+    { id: 'Laptop', name: 'Laptop' },
+    { id: 'PC_Gaming', name: 'PC Gaming' },
+    { id: 'Phụ kiện', name: 'Phụ kiện' },
+    // Add more predefined categories as needed
+    // { id: 'Smartphone', name: 'Điện thoại thông minh' },
+    // { id: 'Tablet', name: 'Máy tính bảng' },
+];
 
-  const handleCategoryClick = (categoryValue) => {
-    // Nếu categoryValue giống category hiện tại, có thể bỏ chọn (điều hướng về /shop)
-    // Hoặc đơn giản là luôn điều hướng
-    const searchParams = createSearchParams();
-    if (categoryValue && categoryValue !== currentCategory) {
-        searchParams.set('category', categoryValue);
-    }
-    // Nếu không có categoryValue (người dùng bỏ chọn hoặc chọn lại cái đang active)
-    // hoặc categoryValue giống cái hiện tại và bạn muốn bỏ chọn, thì không set param.
-    // Nếu không set param nào, nó sẽ về /shop
-    navigate({
-        pathname: '/shop',
-        search: searchParams.toString()
-    });
+const SidebarFilter = ({ onFilterChange }) => {
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [selectedCategories, setSelectedCategories] = useState([]); // Stores IDs of selected categories
+
+  const handlePriceInputChange = (e) => {
+    const { name, value } = e.target;
+    // Allow only numeric input for price, but store as string for flexible display formatting
+    const numericValue = value.replace(/[^0-9]/g, '');
+    setPriceRange(prev => ({
+      ...prev,
+      [name]: numericValue, // Store the raw numeric string
+    }));
   };
 
-  // categoriesData sẽ được truyền từ ShopPage sau khi lấy từ API hoặc từ allProducts
-  // Ví dụ: availableCategories = ['Laptop', 'Phụ kiện', 'PC_Gaming']
-  // Hoặc [{id: 'Laptop', name: 'Laptop'}, {id: 'Phu kien', name: 'Phụ kiện'}]
-  // Chúng ta sẽ giả định availableCategories là mảng các string (tên danh mục)
+  const formatDisplayPrice = (value) => {
+    if (value === '' || value === null || value === undefined) return '';
+    // Parse the numeric string before formatting
+    const num = parseFloat(value);
+    if (isNaN(num)) return '';
+    return num.toLocaleString('vi-VN');
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(cId => cId !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+  
+  const memoizedOnFilterChange = useCallback(onFilterChange, [onFilterChange]);
+
+  useEffect(() => {
+    const parsePriceForFilter = (priceStr) => {
+        if (priceStr === '' || priceStr === null || priceStr === undefined) return null;
+        // The priceStr should already be just digits due to handlePriceInputChange logic
+        const cleanedStr = String(priceStr).replace(/[^0-9]/g, ''); // Redundant if input is controlled, but safe
+        if (cleanedStr === '') return null;
+        return parseFloat(cleanedStr);
+    };
+
+    const filters = {
+      priceRange: {
+        min: parsePriceForFilter(priceRange.min),
+        max: parsePriceForFilter(priceRange.max),
+      },
+      categories: selectedCategories,
+      // Removed highlights, colors, rating from the filters object
+    };
+    
+    if (memoizedOnFilterChange) {
+        memoizedOnFilterChange(filters);
+    }
+  }, [priceRange, selectedCategories, memoizedOnFilterChange]);
+
 
   return (
     <aside className="sidebar-filters">
-      {availableCategories.length > 0 && (
-        <FilterSection title="Lọc theo danh mục">
-          <ul className="category-filter-list">
-            {/* Thêm tùy chọn "Tất cả danh mục" để xóa filter */}
-            <li
-                key="all-categories"
-                className={`category-filter-item ${currentCategory === '' ? 'active' : ''}`}
-                onClick={() => handleCategoryClick('')} // Rỗng để xóa filter category
-            >
-                Tất cả danh mục
-            </li>
-            {availableCategories.map(catName => (
-              <li
-                key={catName}
-                className={`category-filter-item ${currentCategory === catName ? 'active' : ''}`}
-                onClick={() => handleCategoryClick(catName)}
-              >
-                {catName}
-              </li>
+      <FilterSection title="Lọc theo danh mục">
+        {CATEGORIES_DATA.length > 0 ? (
+            <ul>
+            {CATEGORIES_DATA.map(cat => (
+                <li key={cat.id}>
+                <label>
+                    <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat.id)}
+                    onChange={() => handleCategoryChange(cat.id)}
+                    />
+                    {cat.name} 
+                </label>
+                </li>
             ))}
-          </ul>
-        </FilterSection>
-      )}
-      {/* Các bộ lọc khác như giá sẽ rất khó thực hiện theo kiểu "load lại trang" vì BE không có API */}
+            </ul>
+        ) : (
+            <p className="no-categories-message">Không có danh mục nào.</p>
+        )}
+      </FilterSection>
+
+      <FilterSection title="Lọc theo giá">
+        <div className="price-input-group">
+          <input
+            type="text" // Keep as text to allow formatted display
+            name="min"
+            placeholder="Thấp nhất ₫"
+            value={formatDisplayPrice(priceRange.min)} // Display formatted value
+            onChange={handlePriceInputChange} // Updates state with raw numeric string
+            className="price-input"
+          />
+          <span className="price-separator">-</span>
+          <input
+            type="text"   
+            name="max"
+            placeholder="Cao nhất ₫"
+            value={formatDisplayPrice(priceRange.max)} // Display formatted value
+            onChange={handlePriceInputChange} // Updates state with raw numeric string
+            className="price-input"
+          />
+        </div>
+      </FilterSection>
+
+      {/* Sections for Highlights, Colors, and Rating have been removed */}
     </aside>
   );
 };
