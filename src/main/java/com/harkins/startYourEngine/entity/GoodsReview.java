@@ -28,7 +28,7 @@ public class GoodsReview {
     String content;
 
     @Column(nullable = false)
-    double rating;
+    int rating;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     Date createdAt;
