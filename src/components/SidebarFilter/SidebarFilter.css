@@ -114,7 +114,7 @@
 }
 
 .price-input {
-  width: 80px; /* Hoặc dùng flex-grow: 1 nếu muốn co giãn */
+  width: 45%; /* Hoặc dùng flex-grow: 1 nếu muốn co giãn */
   padding: 8px;
   border: 1px solid var(--border-color); /* Sử dụng biến CSS */
   border-radius: 4px; /* Giữ lại border-radius */

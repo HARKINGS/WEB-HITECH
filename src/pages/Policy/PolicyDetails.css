@@ -3,7 +3,7 @@
 .policy-detail-container {
     max-width: 900px; /* Có thể hẹp hơn trang chính để dễ đọc text dài */
     margin: 40px auto;
-    padding: 30px;
+    padding: 80px 30px 30px 30px;
     font-family: var(--font-secondary, sans-serif); /* Dùng font phụ cho dễ đọc */
     color: var(--text-primary);
     background-color: var(--background-primary);

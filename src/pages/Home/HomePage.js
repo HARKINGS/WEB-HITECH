@@ -9,7 +9,7 @@ import { getAllGoods } from '../../services/goodsService';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import bannerImg from '../../assets/images/banner.png';
 
 const HomePage = () => {
   const [randomProducts, setRandomProducts] = useState([]);
@@ -81,8 +81,10 @@ const HomePage = () => {
           <h1>Chào mừng đến với Electech</h1>
           <p>Điểm đến đúng đắn của bạn cho các thiết bị điện tử HOT nhất.</p>
           <div className="hero-placeholder">
-            {/* Thay bằng ảnh thật hoặc slider riêng cho hero */}
-            {/* <img src="/banner-placeholder.jpg" alt="Hero Banner" /> */}
+            <img
+              src={bannerImg} // Đảm bảo bannerImg đã được import chính xác
+              alt="Banner quảng cáo sản phẩm"
+            />
              Hero Banner / Slider Placeholder
           </div>
         </div>

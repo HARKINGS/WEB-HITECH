@@ -493,7 +493,7 @@ const ShopPage = () => {
                         <div className="controls-left">
                             <p className="shop-info">
                                 {/* Hiển thị số sản phẩm đang hiển thị / tổng số sản phẩm sau khi lọc */}
-                                Hiển thị {displayedProducts.length} trên {processedProducts.length} kết quả
+                                Hiển thị {displayedProducts.length} / {processedProducts.length} kết quả
                                 {filters.searchQuery && ` cho "${filters.searchQuery}"`}
                             </p>
                         </div>
