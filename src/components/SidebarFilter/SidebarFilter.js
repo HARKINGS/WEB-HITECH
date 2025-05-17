@@ -1,8 +1,6 @@
 // src/components/SidebarFilter/SidebarFilter.js
 import React, { useState, useEffect, useCallback } from 'react';
 import './SidebarFilter.css';
-// FaStar and FaRegStar are no longer needed if rating filter is removed
-// import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const FilterSection = ({ title, children }) => (
   <div className="filter-section">
@@ -11,37 +9,30 @@ const FilterSection = ({ title, children }) => (
   </div>
 );
 
-// DANH MỤC SẢN PHẨM ĐƯỢC ĐỊNH NGHĨA SẴN Ở ĐÂY
-// Ensure these 'id' values match what your product data uses for 'goodsCategory'
 const CATEGORIES_DATA = [
     { id: 'Laptop', name: 'Laptop' },
     { id: 'PC_Gaming', name: 'PC Gaming' },
     { id: 'Phụ kiện', name: 'Phụ kiện' },
-    // Add more predefined categories as needed
-    // { id: 'Smartphone', name: 'Điện thoại thông minh' },
-    // { id: 'Tablet', name: 'Máy tính bảng' },
 ];
 
 const SidebarFilter = ({ onFilterChange }) => {
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [selectedCategories, setSelectedCategories] = useState([]); // Stores IDs of selected categories
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const handlePriceInputChange = (e) => {
     const { name, value } = e.target;
-    // Allow only numeric input for price, but store as string for flexible display formatting
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, ''); // Chỉ giữ lại số
     setPriceRange(prev => ({
       ...prev,
-      [name]: numericValue, // Store the raw numeric string
+      [name]: numericValue,
     }));
   };
 
   const formatDisplayPrice = (value) => {
     if (value === '' || value === null || value === undefined) return '';
-    // Parse the numeric string before formatting
-    const num = parseFloat(value);
+    const num = parseFloat(value); // value đã là chuỗi số
     if (isNaN(num)) return '';
-    return num.toLocaleString('vi-VN');
+    return num.toLocaleString('vi-VN'); // Ví dụ: 100000 -> "100.000"
   };
 
   const handleCategoryChange = (categoryId) => {
@@ -57,8 +48,7 @@ const SidebarFilter = ({ onFilterChange }) => {
   useEffect(() => {
     const parsePriceForFilter = (priceStr) => {
         if (priceStr === '' || priceStr === null || priceStr === undefined) return null;
-        // The priceStr should already be just digits due to handlePriceInputChange logic
-        const cleanedStr = String(priceStr).replace(/[^0-9]/g, ''); // Redundant if input is controlled, but safe
+        const cleanedStr = String(priceStr).replace(/[^0-array]/g, ''); // Should be unnecessary if input is controlled
         if (cleanedStr === '') return null;
         return parseFloat(cleanedStr);
     };
@@ -69,7 +59,6 @@ const SidebarFilter = ({ onFilterChange }) => {
         max: parsePriceForFilter(priceRange.max),
       },
       categories: selectedCategories,
-      // Removed highlights, colors, rating from the filters object
     };
     
     if (memoizedOnFilterChange) {
@@ -77,11 +66,11 @@ const SidebarFilter = ({ onFilterChange }) => {
     }
   }, [priceRange, selectedCategories, memoizedOnFilterChange]);
 
-
   return (
     <aside className="sidebar-filters">
       <FilterSection title="Lọc theo danh mục">
-        {CATEGORIES_DATA.length > 0 ? (
+        {/* ... (phần category giữ nguyên) ... */}
+         {CATEGORIES_DATA.length > 0 ? (
             <ul>
             {CATEGORIES_DATA.map(cat => (
                 <li key={cat.id}>
@@ -91,7 +80,7 @@ const SidebarFilter = ({ onFilterChange }) => {
                     checked={selectedCategories.includes(cat.id)}
                     onChange={() => handleCategoryChange(cat.id)}
                     />
-                    {cat.name} 
+                    {cat.name}
                 </label>
                 </li>
             ))}
@@ -104,26 +93,36 @@ const SidebarFilter = ({ onFilterChange }) => {
       <FilterSection title="Lọc theo giá">
         <div className="price-input-group">
           <input
-            type="text" // Keep as text to allow formatted display
+            type="text"
             name="min"
-            placeholder="Thấp nhất ₫"
-            value={formatDisplayPrice(priceRange.min)} // Display formatted value
-            onChange={handlePriceInputChange} // Updates state with raw numeric string
+            // THAY ĐỔI PLACEHOLDER
+            placeholder="vd: 100.000" // Hoặc "Từ 000 ₫"
+            value={formatDisplayPrice(priceRange.min)}
+            onChange={handlePriceInputChange}
             className="price-input"
+            // pattern="[0-9]*" // Có thể thêm pattern để bàn phím mobile hiển thị số (tùy trình duyệt)
+            // inputMode="numeric" // Gợi ý bàn phím số
           />
           <span className="price-separator">-</span>
           <input
-            type="text"   
+            type="text"
             name="max"
-            placeholder="Cao nhất ₫"
-            value={formatDisplayPrice(priceRange.max)} // Display formatted value
-            onChange={handlePriceInputChange} // Updates state with raw numeric string
+            // THAY ĐỔI PLACEHOLDER
+            placeholder="vd: 5.000.000" // Hoặc "Đến 000 ₫"
+            value={formatDisplayPrice(priceRange.max)}
+            onChange={handlePriceInputChange}
             className="price-input"
+            // pattern="[0-9]*"
+            // inputMode="numeric"
           />
         </div>
+        {/* Bạn có thể hiển thị giá trị đang được lọc ở đây nếu muốn */}
+        {/* <div className="current-filter-price-display">
+            Đang lọc từ: {formatDisplayPrice(priceRange.min) || '0'}₫
+            đến: {formatDisplayPrice(priceRange.max) || 'Không giới hạn'}
+            {priceRange.max ? '₫' : ''}
+        </div> */}
       </FilterSection>
-
-      {/* Sections for Highlights, Colors, and Rating have been removed */}
     </aside>
   );
 };

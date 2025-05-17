@@ -1,40 +1,186 @@
 /* Styles for Home Page */
 
 .home-page {
-  padding-top: 100px;
+  padding-top: 100px; /* Điều chỉnh nếu Header của bạn có chiều cao khác */
 }
+
+/* --- Hero Section --- */
 .hero-section {
-    /* Styles for hero banner/slider */
-    padding: 60px 0;
-    background-color: var(--background-secondary); /* Hoặc ảnh nền */
-    text-align: center;
+  padding: 50px 0;
+  background-color: var(--background-secondary);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero-section h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.hero-section p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+.hero-placeholder {
+  height: 350px; /* Tăng chiều cao banner */
+  background-color: var(--border-color-light, #e0e0e0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  border-radius: 8px; /* Bo góc banner */
+  margin-bottom: 30px;
+}
+
+.hero-placeholder img { /* Nếu bạn dùng ảnh thật */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.hero-cta-button {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  /* Các style khác cho nút primary của bạn */
+}
+
+/* --- Random Products Slider Section --- */
+.random-products-slider-section {
+  padding: 40px 0;
+  background-color: var(--background-primary); /* Hoặc màu nền khác */
+}
+
+.random-products-slider-section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  font-size: 1.8rem;
+}
+
+/* Wrapper for the slider to control width if needed */
+.product-slider-wrapper {
+  /* max-width: 1140px; /* Không cần thiết nếu .container đã có max-width */
+  /* margin: 0 auto; */
+}
+
+/* Padding cho từng item trong slider để không bị dính sát nhau */
+.slider-item-padding {
+  padding: 0 10px; /* Tạo khoảng cách ngang giữa các ProductCard */
+}
+
+/* Customizing react-slick arrows and dots (Tùy chọn) */
+.slick-prev, .slick-next {
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+}
+
+.slick-prev:before, .slick-next:before {
+  font-size: 30px; /* Kích thước mũi tên */
+  color: var(--text-primary); /* Màu mũi tên */
+  opacity: 0.7;
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+  opacity: 1;
+}
+
+.slick-prev { left: -45px; } /* Điều chỉnh vị trí mũi tên prev */
+.slick-next { right: -45px; } /* Điều chỉnh vị trí mũi tên next */
+
+.slick-dots li button:before {
+  font-size: 10px; /* Kích thước chấm */
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.slick-dots li.slick-active button:before {
+  color: var(--text-accent); /* Màu chấm active */
+  opacity: 1;
+}
+
+/* --- Featured Categories Section --- */
+.featured-categories-section {
+  padding: 40px 0;
+  background-color: var(--background-secondary);
+}
+
+.featured-categories-section h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+  font-size: 1.8rem;
+}
+
+.categories-grid-home {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  text-align: center;
+}
+
+.category-card-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.category-card-home:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.category-card-home .category-icon-placeholder {
+  width: 80px;
+  height: 80px;
+  background-color: var(--border-color-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 0.8rem; /* Chữ nhỏ hơn để vừa icon */
+  color: var(--text-secondary);
+}
+
+.category-card-home span {
+  font-weight: 500;
+}
+
+/* Sử dụng lại grid từ global hoặc định nghĩa riêng */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 20px;
+}
+
+/* Responsive adjustments for slider arrows on smaller screens */
+@media (max-width: 768px) {
+  .slick-prev { left: -25px; }
+  .slick-next { right: -25px; }
+  .slick-prev:before, .slick-next:before { font-size: 24px; }
+
+  .home-page {
+    padding-top: 80px; /* Giảm padding top nếu header nhỏ hơn trên mobile */
   }
-  .hero-placeholder {
-      height: 300px;
-      background-color: var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: 20px;
-  }
-  
-  .featured-products-section, .other-section {
-    padding: 40px 0;
-  }
-  
-  .featured-products-section h2, .other-section h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: var(--text-primary);
-  }
-  
-  /* Sử dụng lại grid từ global hoặc định nghĩa riêng */
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-    gap: 20px;
-  }
-  
-  /* Styles cho các section khác nếu cần */
+  .hero-section h1 { font-size: 2rem; }
+  .hero-placeholder { height: 250px; }
+}
+
+@media (max-width: 576px) {
+  .slick-prev, .slick-next { display: none !important; } /* Ẩn mũi tên trên màn hình rất nhỏ nếu muốn */
+  .slider-item-padding { padding: 0 5px; } /* Giảm padding item */
+}

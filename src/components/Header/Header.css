@@ -55,8 +55,6 @@
 .logo { line-height: 1; }
 .logo-text {
   font-size: 2rem; font-weight: bold; color: var(--text-accent);
-  
-  
   -webkit-user-select: none;user-select: none;
 }
 .search-form {
@@ -68,7 +66,6 @@
   border-right: 1px solid var(--border-color); cursor: pointer;
   display: flex; align-items: center; gap: 5px; font-size: 0.9rem;
   color: var(--text-secondary); 
-  
   -webkit-user-select: none;user-select: none;
 }
 .search-input {
@@ -103,12 +100,12 @@
   gap: 8px;
   color: var(--text-accent, #ffc107);
   text-decoration: none;
-  padding: 5px; /* Add some padding so the shake doesn't feel cramped */
-  border-radius: 4px; /* Optional: Slightly round corners */
-  transition: background-color 0.2s ease; /* Optional: Smooth hover */
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 .header-action-item .cart-link-icon:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Optional: Subtle hover */
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .header-action-item .cart-link-icon span.noselect {
   font-weight: 500;
@@ -122,48 +119,46 @@
   user-select: none; 
 }
 .header-action-item .cart-count {
-  background-color: var(--primary-color, red); /* Use your theme color */
+  background-color: var(--primary-color, red);
   color: white;
   border-radius: 50%;
   padding: 5px 7px;
   font-size: 0.8em;
-  min-width: 18px; /* Ensure circle shape even for single digit */
+  min-width: 18px;
   text-align: center;
   line-height: 1;
-  display: inline-block; /* Or inline-flex if needed */
+  display: inline-block;
 }
-
 
 .header-action-item svg { font-size: 1.2rem; }
 .header-action-item:hover { color: var(--text-accent); }
 .header-action-item span { 
-  
   -webkit-user-select: none;user-select: none; }
-  .cart-count {
-    background-color: var(--price-color, #dc3545); /* <<< MÀU HỒNG/ĐỎ */
-    color: var(--text-on-price, #fff); /* <<< MÀU CHỮ TRẮNG */
-    border-radius: 50%; /* <<< LÀM TRÒN HOÀN TOÀN */
-    padding: 0; /* Reset padding */
-    font-size: 0.75rem; /* Kích thước chữ số */
-    font-weight: 600; /* Chữ số đậm hơn */
-    /* margin: 0 5px; */ /* Bỏ margin, dùng gap của span cha */
-    display: inline-flex; /* Sử dụng flex để căn giữa số */
-    align-items: center;
-    justify-content: center;
-    min-width: 20px; /* <<< Chiều rộng tối thiểu */
-    height: 20px; /* <<< Chiều cao cố định */
-    line-height: 20px; /* <<< Căn chữ số vào giữa theo chiều dọc */
-    text-align: center;
-    box-sizing: border-box; /* Đảm bảo padding/border không làm tăng kích thước */
-  }
+.cart-count {
+  background-color: var(--price-color, #dc3545);
+  color: var(--text-on-price, #fff);
+  border-radius: 50%;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 /* ============================================ */
 /* =========== CART PREVIEW DROPDOWN ========== */
 /* ============================================ */
 
 /* Wrapper for positioning */
 .cart-action-wrapper {
-  position: relative; /* Needed for absolute positioning of the dropdown */
-  cursor: pointer;    /* Indicate it's clickable */
+  position: relative;
+  cursor: pointer;
 }
 
 .cart-preview-dropdown {
@@ -189,8 +184,8 @@
 .cart-preview-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 15px 0; /* Space below list */
-  max-height: 350px; /* Limit height */
+  margin: 0 0 15px 0;
+  max-height: 350px;
   overflow-y: auto;
 }
 
@@ -210,33 +205,30 @@ border-radius: 3px;
 background: var(--text-secondary, #999);
 }
 
-
 .cart-preview-item {
   display: flex;
-  align-items: center; /* Vertically center items */
-  gap: 12px; /* Space between image, info, button */
+  align-items: center;
+  gap: 12px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--border-color-dark, #444); /* Darker border */
+  border-bottom: 1px solid var(--border-color-dark, #444);
 }
 .cart-preview-item:last-child {
   border-bottom: none;
-  padding-bottom: 5px; /* Less padding at the very bottom */
+  padding-bottom: 5px;
 }
 .cart-preview-item:first-child {
-  padding-top: 5px; /* Less padding at the very top */
+  padding-top: 5px;
 }
 
-
 .cart-preview-image {
-  width: 60px; /* Slightly larger image */
+  width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 4px;
-  border: 1px solid var(--border-color-darker, #555); /* Subtle border */
+  border: 1px solid var(--border-color-darker, #555);
   flex-shrink: 0;
 }
 
-/* Renamed from cart-preview-details */
 .cart-preview-info {
   flex-grow: 1;
   display: flex;
@@ -246,10 +238,10 @@ background: var(--text-secondary, #999);
 }
 
 .cart-preview-details {
-  flex-grow: 1; /* Take remaining space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 3px; /* Small gap between lines */
+  gap: 3px;
 }
 
 .cart-preview-name {
@@ -257,7 +249,7 @@ background: var(--text-secondary, #999);
   font-weight: 500;
   color: var(--text-primary);
   text-decoration: none;
-  line-height: 1.3; /* Slightly adjust line height if needed */
+  line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -265,7 +257,7 @@ background: var(--text-secondary, #999);
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.2s ease;
-  margin-bottom: 2px; /* Small space below name */
+  margin-bottom: 2px;
 }
 .cart-preview-name:hover {
   color: var(--text-accent, #007bff);
@@ -273,7 +265,7 @@ background: var(--text-secondary, #999);
 .cart-preview-quantity-controls {
   display: flex;
   align-items: center;
-  gap: 8px; /* Space between buttons and number */
+  gap: 8px;
 }
 .cart-preview-quantity,
 .cart-preview-price {
@@ -286,9 +278,9 @@ background: var(--text-secondary, #999);
   color: var(--text-secondary-on-dark, #bbb);
   font-weight: 400;
 }
-.cart-preview-price strong { /* Make price part stand out */
+.cart-preview-price strong {
   font-weight: 600;
-  color: var(--price-color-on-dark, #f07777); /* Price color */
+  color: var(--price-color-on-dark, #f07777);
 }
 
 .cart-preview-remove {
@@ -296,18 +288,18 @@ background: var(--text-secondary, #999);
   border: none;
   color: var(--text-secondary-on-dark, #999);
   cursor: pointer;
-  padding: 8px; /* Larger clickable area */
-  margin-left: 5px; /* Space from info */
+  padding: 8px;
+  margin-left: 5px;
   line-height: 1;
-  border-radius: 50%; /* Make it round */
+  border-radius: 50%;
   transition: color 0.2s ease, background-color 0.2s ease;
   flex-shrink: 0;
 }
 .cart-preview-remove:hover {
-  color: var(--price-color, #dc3545); /* Red color on hover */
+  color: var(--price-color, #dc3545);
 }
 .cart-preview-remove svg {
-  display: block; /* Fix potential alignment issues */
+  display: block;
 }
 .cart-preview-footer {
   margin-top: 15px;
@@ -326,7 +318,7 @@ background: var(--text-secondary, #999);
   color: var(--text-primary);
   font-weight: 600;
 }
-.cart-preview-subtotal { /* Optional subtotal styles */
+.cart-preview-subtotal {
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
@@ -335,11 +327,10 @@ background: var(--text-secondary, #999);
   font-weight: 500;
 }
 
-
 .btn-view-cart {
-  display: block; /* Make button full width */
+  display: block;
   width: 100%;
-  background-color: var(--accent-color, #007bff); /* Use your accent color */
+  background-color: var(--accent-color, #007bff);
   color: var(--text-on-accent, #fff);
   border: none;
   padding: 10px 15px;
@@ -352,25 +343,25 @@ background: var(--text-secondary, #999);
 }
 
 .btn-view-cart:hover {
-  background-color: var(--accent-color-darker, #0056b3); /* Darker accent on hover */
+  background-color: var(--accent-color-darker, #0056b3);
 }
 .cart-preview-total {
   font-size: 1rem;
-  color: var(--price-color-on-dark, #f07777); /* Price color */
+  color: var(--price-color-on-dark, #f07777);
 }
 
 /* Container for buttons */
 .cart-preview-actions {
     margin-top: 15px;
     display: flex;
-    gap: 10px; /* Space between buttons if you add more */
-    justify-content: center; /* Center button(s) */
+    gap: 10px;
+    justify-content: center;
 }
 
 /* General button styling (assuming you have base .btn styles) */
 .cart-preview-actions .btn {
-  flex-grow: 1; /* Make buttons take equal width */
-  padding: 8px 15px; /* Adjust padding */
+  flex-grow: 1;
+  padding: 8px 15px;
   font-size: 0.9rem;
   text-align: center;
   text-decoration: none;
@@ -381,7 +372,7 @@ background: var(--text-secondary, #999);
 
 /* Primary button (Checkout) - Adapt colors */
 .cart-preview-actions .btn-primary {
-  background-color: var(--accent-color, #007bff); /* Use your primary color */
+  background-color: var(--accent-color, #007bff);
   color: var(--text-on-primary, #fff);
   font-size: 1.1rem;
   font-weight: 600;
@@ -405,8 +396,7 @@ background: var(--text-secondary, #999);
 }
 
 /* Utility classes potentially needed in JS (add if not present) */
-.btn { /* Base button */
-    /* display: inline-block; */
+.btn {
     text-align: center;
     vertical-align: middle;
     cursor: pointer;
@@ -419,7 +409,7 @@ background: var(--text-secondary, #999);
     border-radius: 0.25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-.btn-sm { /* Smaller button variant */
+.btn-sm {
     padding: 0.25rem 0.5rem;
     font-size: .875rem;
     line-height: 1.5;
@@ -463,8 +453,7 @@ background: var(--text-secondary, #999);
 .browse-categories {
   background-color: var(--accent-color);
   color: var(--text-on-accent);
-  /* padding: 0 20px; */
-  padding-right: 60px; /* Giữ padding phải lớn */
+  padding-right: 60px;
   height: 100%;
   display: flex; align-items: center; gap: 10px;
   font-weight: 600;
@@ -498,7 +487,7 @@ background: var(--text-secondary, #999);
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0; /* Reset padding link */
+  padding: 0;
   color: var(--text-on-accent);
   font-weight: 600;
   font-size: 1rem;
@@ -521,7 +510,6 @@ background: var(--text-secondary, #999);
 .nav-item > a .badge {
   margin-left: 6px; padding: 2px 6px; font-size: 0.65rem;
   border-radius: 3px; line-height: 1; font-weight: bold;
-  
   -webkit-user-select: none;user-select: none;
   vertical-align: middle;
   display: inline-block;
@@ -556,7 +544,7 @@ background: var(--text-secondary, #999);
 /* ============= DROPDOWN MENUS =============== */
 /* ============================================ */
 
-/* Header.css - Sửa lại */
+/* Header.css - Updated to fix dropdown visibility */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -569,36 +557,34 @@ background: var(--text-secondary, #999);
   border-radius: 0 0 5px 5px;
   padding: 0;
   min-width: 220px;
-
-  /* BỎ !important ở đây */
+  display: block; /* Ensure dropdown is not hidden by display: none */
   opacity: 0;
   visibility: hidden;
   transform: translateY(5px);
   pointer-events: none;
-  /* THÊM LẠI TRANSITION CHO TRẠNG THÁI ẨN ĐỂ MƯỢT MÀ KHI ẨN ĐI */
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
 }
 
-.nav-item.has-dropdown:hover > .dropdown-menu,
-.browse-categories-wrapper:hover > .dropdown-menu {
-  /* CÓ THỂ BỎ !important ở đây nếu không có xung đột nào khác từ Bootstrap */
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  pointer-events: auto;
-  /* Transition khi hiện ra */
-  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0s;
+/* Increase specificity and add !important to override SCSS */
+.site-header .nav-item.has-dropdown:hover > .dropdown-menu,
+.site-header .browse-categories-wrapper:hover > .dropdown-menu {
+  display: block !important; /* Ensure SCSS can't override with display: none */
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  pointer-events: auto !important;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0s !important;
 }
 
 /* --- Simple Dropdown List Styling --- */
 .dropdown-menu .dropdown-list {
   list-style: none;
-  padding: 10px 0; /* Padding top/bottom cho list */
+  padding: 10px 0;
   margin: 0;
 }
 .dropdown-menu .dropdown-list li a {
   display: block;
-  padding: 6px 20px; /* Padding cho item link */
+  padding: 6px 20px;
   color: var(--text-secondary);
   font-size: 0.9rem;
   white-space: nowrap;
@@ -618,7 +604,7 @@ background: var(--text-secondary, #999);
 
 /* Style for headers within the list */
 .dropdown-menu .dropdown-list li.dropdown-list-header {
-  padding: 10px 20px 4px 20px; /* Padding cho header */
+  padding: 10px 20px 4px 20px;
   font-weight: 600;
   color: var(--text-primary);
   font-size: 0.9rem;
@@ -634,39 +620,34 @@ background: var(--text-secondary, #999);
 }
 /* Optional: Inline product style */
 .dropdown-menu .dropdown-list li.dropdown-list-product { padding: 5px 10px; }
-/* ... product-showcase-mini.horizontal.simple-list-product styles ... */
-
 
 /* Browse Categories Dropdown */
 .browse-menu {
   left: 0;
   min-width: 250px;
-  padding: 0; /* Kế thừa padding từ list */
+  padding: 0;
 }
 .browse-menu .dropdown-list { padding: 10px 0; }
-.browse-menu .vertical-list li a { padding: 8px 20px; } /* Đồng bộ padding */
+.browse-menu .vertical-list li a { padding: 8px 20px; }
 .browse-menu .submenu-arrow { margin-left: auto; opacity: 0.6; }
 
 /* --- Mega Menu General Styling (Chỉ áp dụng cho Shop, Products, Top Deals) --- */
-/* .mega-menu:not(.categories-menu):not(.elements-menu):not(.browse-menu)  */
 .mega-menu {
   min-width: 600px;
-  padding: 25px; /* Padding riêng cho mega */
-  /* Kế thừa border, shadow từ .dropdown-menu */
+  padding: 25px;
 }
 .mega-menu-grid { display: grid; gap: 30px; }
 .mega-menu-column h4 {
   margin-top: 0; margin-bottom: 15px; font-size: 0.95rem;
   font-weight: 600; color: var(--text-primary);
   border-bottom: 1px solid var(--border-color); padding-bottom: 8px;
-  
   -webkit-user-select: none;user-select: none;
 }
 .mega-menu-column ul { list-style: none; padding: 0; margin: 0; }
 .mega-menu-column ul li a {
   display: block; padding: 5px 0; color: var(--text-secondary);
   font-size: 0.9rem; transition: color 0.2s ease;
-  white-space: normal; /* Cho phép xuống dòng */
+  white-space: normal;
   border-radius: 0;
   justify-content: flex-start;
 }
@@ -675,15 +656,12 @@ background: var(--text-secondary, #999);
     background-color: transparent;
 }
 
-
 /* --- Categories Menu - Đảm bảo là Simple Dropdown --- */
 .categories-menu.dropdown-menu {
-  min-width: 240px; /* Độ rộng mong muốn */
-  left: 0;    /* Căn trái với nav item Categories */
+  min-width: 240px;
+  left: 0;
   transform: none;
-  /* Các style khác kế thừa từ .dropdown-menu */
 }
-/* CSS cho các link bên trong Categories menu sẽ tự động kế thừa từ .dropdown-menu .dropdown-list li a */
 
 /* Shop Menu */
 .shop-menu.mega-menu,
@@ -698,7 +676,6 @@ background: var(--text-secondary, #999);
 
 .top-deals-menu.mega-menu { min-width: 850px; left: auto; right: 15px; }
 
-
 /* Elements Menu */
 .elements-menu {
   min-width: 180px;
@@ -706,6 +683,86 @@ background: var(--text-secondary, #999);
 }
 .elements-menu .dropdown-list { padding: 10px 0; }
 .elements-menu .dropdown-list li a { padding: 8px 15px; }
+/* src/components/Header/Header.css */
+/* ... (CSS hiện tại của bạn) ... */
+
+/* Thêm hoặc điều chỉnh các style sau nếu cần */
+
+.dropdown-loading,
+.dropdown-empty {
+  padding: 15px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  min-width: 200px; /* Để dropdown không bị quá hẹp khi loading */
+}
+
+/* Styling cho sản phẩm trong mega menu (products-actual-menu) */
+.products-actual-menu .mega-menu-product-item { /* Sử dụng class mới cho mega menu sản phẩm */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 5px; /* Giảm padding nếu cần để vừa nhiều item hơn */
+  text-decoration: none;
+  color: var(--text-secondary);
+  border-radius: 4px;
+}
+
+.products-actual-menu .mega-menu-product-item:hover {
+  color: var(--text-accent);
+  background-color: var(--background-secondary-hover, #f0f0f0); /* Thêm màu nền khi hover item */
+}
+
+.products-actual-menu .mega-menu-product-item img {
+  width: 45px; /* Kích thước ảnh nhỏ hơn */
+  height: 45px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--border-color-light, #eee);
+  flex-shrink: 0;
+}
+
+.products-actual-menu .mega-menu-product-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem; /* Chữ nhỏ hơn cho tên và giá */
+  overflow: hidden; /* Tránh text dài làm vỡ layout */
+}
+.products-actual-menu .mega-menu-product-info span:first-child { /* Tên sản phẩm */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px; /* Giới hạn chiều rộng tên sản phẩm */
+}
+
+
+.products-actual-menu .mega-menu-product-info .price {
+  font-weight: 500;
+  color: var(--price-color, #dc3545);
+  margin-top: 2px;
+}
+
+/* Đảm bảo menu "Sản phẩm" có đủ không gian và căn chỉnh */
+.products-actual-menu.mega-menu {
+  min-width: 700px; /* Tùy chỉnh theo số cột và nội dung */
+  max-width: 900px;
+  /* Cân nhắc dùng left: 50%; transform: translateX(-XX%); để căn giữa nếu nội dung thay đổi nhiều */
+}
+
+.products-actual-menu.mega-menu .mega-menu-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Cột nhỏ hơn cho sản phẩm */
+}
+
+/* Cart Preview - Nút Xem giỏ hàng */
+.cart-preview-actions .btn-secondary {
+   background-color: var(--background-primary); /* Hoặc một màu khác cho nút thứ cấp */
+   color: var(--text-primary);
+   border: 1px solid var(--border-color);
+}
+.cart-preview-actions .btn-secondary:hover {
+    background-color: var(--background-secondary-hover, #f0f0f0);
+    border-color: var(--border-color-darker, #ccc);
+}
 
 /* ============================================ */
 /* ============= RESPONSIVE =================== */
@@ -714,7 +771,7 @@ background: var(--text-secondary, #999);
     .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 960px; }
     .shop-menu.mega-menu, .products-menu.mega-menu, .top-deals-menu.mega-menu { min-width: 800px; }
     .product-grid-mini { grid-template-columns: repeat(2, 1fr); }
-    .nav-item { padding: 0 10px; } /* Giảm padding nav item trên màn hình nhỏ hơn */
+    .nav-item { padding: 0 10px; }
 }
 
 @media (max-width: 991px) {
@@ -724,7 +781,7 @@ background: var(--text-secondary, #999);
     .header-top-nav { display: none; }
     .todays-deals { display: none; }
     .browse-categories-wrapper { margin-right: auto; }
-    .browse-categories { border-right: none; } /* Bỏ border nút browse khi chỉ còn nó */
+    .browse-categories { border-right: none; }
     .mobile-menu-toggle { display: block; }
 }
 
@@ -752,7 +809,7 @@ background: var(--text-secondary, #999);
     .mega-menu-grid { grid-template-columns: 1fr !important; gap: 20px; }
     .shop-menu .image-ad, .categories-menu .best-selling { display: none; }
     .product-grid-mini { grid-template-columns: 1fr; gap: 15px; }
-    .category-icons-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* Sửa thành 2 cột */
+    .category-icons-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .product-showcase-mini img { max-width: 50px; height: 50px;}
 }
 
@@ -767,3 +824,4 @@ background: var(--text-secondary, #999);
     height: 100%;
     line-height: 50px;
 }
+

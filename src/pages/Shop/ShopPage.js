@@ -271,7 +271,7 @@ import { FaThLarge, FaList } from 'react-icons/fa';
 import { getAllGoods } from '../../services/goodsService';
 // Không cần searchGoods ở đây nữa nếu tìm kiếm cũng xử lý ở FE trên data đã tải
 
-const ITEMS_PER_PAGE = 8; // Số sản phẩm mỗi trang
+const ITEMS_PER_PAGE = 16; // Số sản phẩm mỗi trang
 
 const ShopPage = () => {
     const [allProducts, setAllProducts] = useState([]); // Lưu trữ tất cả sản phẩm từ API
