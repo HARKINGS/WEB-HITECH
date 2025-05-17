@@ -73,7 +73,7 @@ public class GoodsController {
                 .build();
     }
 
-    @GetMapping("/{goodsId}")
+    @GetMapping("/by-id/{goodsId}")
     ApiResponse<GoodsResponse> getGoodsById(@PathVariable("goodsId") String goodsId) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.getGoodsById(goodsId))
@@ -94,14 +94,14 @@ public class GoodsController {
                 .build();
     }
 
-    @GetMapping("/{goodsBrand}")
+    @GetMapping("/by-brand/{goodsBrand}")
     ApiResponse<List<GoodsResponse>> getGoodsByBrand(@PathVariable("goodsBrand") String goodsBrand) {
         return ApiResponse.<List<GoodsResponse>>builder()
                 .result(goodsService.getGoodsByBrand(goodsBrand))
                 .build();
     }
 
-    @GetMapping("/{goodsPrice}")
+    @GetMapping("/by-price/{goodsPrice}")
     ApiResponse<List<GoodsResponse>> getGoodsByPrice(@PathVariable("goodsPrice") Long price) {
         return ApiResponse.<List<GoodsResponse>>builder()
                 .result(goodsService.getGoodsByPrice(price))

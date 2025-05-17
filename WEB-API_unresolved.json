@@ -1723,7 +1723,7 @@
         }
       }
     },
-    "/goods/goodsCategory" : {
+    "/goods/{goodsCategory}" : {
       "get" : {
         "tags" : [ "Goods" ],
         "description" : "Lọc sản phẩm theo danh mục",
@@ -1775,6 +1775,166 @@
                             "type" : "integer",
                             "format" : "int64",
                             "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsBrand}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo hãng",
+        "operationId" : "getGoodsByBrand",
+        "parameters" : [ {
+          "name" : "goodsBrand",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Hãng A"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsBrand": {
+                            "type": "string",
+                            "example": "Hãng A"
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsPrice}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo giá cố định",
+        "operationId" : "getGoodsByPrice",
+        "parameters" : [ {
+          "name" : "goodsPrice",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 15000000
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsBrand": {
+                            "type": "string",
+                            "example": "Hãng A"
                           },
                           "goodsDescription" : {
                             "type" : "string",
