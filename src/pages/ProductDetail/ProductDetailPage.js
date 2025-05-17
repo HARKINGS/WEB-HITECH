@@ -1,178 +1,201 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { mockProducts } from '../../data/mockData'; // Dùng dữ liệu giả
-import ProductCard from '../../components/ProductCard/ProductCard'; // Để hiển thị related products
-import { useCart } from '../../contexts/CartContext'; 
-import './ProductDetailPage.css';
-import { FaStar, FaRegStar, FaShoppingCart, FaHeart, FaExchangeAlt } from 'react-icons/fa';
+  // src/pages/ProductDetail/ProductDetailPage.js
+  import React, { useState, useEffect } from 'react';
+  import { useParams, Link } // Thêm Link nếu cần cho breadcrumbs hoặc related products
+      from 'react-router-dom';
+  // import { mockProducts } from '../../data/mockData'; // Xóa hoặc comment dòng này
+  import ProductCard from '../../components/ProductCard/ProductCard';
+  import { useCart } from '../../contexts/CartContext';
+  import './ProductDetailPage.css';
+  import { FaStar, FaRegStar, FaShoppingCart } from 'react-icons/fa';
 
-// Hàm render sao (có thể đưa ra utils)
-const renderStars = (rating) => {
-  const stars = [];
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 !== 0; // Check if there's a decimal part (not needed for simple full stars)
+  import { getGoodsById, getAllGoods } from '../../services/goodsService'; // Import service lấy chi tiết và có thể cả ds sản phẩm
 
-  for (let i = 0; i < fullStars; i++) {
-      stars.push(<FaStar key={`full-${i}`} />);
-  }
-  // For simplicity here, we'll only use full stars or empty stars based on rounding or floor
-  for (let i = fullStars; i < 5; i++) {
-      stars.push(<FaRegStar key={`empty-${i}`} />);
-  }
-  return stars;
-};
-
-const ProductDetailPage = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState('description');
-  const { addToCart } = useCart();
-
-  useEffect(() => {
-    // Tìm sản phẩm trong mock data dựa vào productId từ URL
-    const foundProduct = mockProducts.find(p => p.id === parseInt(productId));
-    setProduct(foundProduct);
-    // Trong ứng dụng thực tế, bạn sẽ fetch dữ liệu từ API ở đây
-    // fetch(`/api/products/${productId}`).then(res => res.json()).then(data => setProduct(data));
-  }, [productId]);
-
-  if (!product) {
-    return <div className="container">Loading product...</div>; // Hoặc trang lỗi
-  }
-
-  // Lấy một vài sản phẩm khác làm "related"
-  const relatedProducts = mockProducts.filter(p => p.id !== product.id).slice(0, 4);
-
-  const handleQuantityChange = (amount) => {
-    setQuantity(prev => Math.max(1, prev + amount)); // Không cho số lượng < 1
+  // Hàm render sao (giữ nguyên hoặc tùy chỉnh)
+  const renderStars = (rating = 0) => {
+      const stars = [];
+      const fullStars = Math.floor(rating);
+      for (let i = 0; i < 5; i++) {
+          if (i < fullStars) {
+              stars.push(<FaStar key={`full-${i}`} />);
+          } else {
+              stars.push(<FaRegStar key={`empty-${i}`} />);
+          }
+      }
+      return stars;
   };
 
-  // --- Handler for Add to Cart Button ---
-  const handleAddToCartClick = () => {
-    if (product) {
-      addToCart(product, quantity); // <-- Call context function
-      // Optional: Show a confirmation message to the user
-      // alert(`${quantity} x ${product.name} added to cart!`);
-      // Maybe reset quantity after adding? (Optional)
-      // setQuantity(1);
-    }
+  // --- Helper để format tiền tệ (NÊN THỐNG NHẤT SỬ DỤNG) ---
+  const formatCurrencyVND = (amount) => {
+      if (typeof amount !== 'number' || isNaN(amount)) {
+          return '0 ₫';
+      }
+      return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   };
-  return (
-    <div className="product-detail-page">
-      <div className="container">
-        {/* Breadcrumbs (nên tạo component riêng) */}
-        <div className="breadcrumbs">
-            <a href="/">Home</a> / <a href="/shop">Shop</a> / <span>{product.name}</span>
-        </div>
 
-        <div className="product-detail-main">
-          {/* Product Gallery */}
-          <div className="product-gallery">
-             {/* Ảnh chính */}
-             <div className="main-image">
-                <img src={product.imageUrl || '/path/to/placeholder.jpg'} alt={product.name} />
-                {product.salePercent && <span className="badge badge-sale">-{product.salePercent}%</span>}
-             </div>
-             {/* Thumbnails (nếu có nhiều ảnh) */}
-             {/* <div className="thumbnail-images"> ... </div> */}
-          </div>
 
-          {/* Product Info */}
-          <div className="product-info-details">
-            <h1 className="product-title">{product.name}</h1>
-            <div className="product-meta">
-              <div className="rating">
-                {renderStars(product.rating)}
-                {/* <span>(5 comment)</span> */}
+  const ProductDetailPage = () => {
+      const { productId } = useParams();
+      const [product, setProduct] = useState(null);
+      const [relatedProducts, setRelatedProducts] = useState([]);
+      const [loading, setLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [quantity, setQuantity] = useState(1);
+      const [activeTab, setActiveTab] = useState('description');
+      const { addToCart } = useCart();
+
+      useEffect(() => {
+          const fetchProductData = async () => {
+              if (productId) {
+                  setLoading(true);
+                  setError(null);
+                  try {
+                      // Fetch chi tiết sản phẩm chính
+                      const mainProductData = await getGoodsById(productId);
+                      setProduct(mainProductData);
+                      console.log("Fetched main product:", mainProductData);
+
+                      // Fetch các sản phẩm liên quan (ví dụ: lấy tất cả rồi lọc ra, hoặc API riêng)
+                      // Cách đơn giản: Lấy tất cả sản phẩm, loại trừ sản phẩm hiện tại và lấy 4 sản phẩm đầu
+                      if (mainProductData) { // Chỉ fetch related nếu có sản phẩm chính
+                          const allProductsData = await getAllGoods(); // Giả sử getAllGoods trả về tất cả sản phẩm
+                          const filteredRelated = allProductsData
+                              .filter(p => p.goodsId !== mainProductData.goodsId)
+                              .slice(0, 4);
+                          setRelatedProducts(filteredRelated);
+                          console.log("Fetched related products:", filteredRelated);
+                      }
+
+                  } catch (err) {
+                      console.error("Error fetching product data:", err);
+                      setError(err.message);
+                  } finally {
+                      setLoading(false);
+                  }
+              }
+          };
+
+          fetchProductData();
+      }, [productId]); // Chạy lại khi productId thay đổi
+
+      if (loading) {
+          return <div className="container product-detail-loading"><p>Đang tải thông tin sản phẩm...</p></div>;
+      }
+
+      if (error) {
+          return <div className="container product-detail-error"><p>Lỗi: {error}</p></div>;
+      }
+
+      if (!product) {
+          return <div className="container product-detail-not-found"><p>Không tìm thấy sản phẩm.</p></div>;
+      }
+
+      const handleQuantityChange = (amount) => {
+          setQuantity(prev => Math.max(1, prev + amount));
+      };
+
+      const handleAddToCartClick = () => {
+          if (product) {
+              // Tạo object cartItem với cấu trúc mà CartContext mong đợi
+              const cartItem = {
+                  id: product.goodsId,
+                  name: product.goodsName,
+                  price: Number(product.price),
+                  imageUrl: product.goodsImageURL,
+                  // quantity sẽ được truyền vào addToCart
+              };
+              addToCart(cartItem, quantity);
+              // alert(`${quantity} x ${product.goodsName} đã được thêm vào giỏ!`);
+          }
+      };
+
+      return (
+          <div className="product-detail-page">
+              <div className="container">
+                  <div className="breadcrumbs">
+                      <Link to="/">Trang chủ</Link> / <Link to="/shop">Cửa hàng</Link> / <span>{product.goodsName}</span>
+                  </div>
+
+                  <div className="product-detail-main">
+                      <div className="product-gallery">
+                          <div className="main-image">
+                              <img src={product.goodsImageURL || '/path/to/placeholder.jpg'} alt={product.goodsName} />
+                              {/* {product.salePercent && <span className="badge badge-sale">-{product.salePercent}%</span>} */}
+                          </div>
+                      </div>
+
+                      <div className="product-info-details">
+                          <h1 className="product-title">{product.goodsName}</h1>
+                          <div className="product-meta">
+                              <div className="rating">
+                                  {renderStars(0)} {/* Tạm thời 0 sao, cần dữ liệu rating từ API */}
+                              </div>
+                          </div>
+                          <div className="product-price-detail">
+                              <span className="current-price">{formatCurrencyVND(Number(product.price))}</span>
+                              {/* {product.oldPrice && <span className="old-price">{formatCurrencyVND(Number(product.oldPrice))}</span>} */}
+                          </div>
+                          <div className="product-short-description">
+                              <p>{product.goodsDescription || 'Chưa có mô tả ngắn cho sản phẩm này.'}</p>
+                          </div>
+
+                          <div className="product-actions-detail">
+                              <div className="quantity-selector">
+                                  <button onClick={() => handleQuantityChange(-1)} disabled={quantity <= 1}>-</button>
+                                  <input type="number" value={quantity} readOnly />
+                                  <button onClick={() => handleQuantityChange(1)}>+</button>
+                              </div>
+                              <button className="btn btn-add-to-cart-detail" onClick={handleAddToCartClick}>
+                                  <FaShoppingCart /> Thêm vào giỏ hàng
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div className="product-tabs">
+                      <div className="tab-headers">
+                          <button
+                              className={`tab-header ${activeTab === 'description' ? 'active' : ''}`}
+                              onClick={() => setActiveTab('description')}
+                          >
+                              Mô tả
+                          </button>
+                          <button
+                              className={`tab-header ${activeTab === 'reviews' ? 'active' : ''}`}
+                              onClick={() => setActiveTab('reviews')}
+                          >
+                              Đánh giá {/* ({product.reviews ? product.reviews.length : 0}) Cần API lấy review */}
+                          </button>
+                      </div>
+                      <div className="tab-content">
+                          {activeTab === 'description' && (
+                              <div className="tab-pane active">
+                                  <h4>Mô tả sản phẩm</h4>
+                                  <p>{product.goodsDescription || 'Thông tin mô tả chi tiết đang được cập nhật.'}</p>
+                              </div>
+                          )}
+                          {activeTab === 'reviews' && (
+                              <div className="tab-pane active">
+                                  <h4>Đánh giá từ khách hàng</h4>
+                                  {/* TODO: Fetch và hiển thị reviews cho product.goodsId */}
+                                  <p>Chưa có đánh giá nào cho sản phẩm này.</p>
+                              </div>
+                          )}
+                      </div>
+                  </div>
+
+                  {relatedProducts.length > 0 && (
+                      <div className="related-products">
+                          <h2>Các sản phẩm cũng được quan tâm</h2>
+                          <div className="product-grid related-grid">
+                              {relatedProducts.map(relProduct => (
+                                  <ProductCard key={relProduct.goodsId} product={relProduct} />
+                              ))}
+                          </div>
+                      </div>
+                  )}
               </div>
-              {/* <div className="sku">SKU: {product.sku || 'N/A'}</div> */}
-              {/* <div className="availability">Availability: In Stock</div> */}
-            </div>
-            <div className="product-price-detail">
-              <span className="current-price">${product.price.toFixed(2)}</span>
-              {product.oldPrice && <span className="old-price">${product.oldPrice.toFixed(2)}</span>}
-            </div>
-            <div className="product-short-description">
-              {/* Mô tả ngắn gọn ở đây */}
-              <p>This is a short description of the product. Highlighting key features and benefits.</p>
-            </div>
-
-            {/* Options (Màu sắc, Kích thước - nếu có) */}
-            {/* <div className="product-options"> ... </div> */}
-
-            {/* Quantity & Add to Cart */}
-            <div className="product-actions-detail">
-               <div className="quantity-selector">
-                   <button onClick={() => handleQuantityChange(-1)}>-</button>
-                   <input type="number" value={quantity} readOnly />
-                   <button onClick={() => handleQuantityChange(1)}>+</button>
-               </div>
-               <button className="btn btn-add-to-cart-detail"  onClick={handleAddToCartClick}>
-                   <FaShoppingCart /> Thêm vào giỏ hàng
-               </button>
-            </div>
-
-            {/* Wishlist & Compare */}
-            {/* <div className="product-secondary-actions">
-               <button className="btn-icon"><FaHeart /> Add to Wishlist</button>
-            </div> */}
-
-             {/* Meta info: Categories, Tags */}
-             {/* <div className="product-meta-info"> ... </div> */}
           </div>
-        </div>
+      );
+  };
 
-        {/* Product Tabs (Description, comment, etc.) */}
-        <div className="product-tabs">
-          <div className="tab-headers">
-            <button
-              className={`tab-header ${activeTab === 'description' ? 'active' : ''}`}
-              onClick={() => setActiveTab('description')}
-            >
-              Mô tả
-            </button>
-            <button
-              className={`tab-header ${activeTab === 'comment' ? 'active' : ''}`}
-              onClick={() => setActiveTab('comment')}
-            >
-              Bình luận ({/* Số lượng review */ 0})
-            </button>
-             {/* Thêm tab Additional Information, Shipping & Returns nếu cần */}
-          </div>
-          <div className="tab-content">
-            {activeTab === 'description' && (
-              <div className="tab-pane active">
-                <h4>Mô tả sản phẩm</h4>
-                <p>Detailed description goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
-                {/* Thêm nội dung mô tả */}
-              </div>
-            )}
-            {activeTab === 'comment' && (
-              <div className="tab-pane active">
-                <h4>Bình luận từ khách hàng</h4>
-                {/* Hiển thị danh sách review và form để viết review */}
-                <p>Không có bình luận nào.</p>
-                {/* <div className="review-list"> ... </div> */}
-                {/* <div className="add-review-form"> ... </div> */}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Related Products */}
-        <div className="related-products">
-           <h2>Các sản phẩm cũng được quan tâm</h2>
-           <div className="product-grid related-grid">
-              {relatedProducts.map(relProduct => (
-                  <ProductCard key={relProduct.id} product={relProduct} />
-              ))}
-           </div>
-        </div>
-
-      </div>
-    </div>
-  );
-};
-
-export default ProductDetailPage;
+  export default ProductDetailPage;

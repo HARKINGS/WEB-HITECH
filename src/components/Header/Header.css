@@ -556,9 +556,10 @@ background: var(--text-secondary, #999);
 /* ============= DROPDOWN MENUS =============== */
 /* ============================================ */
 
+/* Header.css - Sửa lại */
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* Sát nav */
+  top: 100%;
   left: 0;
   z-index: 1030;
   background-color: var(--background-primary);
@@ -566,22 +567,26 @@ background: var(--text-secondary, #999);
   border-top: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   border-radius: 0 0 5px 5px;
-  padding: 0; /* Reset padding, dùng padding cho list con */
+  padding: 0;
   min-width: 220px;
 
+  /* BỎ !important ở đây */
   opacity: 0;
   visibility: hidden;
   transform: translateY(5px);
   pointer-events: none;
+  /* THÊM LẠI TRANSITION CHO TRẠNG THÁI ẨN ĐỂ MƯỢT MÀ KHI ẨN ĐI */
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
 }
 
 .nav-item.has-dropdown:hover > .dropdown-menu,
 .browse-categories-wrapper:hover > .dropdown-menu {
+  /* CÓ THỂ BỎ !important ở đây nếu không có xung đột nào khác từ Bootstrap */
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
+  /* Transition khi hiện ra */
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0s;
 }
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../../contexts/CartContext';
+import { placeOrderAPI } from '../../services/orderService';
+import { createZaloPayOrderAPI } from '../../services/zalopayService'; // THÊM IMPORT NÀY
 import { v4 as uuidv4 } from 'uuid';
 import './CheckoutPage.css';
 
@@ -23,9 +25,9 @@ const CheckoutPage = () => {
     });
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
-    const [orderId, setOrderId] = useState('');
+    const [orderId, setOrderId] = useState(''); // Used for display, especially for bank transfer instructions and success message
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [orderPlaced, setOrderPlaced] = useState(false);
+    const [orderPlaced, setOrderPlaced] = useState(false); // Indicates if order process (for COD/Bank) is complete
 
     // --- State cho dữ liệu địa chỉ từ API ---
     const [provincesApi, setProvincesApi] = useState([]);
@@ -37,7 +39,15 @@ const CheckoutPage = () => {
     const [loadingWards, setLoadingWards] = useState(false);
 
     const [errorProvinces, setErrorProvinces] = useState(null);
-    // (Bạn có thể thêm errorDistricts, errorWards nếu cần xử lý lỗi chi tiết hơn)
+
+    const formatCurrencyVND = (amount) => {
+        if (typeof amount !== 'number' || isNaN(amount)) {
+            // Assuming cartTotal is in a base unit, adjust if it's already formatted or needs conversion
+            return '$0.00'; // Fallback or keep original $ format if VND is not primary
+        }
+        return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    };
+
 
     // --- Fetch Provinces ---
     useEffect(() => {
@@ -110,14 +120,19 @@ const CheckoutPage = () => {
         }
     }, [formData.districtCode]);
 
-
+    // Generate a temporary ID for bank transfer instructions
     useEffect(() => {
-        if (paymentMethod === 'bank_transfer') {
+        if (paymentMethod === 'bank_transfer' && !orderPlaced) {
             setOrderId(uuidv4().substring(0, 8).toUpperCase());
-        } else {
-            setOrderId('');
+        } else if (paymentMethod !== 'bank_transfer') {
+            // Clear if not bank transfer, or if order is already placed and ID is now from backend
+            // This might be too aggressive if orderId is set by BE for other methods and we want to keep it.
+            // Let's refine: only clear if it's not bank_transfer and no order has been placed.
+            // If an order WAS placed (COD), orderId would be from BE.
+            // The handleSubmit will set the definitive orderId.
+             if (!orderPlaced) setOrderId('');
         }
-    }, [paymentMethod]);
+    }, [paymentMethod, orderPlaced]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -133,10 +148,10 @@ const CheckoutPage = () => {
         setFormData(prevState => ({
             ...prevState,
             provinceCode: provinceCode,
-            provinceName: provinceCode ? provinceName : '', // Chỉ lấy tên nếu có code
-            districtCode: '', // Reset quận/huyện
+            provinceName: provinceCode ? provinceName : '',
+            districtCode: '',
             districtName: '',
-            wardCode: '',     // Reset phường/xã
+            wardCode: '',
             wardName: '',
         }));
     };
@@ -148,7 +163,7 @@ const CheckoutPage = () => {
             ...prevState,
             districtCode: districtCode,
             districtName: districtCode ? districtName : '',
-            wardCode: '', // Reset phường/xã
+            wardCode: '',
             wardName: '',
         }));
     };
@@ -167,86 +182,155 @@ const CheckoutPage = () => {
         setPaymentMethod(e.target.value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (cartItems.length === 0) {
-            alert("Giỏ hàng của bạn đang trống!");
-            return;
-        }
-        // Kiểm tra các trường địa chỉ bắt buộc
-        if (!formData.provinceCode || !formData.districtCode || !formData.wardCode || !formData.streetAddress) {
-            alert("Vui lòng điền đầy đủ thông tin địa chỉ (Tỉnh/Thành, Quận/Huyện, Phường/Xã, Địa chỉ cụ thể).");
-            return;
-        }
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (cartItems.length === 0) {
+        alert("Giỏ hàng của bạn đang trống!");
+        return;
+    }
+    if (!formData.provinceCode || !formData.districtCode || !formData.wardCode || !formData.streetAddress) {
+        alert("Vui lòng điền đầy đủ thông tin địa chỉ (Tỉnh/Thành, Quận/Huyện, Phường/Xã, Địa chỉ cụ thể).");
+        return;
+    }
+    if (!formData.fullName || !formData.phone) {
+        alert("Vui lòng điền đầy đủ Họ Tên và Số điện thoại.");
+        return;
+    }
 
-        setIsSubmitting(true);
-        console.log('Processing order...');
 
-        const orderDetails = {
-            customerInfo: {
-                fullName: formData.fullName,
-                phone: formData.phone,
-                email: formData.email,
-                address: {
-                    provinceName: formData.provinceName,
-                    districtName: formData.districtName,
-                    wardName: formData.wardName,
-                    street: formData.streetAddress,
-                    // Bạn có thể gửi cả code nếu backend cần
-                    // provinceCode: formData.provinceCode,
-                    // districtCode: formData.districtCode,
-                    // wardCode: formData.wardCode,
-                },
-                notes: formData.notes,
-            },
-            items: cartItems.map(item => ({
-                id: item.id,
-                name: item.name,
-                quantity: item.quantity,
-                price: item.price,
-            })),
-            totalAmount: cartTotal,
-            paymentMethod: paymentMethod,
-            orderId: paymentMethod === 'bank_transfer' ? orderId : null,
-            orderDate: new Date().toISOString(),
-            status: 'Pending',
-        };
+    setIsSubmitting(true);
 
-        console.log('Order Details to be sent:', orderDetails);
-
-        setTimeout(() => {
-            console.log('Order placed successfully!');
-            setIsSubmitting(false);
-            setOrderPlaced(true);
-             // clearCart(); // Xem xét việc xóa giỏ hàng ở đây hoặc sau khi người dùng xác nhận đã xem thông báo
-        }, 1000);
+    // Bước 1: Tạo đơn hàng trong hệ thống của bạn (chung cho COD, Bank Transfer, ZaloPay)
+    const shippingInfoPayload = {
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email || null,
+        provinceName: formData.provinceName,
+        districtName: formData.districtName,
+        wardName: formData.wardName,
+        street: formData.streetAddress, // Assuming backend expects 'street'
+        // notes: formData.notes || null, // Add if backend supports it
     };
 
-    if (orderPlaced) {
+    const orderItemsPayload = cartItems.map(item => ({
+        goodsId: item.id,
+        quantity: item.quantity,
+    }));
+
+    const initialOrderPayload = {
+        orderItems: orderItemsPayload,
+        shippingInfo: shippingInfoPayload,
+        paymentMethod: paymentMethod, // Sẽ là "cod", "bank_transfer", hoặc "zalopay"
+        totalPrice: cartTotal,
+        voucherId: null, // Placeholder
+        totalDiscount: 0.0, // Placeholder
+        // notes: formData.notes || null, // Add if backend supports it at root level
+    };
+
+    try {
+        console.log('Initial Order Payload to BE:', JSON.stringify(initialOrderPayload, null, 2));
+        const createdOrderInSystem = await placeOrderAPI(initialOrderPayload); // API tạo đơn hàng gốc
+        console.log('Order created in system:', createdOrderInSystem);
+
+        if (!createdOrderInSystem || !createdOrderInSystem.id) {
+            throw new Error("Failed to create order in system or missing order ID.");
+        }
+
+        const systemOrderId = createdOrderInSystem.id.toString(); // ID đơn hàng của bạn
+
+        // Bước 2: Xử lý theo phương thức thanh toán
+        if (paymentMethod === 'cod' || paymentMethod === 'bank_transfer') {
+            let finalDisplayOrderId = systemOrderId;
+            if (paymentMethod === 'bank_transfer') {
+                // Use transactionId from backend if available, otherwise systemOrderId.
+                // The UUID in 'orderId' state was for pre-submit display.
+                finalDisplayOrderId = createdOrderInSystem.transactionId || systemOrderId;
+            } else { // COD
+                 finalDisplayOrderId = createdOrderInSystem.transactionId || systemOrderId; // Use transactionId if BE provides one for COD too
+            }
+            setOrderId(finalDisplayOrderId); // Update state with the definitive ID from backend
+            setOrderPlaced(true);
+            clearCart();
+
+        } else if (paymentMethod === 'zalopay') {
+            // Gọi API khởi tạo thanh toán ZaloPay
+            const zaloPayInitData = {
+                // Backend should use systemOrderId to find/create the ZaloPay transaction
+                // The `orderId` here is the one that `placeOrderAPI` just created.
+                // It's the ID of the order in *our* system.
+                appOrderSn: systemOrderId, // Or whatever field your ZaloPay API expects for your internal order ID
+                amount: Math.round(cartTotal), // ZaloPay yêu cầu amount là Long (integer)
+                description: `Thanh toán cho đơn hàng ${systemOrderId}`
+            };
+            console.log("Requesting ZaloPay payment with data:", zaloPayInitData);
+            const zaloPayResponse = await createZaloPayOrderAPI(zaloPayInitData);
+            console.log("ZaloPay init response:", zaloPayResponse);
+
+            if (zaloPayResponse && zaloPayResponse.order_url) {
+                // Backend should have linked createdOrderInSystem.id with zaloPayResponse.app_trans_id (or similar ZaloPay transaction ID)
+                // Optionally, set orderId state to something from ZaloPay if needed for immediate display (though usually not)
+                // setOrderId(zaloPayResponse.app_trans_id || systemOrderId);
+
+                // Điều hướng người dùng đến ZaloPay
+                window.location.href = zaloPayResponse.order_url;
+                // Không clearCart() hay setOrderPlaced(true) ở đây.
+                // Việc này sẽ được xử lý sau khi có callback thành công từ ZaloPay.
+            } else {
+                throw new Error(zaloPayResponse.return_message || "Không thể khởi tạo thanh toán ZaloPay. Vui lòng thử lại hoặc chọn phương thức khác.");
+            }
+        }
+
+    } catch (error) {
+        console.error('Order processing failed:', error);
+        let errorMessage = "Xử lý đơn hàng thất bại. Vui lòng thử lại.";
+        if (error.response && error.response.data) {
+            if (typeof error.response.data === 'string') {
+                 errorMessage = `Lỗi: ${error.response.data}`;
+            } else if (error.response.data.message) { // Common for Spring Boot RestControllerAdvice
+                 errorMessage = `Lỗi: ${error.response.data.message}`;
+            } else if (error.response.data.error) { // Another common pattern
+                 errorMessage = `Lỗi: ${error.response.data.error}`;
+            }  else if (error.response.statusText) {
+                errorMessage = `Lỗi: ${error.response.status} ${error.response.statusText}`;
+            }
+        } else if (error.message) {
+            errorMessage = `Lỗi: ${error.message}`;
+        }
+        alert(errorMessage);
+        // Không setOrderPlaced(true) nếu có lỗi, setIsSubmitting will be handled in finally
+    } finally {
+        setIsSubmitting(false);
+    }
+};
+
+
+    // This success message is for COD and Bank Transfer (immediate confirmation)
+    // ZaloPay success will be handled on a return URL page.
+    if (orderPlaced && (paymentMethod === 'cod' || paymentMethod === 'bank_transfer')) {
         const fullAddress = `${formData.streetAddress}, ${formData.wardName}, ${formData.districtName}, ${formData.provinceName}`;
         return (
             <div className="checkout-page container">
                 <div className="order-success-message">
                     <h2>Đặt hàng thành công!</h2>
-                    <p>Cảm ơn bạn đã mua hàng. Mã đơn hàng của bạn là: <strong>{orderId || 'N/A (COD)'}</strong></p>
+                    <p>Cảm ơn bạn đã mua hàng. {paymentMethod === 'bank_transfer' ? `Mã đơn hàng của bạn là:` : `Đơn hàng của bạn đã được ghi nhận. Mã đơn hàng:`} <strong>{orderId || 'N/A'}</strong></p>
                     <p>Địa chỉ giao hàng: <strong>{fullAddress}</strong></p>
                     {paymentMethod === 'bank_transfer' && orderId && (
                          <div className="bank-details-summary">
                             <h4>Vui lòng chuyển khoản với nội dung:</h4>
-                            <p className="order-id-highlight">{orderId}</p>
+                            <p className="order-id-highlight">{orderId}</p> {/* This orderId is now from BE */}
                             <p>Ngân hàng: [Tên Ngân Hàng Của Bạn]</p>
                             <p>Số tài khoản: [Số Tài Khoản Của Bạn]</p>
                             <p>Chủ tài khoản: [Tên Chủ Tài Khoản]</p>
                          </div>
                     )}
                     <p>Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng.</p>
-                     <button onClick={() => { clearCart(); window.location.href = '/'; }} className="btn btn-secondary">Tiếp tục mua sắm</button>
+                     <button onClick={() => { /* clearCart() is already done in handleSubmit */; window.location.href = '/'; }} className="btn btn-secondary">Tiếp tục mua sắm</button>
                 </div>
             </div>
         );
     }
 
-    if (cartItems.length === 0 && !orderPlaced) {
+    if (cartItems.length === 0 && !orderPlaced) { // If cart becomes empty NOT due to successful order (e.g. user navigates away and back)
          return (
             <div className="checkout-page container">
                 <h2>Thanh toán</h2>
@@ -276,7 +360,6 @@ const CheckoutPage = () => {
                             <input type="email" id="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="Nhập địa chỉ email" />
                         </div>
 
-                        {/* --- Tỉnh/Thành phố --- */}
                         <div className="form-group">
                             <label htmlFor="province">Tỉnh/Thành phố *</label>
                             <select id="province" name="provinceCode" value={formData.provinceCode} onChange={handleProvinceChange} required disabled={loadingProvinces}>
@@ -290,7 +373,6 @@ const CheckoutPage = () => {
                             </select>
                         </div>
 
-                        {/* --- Quận/Huyện --- */}
                         <div className="form-group">
                             <label htmlFor="district">Quận/Huyện *</label>
                             <select id="district" name="districtCode" value={formData.districtCode} onChange={handleDistrictChange} required disabled={!formData.provinceCode || loadingDistricts || districtsApi.length === 0}>
@@ -303,7 +385,6 @@ const CheckoutPage = () => {
                             </select>
                         </div>
 
-                        {/* --- Phường/Xã --- */}
                         <div className="form-group">
                             <label htmlFor="ward">Phường/Xã *</label>
                             <select id="ward" name="wardCode" value={formData.wardCode} onChange={handleWardChange} required disabled={!formData.districtCode || loadingWards || wardsApi.length === 0}>
@@ -367,6 +448,7 @@ const CheckoutPage = () => {
                                 {paymentMethod === 'bank_transfer' && (
                                     <div className="bank-transfer-details">
                                         <p>Vui lòng chuyển khoản với nội dung (ghi chú):</p>
+                                        {/* This orderId is the temporary UUID for instruction */}
                                         <p className="order-id-highlight">{orderId || 'Đang tạo ID...'}</p>
                                         <hr/>
                                         <p><strong>Ngân hàng:</strong> [Tên Ngân Hàng Của Bạn]</p>
@@ -376,9 +458,17 @@ const CheckoutPage = () => {
                                     </div>
                                 )}
                             </div>
+                            <div className="payment-option"> {/* ZALOPAY OPTION */}
+                                <input type="radio" id="zalopay" name="paymentMethod" value="zalopay"
+                                       checked={paymentMethod === 'zalopay'} onChange={handlePaymentChange} />
+                                <label htmlFor="zalopay">
+                                    Thanh toán qua ZaloPay
+                                    <p className="payment-description">Sử dụng ví ZaloPay hoặc ứng dụng ngân hàng hỗ trợ ZaloPay QR.</p>
+                                </label>
+                            </div>
                         </div>
                         <button type="submit" className="btn btn-primary place-order-btn" disabled={isSubmitting || cartItems.length === 0}>
-                            {isSubmitting ? 'Đang xử lý...' : 'Đặt hàng'}
+                            {isSubmitting ? 'Đang xử lý...' : (paymentMethod === 'zalopay' ? 'Tiếp tục với ZaloPay' : 'Đặt hàng')}
                         </button>
                     </div>
                 </form>
