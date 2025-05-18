@@ -3,182 +3,165 @@ import axios from 'axios'; // Hoặc dùng fetch nếu bạn muốn
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL; // Đảm bảo file .env đã được tạo và React server đã restart
 
-/**
- * Fetches all goods from the API.
- * @returns {Promise<Array<Object>>} A promise that resolves to an array of goods.
- * @throws {Error} If the API request fails.
- */
-export const getAllGoods = async () => {
-    if (!API_BASE_URL) {
-        console.error("REACT_APP_API_BASE_URL is not defined. Please check your .env file and restart the server.");
-        throw new Error("API base URL is not configured.");
+const handleError = (error, defaultMessage = 'An unexpected error occurred.') => {
+    console.error('API Error:', error.response?.data || error.message || error);
+    const message = error.response?.data?.message || error.response?.data?.error || error.message || defaultMessage;
+    throw new Error(message);
+};
+
+const handleApiResponse = (response, errorMessage, expectArray = true) => {
+    if (response.data && response.data.code === 1000 && response.data.result !== undefined) {
+        if (expectArray && !Array.isArray(response.data.result)) {
+            console.warn(`API Response Warning: Expected array for result, but got:`, response.data.result);
+            return []; // Trả về mảng rỗng nếu kỳ vọng mảng nhưng không phải
+        }
+        return response.data.result;
     }
+    // Xử lý GoodsDetailsResponse
+    if (!expectArray && response.data && response.data.goods !== undefined && response.data.reviews !== undefined) {
+        return response.data;
+    }
+    const msg = response.data?.message || errorMessage || 'Invalid data structure from API.';
+    console.error('API Response Error:', msg, response.data);
+    if (expectArray) return []; // Trả về mảng rỗng nếu lỗi và kỳ vọng mảng
+    throw new Error(msg);
+};
+
+export const getAllGoods = async () => {
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
     try {
         const response = await axios.get(`${API_BASE_URL}/goods/all-goods`);
-        if (response.data && response.data.code === 1000 && Array.isArray(response.data.result)) {
-            return response.data.result; // Trả về mảng các sản phẩm
-        } else {
-            const errorMessage = response.data?.message || 'Failed to fetch goods or invalid data structure (expected result array).';
-            console.error('Error fetching all goods:', errorMessage, response.data);
-            throw new Error(errorMessage);
-        }
+        return handleApiResponse(response, 'Failed to fetch all goods.');
     } catch (error) {
-        console.error('API call error to /goods/all-goods:', error.response?.data || error.message || error);
-        const errorMessage = error.response?.data?.message || error.message || 'An unexpected error occurred while fetching all goods.';
-        throw new Error(errorMessage);
+        return handleError(error, 'Failed to fetch all goods.');
     }
 };
     
-/**
- * Fetches a single good by its ID from the API.
- * @param {string} goodsId - The ID of the good to fetch.
- * @returns {Promise<Object>} A promise that resolves to the good object from the 'result' field.
- * @throws {Error} If the API request fails or the response structure is not as expected.
- */
-export const getGoodsById = async (goodsId) => {
-    if (!API_BASE_URL) {
-        console.error("REACT_APP_API_BASE_URL is not defined.");
-        throw new Error("API base URL is not configured.");
-    }
-    if (!goodsId) {
-        console.error("goodsId is required for getGoodsById.");
-        throw new Error("Goods ID is required.");
-    }
+export const getGoodsById = async (goodsId) => { 
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!goodsId) return handleError(new Error("Goods ID is required."));
     try {
-        const response = await axios.get(`${API_BASE_URL}/goods/${goodsId}`);
-        if (response.data && response.data.code === 1000 && response.data.result) {
-            return response.data.result; // Trả về object sản phẩm
-        } else {
-            const errorMessage = response.data?.message || `Failed to fetch good details for ID: ${goodsId}.`;
-            console.error(`Error fetching good by ID ${goodsId}:`, errorMessage, response.data);
-            throw new Error(errorMessage);
-        }
+        const response = await axios.get(`${API_BASE_URL}/goods/by-id/${goodsId}`);
+        return handleApiResponse(response, `Failed to fetch good ID ${goodsId}.`, false); // Expect object
     } catch (error) {
-        console.error(`API call error to /goods/${goodsId}:`, error.response?.data || error.message || error);
-        const errorMessage = error.response?.data?.message || error.message || `An unexpected error occurred while fetching good ID ${goodsId}.`;
-        throw new Error(errorMessage);
+        return handleError(error, `Failed to fetch good ID ${goodsId}.`);
     }
 };
 
-/**
- * Fetches goods by category from the API.
- * @param {string} categoryName - The name of the category.
- * @returns {Promise<Array<Object>>} A promise that resolves to an array of goods from the 'result' field.
- * @throws {Error} If the API request fails or the response structure is not as expected.
- */
-export const getGoodsByCategoryAPI = async (categoryName) => {
-    if (!API_BASE_URL) {
-        console.error("REACT_APP_API_BASE_URL is not defined.");
-        throw new Error("API base URL is not configured.");
-    }
-    if (!categoryName) {
-        console.error("categoryName is required for getGoodsByCategoryAPI.");
-        throw new Error("Category name is required.");
-    }
+export const getGoodsByCategoryAPI = async (categoryName) => { // ĐÚNG THEO OpenAPI MỚI
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!categoryName) return [];
     try {
         const response = await axios.get(`${API_BASE_URL}/goods/goodsCategory?goodsCategory=${encodeURIComponent(categoryName)}`);
-        // API /goods/goodsCategory trả về ApiResponse<List<GoodsResponse>>
-        // nên response.data sẽ là { code: ..., result: [...] }
-        if (response.data && response.data.code === 1000 && Array.isArray(response.data.result)) {
-            return response.data.result; // Trả về mảng các sản phẩm
-        } else {
-            const errorMessage = response.data?.message || `Failed to fetch goods for category: ${categoryName} or invalid data structure.`;
-            console.error(`Error fetching goods by category ${categoryName}:`, errorMessage, response.data);
-            // Trả về mảng rỗng trong trường hợp này để ShopPage không bị crash nếu BE trả về cấu trúc lỗi nhưng không phải lỗi mạng
-            if (response.data && response.data.code !== 1000) return [];
-            throw new Error(errorMessage);
-        }
+        return handleApiResponse(response, `Failed to fetch goods for category: ${categoryName}.`);
     } catch (error) {
-        console.error(`API call error to /goods/goodsCategory?goodsCategory=${categoryName}:`, error.response?.data || error.message || error);
-        const errorMessage = error.response?.data?.message || error.message || `An unexpected error occurred while fetching goods by category ${categoryName}.`;
-        throw new Error(errorMessage);
+        console.warn(`Fetching category '${categoryName}' failed, returning empty array. Error: ${error.message}`);
+        return [];
     }
 };
 
-
-/**
- * Fetches reviews for a specific good.
- * @param {string} goodsId - The ID of the good.
- * @returns {Promise<Array<Object>>} A promise that resolves to an array of review objects.
- * @throws {Error} If the API request fails.
- */
-export const getGoodsReviewsAPI = async (goodsId) => {
-    if (!API_BASE_URL) {
-        throw new Error("API base URL is not configured.");
+export const getGoodsByBrandAPI = async (brandName) => {
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!brandName) return [];
+    try {
+        const response = await axios.get(`${API_BASE_URL}/goods/by-brand/${encodeURIComponent(brandName)}`);
+        return handleApiResponse(response, `Failed to fetch goods for brand: ${brandName}.`);
+    } catch (error) {
+        console.warn(`Fetching brand '${brandName}' failed, returning empty array. Error: ${error.message}`);
+        return [];
     }
+};
+
+export const getGoodsByExactPriceAPI = async (price) => {
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (price === undefined || price === null || isNaN(Number(price))) return [];
+    try {
+        // OpenAPI mô tả param là "goodsPrice", endpoint là "/goods/by-price"
+        const response = await axios.get(`${API_BASE_URL}/goods/by-price?goodsPrice=${price}`);
+        return handleApiResponse(response, `Failed to fetch goods for price: ${price}.`);
+    } catch (error) {
+        console.warn(`Fetching price '${price}' failed, returning empty array. Error: ${error.message}`);
+        return [];
+    }
+};
+
+export const getGoodsByPriceAPI = async (price) => {
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (price === undefined || price === null || isNaN(Number(price))) {
+        return handleError(new Error("Valid price is required."));
+    }
+    try {
+        // OpenAPI mô tả là query param, nhưng path là /goods/by-price/{goodsPrice}
+        // Giả sử controller thực tế dùng query param theo OpenAPI:
+        const response = await axios.get(`${API_BASE_URL}/goods/by-price?goodsPrice=${price}`);
+        // Nếu controller dùng path variable:
+        // const response = await axios.get(`${API_BASE_URL}/goods/by-price/${price}`);
+        const result = handleApiResponse(response, `Failed to fetch goods for price: ${price}.`);
+        return Array.isArray(result) ? result : [];
+    } catch (error) {
+        console.error(`Error in getGoodsByPriceAPI for ${price}:`, error.message);
+        return [];
+        // return handleError(error, `Failed to fetch goods by price ${price}.`);
+    }
+};
+
+export const getGoodsReviewsAPI = async (goodsId) => {
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!goodsId) return handleError(new Error("Goods ID is required."));
     try {
         const response = await axios.get(`${API_BASE_URL}/goods/${goodsId}/reviews`);
-        if (response.data && response.data.code === 1000 && response.data.result) {
-            return response.data.result;
-        } else {
-            // Có thể API này trả về mảng rỗng nếu không có review, không phải lỗi
-            if (response.data && response.data.code === 1000 && Array.isArray(response.data.result)) {
-                return response.data.result; // Trả về mảng rỗng
-            }
-            const errorMessage = response.data?.message || 'Failed to fetch reviews.';
-            throw new Error(errorMessage);
-        }
+        const result = handleApiResponse(response, `Failed to fetch reviews for good ID: ${goodsId}.`);
+        return Array.isArray(result) ? result : [];
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.message || 'An unexpected error occurred while fetching reviews.');
+        console.error(`Error in getGoodsReviewsAPI for ${goodsId}:`, error.message);
+        return [];
+        // return handleError(error, `Failed to fetch reviews for good ID ${goodsId}.`);
     }
 };
-
-/**
- * Fetches goods details along with its reviews using a single API call.
- * (Sử dụng API này nếu BE của bạn hỗ trợ /goods/details/{goodsId})
- * @param {string} goodsId - The ID of the good.
- * @returns {Promise<Object>} A promise that resolves to an object containing good details and its reviews.
- *                            Example: { goods: {...}, reviews: [...] }
- * @throws {Error} If the API request fails.
- */
 export const getGoodsWithReviewsAPI = async (goodsId) => {
-    if (!API_BASE_URL) {
-        throw new Error("API base URL is not configured.");
-    }
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!goodsId) return handleError(new Error("Goods ID is required."));
     try {
         const response = await axios.get(`${API_BASE_URL}/goods/details/${goodsId}`);
-        // BE Controller /goods/details/{goodsId} trả về ResponseEntity<GoodsDetailsResponse>
-        // nên response.data sẽ là GoodsDetailsResponse
+        // API này trả về trực tiếp GoodsDetailsResponse (không có wrapper code, result)
+        // hoặc lỗi 500 với body là string message
         if (response.data && response.data.goods) { // Kiểm tra có goods là được
-            return response.data; // { goods: {...}, reviews: [...] }
+            return response.data;
         } else {
-            const errorMessage = response.data?.body || response.data?.message || 'Failed to fetch goods details with reviews.';
-            throw new Error(errorMessage);
+             // Xử lý trường hợp BE trả về lỗi 500 nhưng có body string (như trong GoodsController)
+            if (response.data && typeof response.data === 'string' && response.status >= 400) {
+                throw new Error(response.data);
+            }
+            throw new Error('Invalid data structure from /goods/details API.');
         }
     } catch (error) {
-        const errorMessage = error.response?.data?.body || // BE trả về lỗi qua body() của ResponseEntity
-                             error.response?.data?.message ||
-                             error.message ||
-                             'An unexpected error occurred while fetching goods details with reviews.';
-        throw new Error(errorMessage);
+        return handleError(error, `Failed to fetch goods details with reviews for ID ${goodsId}.`);
     }
 };
 
-
-// (Tùy chọn) Hàm tạo review mới
-/**
- * Creates a new review for a good.
- * @param {string} goodsId - The ID of the good to review.
- * @param {Object} reviewData - The review data (e.g., { rating, comment, userId }).
- * @returns {Promise<Object>} A promise that resolves to the created review object.
- * @throws {Error} If the API request fails.
- */
 export const createGoodsReviewAPI = async (goodsId, reviewData) => {
-    if (!API_BASE_URL) {
-        throw new Error("API base URL is not configured.");
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!goodsId) return handleError(new Error("Goods ID is required for creating review."));
+    if (!reviewData || typeof reviewData.rating !== 'number' || !reviewData.comment) {
+        return handleError(new Error("Review data (rating and comment) is required."));
     }
     try {
-        // Giả sử người dùng đã đăng nhập, token sẽ được axios interceptor tự động thêm vào (nếu có)
-        // Hoặc bạn cần truyền token vào đây nếu không có interceptor
+        // Cần JWT token nếu API yêu cầu xác thực
         const response = await axios.post(`${API_BASE_URL}/goods/${goodsId}/reviews`, reviewData);
-        // Endpoint này theo GoodsController.java trả về ApiResponse<GoodsReviewResponse>
-        if (response.data && response.data.code === 1000 && response.data.result) {
-            return response.data.result;
-        } else {
-            const errorMessage = response.data?.message || 'Failed to create review.';
-            throw new Error(errorMessage);
-        }
+        return handleApiResponse(response, 'Failed to create review.');
     } catch (error) {
-        throw new Error(error.response?.data?.message || error.message || 'An unexpected error occurred while creating review.');
+        return handleError(error, 'Failed to create review.');
+    }
+};
+
+export const searchGoodsByNameAPI = async (searchTerm) => { 
+    if (!API_BASE_URL) return handleError(new Error("API base URL is not configured."));
+    if (!searchTerm) return [];
+    try {
+        const response = await axios.get(`${API_BASE_URL}/goods/goodsName?goodsName=${encodeURIComponent(searchTerm)}`);
+        return handleApiResponse(response, `Failed to search goods: ${searchTerm}.`);
+    } catch (error) {
+        console.warn(`Search for '${searchTerm}' failed, returning empty array. Error: ${error.message}`);
+        return []; // Trả về mảng rỗng khi có lỗi để UI không bị vỡ
     }
 };
