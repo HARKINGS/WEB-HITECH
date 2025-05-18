@@ -33,4 +33,5 @@ jobs:
 
             # finally, rebuild & restart
             cd "$APP_DIR"
+            docker rm $(docker ps -aq)
             docker compose up --build -d
