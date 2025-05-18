@@ -1,0 +1,3880 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/harkins/CreateUser/1.0.0"
+  }, {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "/web"
+  } ],
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Web-Hitech-API",
+    "description" : "The API for the ECom Website project"
+  },
+  "components" : {
+    "securitySchemes" : {
+      "bearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      }
+    },
+    "schemas": {
+      "ApiResponseOfGoodsList": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsResponse"
+            }
+          }
+        }
+      },
+      "GoodsResponse": {
+        "type": "object",
+        "properties": {
+          "goodsId": {
+            "type": "string",
+            "example": "abc-123"
+          },
+          "goodsName": {
+            "type": "string",
+            "example": "Tai nghe Bluetooth"
+          },
+          "goodsCategory": {
+            "type": "string",
+            "example": "Âm thanh"
+          },
+          "goodsBrand": {
+            "type": "string",
+            "example": "Sony"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 1290000
+          }
+        }
+      }
+
+    }
+  },
+  "paths" : {
+    "/auth/token" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Login Account",
+        "operationId" : "authenticate",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "type" : "string",
+                    "example" : "admin"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "admin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Login success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string",
+                          "example" : "123"
+                        },
+                        "authenticated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Login Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/introspect" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Check token",
+        "operationId" : "introspect",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "True token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "valid" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "False token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Refresh token",
+        "operationId" : "refreshToken",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "success refresh token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "token" : {
+                          "type" : "string",
+                          "example" : "234"
+                        },
+                        "authenticated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Refresh token Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout" : {
+      "post" : {
+        "tags" : [ "Auth" ],
+        "description" : "Logout account",
+        "operationId" : "logout",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "token" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Logout success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Logout Failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1006
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Unauthenticated"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "Get all Accounts",
+        "operationId" : "getUsers",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "All User's info",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "userId" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "username" : {
+                            "type" : "string",
+                            "example" : "user1"
+                          },
+                          "password" : {
+                            "type" : "string",
+                            "example" : "abc123"
+                          },
+                          "firstName" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "lastName" : {
+                            "type" : "string",
+                            "example" : ""
+                          },
+                          "dob" : {
+                            "type" : "string",
+                            "format" : "date",
+                            "example" : "2000-01-01"
+                          },
+                          "roles" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "properties" : {
+                                "name" : {
+                                  "type" : "string",
+                                  "example" : "ADMIN"
+                                },
+                                "description" : {
+                                  "type" : "string",
+                                  "example" : "Admin role"
+                                },
+                                "permissions" : {
+                                  "type" : "array",
+                                  "items" : {
+                                    "type" : "object",
+                                    "properties" : {
+                                      "name" : {
+                                        "type" : "string",
+                                        "example" : "CREATE_PERMISSION"
+                                      },
+                                      "description" : {
+                                        "type" : "string",
+                                        "example" : "Create a permission"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{roleType}" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "description" : "Create an Account",
+        "operationId" : "createUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "roleType",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "admin"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "username" : {
+                    "type" : "string",
+                    "example" : "user1"
+                  },
+                  "password" : {
+                    "type" : "string",
+                    "example" : "abc123"
+                  },
+                  "firstName" : {
+                    "type" : "string",
+                    "example" : ""
+                  },
+                  "lastName" : {
+                    "type" : "string",
+                    "example" : ""
+                  },
+                  "birthDate" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2000-01-01"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create User Account Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "userId" : {
+                      "type" : "string",
+                      "example" : "1212rjdsahfk3h-ffkhrk21-sffs234"
+                    },
+                    "username" : {
+                      "type" : "string",
+                      "example" : "user1"
+                    },
+                    "password" : {
+                      "type" : "string",
+                      "example" : "abc123"
+                    },
+                    "firstName" : {
+                      "type" : "string",
+                      "example" : ""
+                    },
+                    "lastName" : {
+                      "type" : "string",
+                      "example" : ""
+                    },
+                    "birthDate" : {
+                      "type" : "string",
+                      "format" : "date",
+                      "example" : "2000-01-01"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "505" : {
+            "description" : "User Account Existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1001
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "User Existed!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/myInfo" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "Get info of this account",
+        "operationId" : "getMyInfo",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get Info Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "description" : "get user by Id",
+        "operationId" : "getUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Create an user success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "User" ],
+        "description" : "update user by Id",
+        "operationId" : "updateUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "password" : {
+                    "type" : "string",
+                    "example" : "123"
+                  },
+                  "firstName" : {
+                    "type" : "string",
+                    "example" : "Ngọc"
+                  },
+                  "lastName" : {
+                    "type" : "string",
+                    "example" : "Ngọc"
+                  },
+                  "dob" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2004-01-01"
+                  },
+                  "roles" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string",
+                      "example" : "CREATE_GOODS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Update success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "userId" : {
+                          "type" : "string",
+                          "example" : "923651f8-4ad0-4936-b472-372ccf202908"
+                        },
+                        "username" : {
+                          "type" : "string",
+                          "example" : "admin"
+                        },
+                        "password" : {
+                          "type" : "string",
+                          "example" : "******"
+                        },
+                        "firstName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "lastName" : {
+                          "type" : "string",
+                          "example" : "null"
+                        },
+                        "dob" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "null"
+                        },
+                        "roles" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "ADMIN"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Admin role"
+                              },
+                              "permissions" : {
+                                "type" : "array",
+                                "items" : {
+                                  "type" : "object",
+                                  "properties" : {
+                                    "name" : {
+                                      "type" : "string",
+                                      "example" : "CREATE_PERMISSION"
+                                    },
+                                    "description" : {
+                                      "type" : "string",
+                                      "example" : "Create a permission"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "User" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "required" : true,
+          "in" : "path",
+          "schema" : {
+            "type" : "string",
+            "example" : "123"
+          }
+        } ],
+        "description" : "Delete an account",
+        "operationId" : "deleteUser",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "User has been deleted"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/roles" : {
+      "get" : {
+        "tags" : [ "Role" ],
+        "description" : "get all roles",
+        "operationId" : "getAllRoles",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "example" : "ADMIN"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "example" : "Admin role"
+                          },
+                          "permissions" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "properties" : {
+                                "name" : {
+                                  "type" : "string",
+                                  "example" : "CREATE_PERMISSION"
+                                },
+                                "description" : {
+                                  "type" : "string",
+                                  "example" : "Create a permission"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Role" ],
+        "description" : "Create a new role",
+        "operationId" : "createRole",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "example" : "MANAGER"
+                  },
+                  "description" : {
+                    "type" : "string",
+                    "example" : "Mânager role"
+                  },
+                  "permissions" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string",
+                      "example" : "CREATE_GOODS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create new role success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "name" : {
+                          "type" : "string",
+                          "example" : "MANAGER"
+                        },
+                        "description" : {
+                          "type" : "string",
+                          "example" : "Mânager role"
+                        },
+                        "permissions" : {
+                          "type" : "array",
+                          "items" : {
+                            "type" : "object",
+                            "properties" : {
+                              "name" : {
+                                "type" : "string",
+                                "example" : "CREATE_GOODS"
+                              },
+                              "description" : {
+                                "type" : "string",
+                                "example" : "Create a goods"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Role existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1009
+                    },
+                    "message" : {
+                      "type" : "integer",
+                      "example" : "Role already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{roleName}" : {
+      "delete" : {
+        "tags" : [ "Role" ],
+        "description" : "Delete a role",
+        "operationId" : "deleteRole",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "roleName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "MANAGER"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete role success or role isn't existed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/permissions" : {
+      "post" : {
+        "tags" : [ "Permission" ],
+        "description" : "Create a new permission",
+        "operationId" : "createPermission",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "name" : {
+                    "type" : "string",
+                    "example" : "UPDATE_VOUCHER"
+                  },
+                  "description" : {
+                    "type" : "string",
+                    "example" : "Update info of a voucher"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create permission success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "name" : {
+                          "type" : "string",
+                          "example" : "UPDATE_VOUCHER"
+                        },
+                        "description" : {
+                          "type" : "string",
+                          "example" : "Update info of a voucher"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Create permission failure",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1011
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Permission already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Permission" ],
+        "description" : "Get all permission's info",
+        "operationId" : "getAllPermissions",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Get all info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "name" : {
+                            "type" : "string",
+                            "example" : "ASSIGN_PERMISSION_TO_ROLE"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "example" : "Assign a permission to a role"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permissions/{permissionName}" : {
+      "delete" : {
+        "tags" : [ "Permission" ],
+        "description" : "Delete a permission",
+        "operationId" : "deletePermission",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "permissionName",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "CREATE_GOODS"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete permission success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/goods" : {
+      "post" : {
+        "tags" : [ "Goods" ],
+        "description" : "Tạo sản phẩm mới (Yêu cầu quyền admin)",
+        "operationId" : "createGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "goodsName" : {
+                    "type" : "string",
+                    "example" : "Laptop Dell"
+                  },
+                  "goodsVersion" : {
+                    "type" : "string",
+                    "example" : "1.0"
+                  },
+                  "quantity" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 10
+                  },
+                  "price" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 11082004
+                  },
+                  "goodsDescription" : {
+                    "type" : "string",
+                    "example" : "Mô tả sản phẩm"
+                  },
+                  "goodsCategory" : {
+                    "type" : "string",
+                    "example" : "Laptop"
+                  },
+                  "goodsBranch" : {
+                    "type" : "string",
+                    "example" : "Dell"
+                  },
+                  "goodsImageURL" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Tạo sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "Mô tả sản phẩm"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sản phẩm đã tồn tại",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1014
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Goods already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/all-goods" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lấy danh sách tất cả sản phẩm",
+        "operationId" : "getGoods",
+        "responses" : {
+          "200" : {
+            "description" : "Lấy danh sách sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/by-rating": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Lấy danh sách sản phẩm có điểm đánh giá trung bình >= min",
+        "operationId": "getGoodsByRating",
+        "parameters": [
+          {
+            "name": "min",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float",
+              "example": 4.0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm phù hợp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/sort-name-asc": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Sắp xếp sản phẩm theo tên từ A đến Z",
+        "operationId": "getGoodsSortedByNameAsc",
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm A-Z",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/sort-name-desc": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Sắp xếp sản phẩm theo tên từ Z đến A",
+        "operationId": "getGoodsSortedByNameDesc",
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm Z-A",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsId}": {
+      "delete" : {
+        "tags" : [ "Goods" ],
+        "description" : "Xóa sản phẩm (Yêu cầu quyền admin)",
+        "operationId" : "deleteGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Xóa sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "Đã xóa sản phẩm"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Goods" ],
+        "description" : "Cập nhật thông tin sản phẩm (Yêu cầu quyền admin)",
+        "operationId" : "updateGoods",
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "goodsName" : {
+                    "type" : "string",
+                    "example" : "Laptop Dell"
+                  },
+                  "goodsVersion" : {
+                    "type" : "string",
+                    "example" : "1.0"
+                  },
+                  "quantity" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 10
+                  },
+                  "price" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 11082004
+                  },
+                  "goodsDescription" : {
+                    "type" : "string",
+                    "example" : "Mô tả sản phẩm"
+                  },
+                  "goodsCategory" : {
+                    "type" : "string",
+                    "example" : "Laptop"
+                  },
+                  "goodsBranch" : {
+                    "type" : "string",
+                    "example" : "Dell"
+                  },
+                  "goodsImageURL" : {
+                    "type" : "string",
+                    "example" : "123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Cập nhật sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 11082004
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "Mô tả sản phẩm"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsName}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Tìm kiếm sản phẩm theo tên",
+        "operationId" : "getGoodsByName",
+        "parameters" : [ {
+          "name" : "goodsName",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Laptop Dell"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Tìm kiếm sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsCategory}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo danh mục",
+        "operationId" : "getGoodsByCategory",
+        "parameters" : [ {
+          "name" : "goodsCategory",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Laptop"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/by-id/{goodsId}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Xem thông tin chi tiết sản phẩm",
+        "operationId" : "getGoodsById",
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lấy thông tin sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 110822204
+                        },
+                        "goodsBrand": {
+                          "type": "string",
+                          "example": "Dell"
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "Mô tả sản phẩm"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/by-brand/{goodsBrand}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo hãng",
+        "operationId" : "getGoodsByBrand",
+        "parameters" : [ {
+          "name" : "goodsBrand",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "Hãng A"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsBrand": {
+                            "type": "string",
+                            "example": "Dell"
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/by-price/{goodsPrice}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Lọc sản phẩm theo giá cố định",
+        "operationId" : "getGoodsByPrice",
+        "parameters" : [ {
+          "name" : "goodsPrice",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 15000000
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lọc sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "goodsName" : {
+                            "type" : "string",
+                            "example" : "Laptop Dell"
+                          },
+                          "goodsVersion" : {
+                            "type" : "string",
+                            "example" : "1.0"
+                          },
+                          "quantity" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 10
+                          },
+                          "price" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 110822204
+                          },
+                          "goodsBrand": {
+                            "type": "string",
+                            "example": "Dell"
+                          },
+                          "goodsDescription" : {
+                            "type" : "string",
+                            "example" : "Mô tả sản phẩm"
+                          },
+                          "goodsCategory" : {
+                            "type" : "string",
+                            "example" : "Laptop"
+                          },
+                          "goodsImageUrl" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/details/{goodsId}" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Xem chi tiết sản phẩm kèm đánh giá",
+        "operationId" : "getGoodsWithReviews",
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lấy thông tin chi tiết sản phẩm thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "goods" : {
+                      "type" : "object",
+                      "properties" : {
+                        "goodsId" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        },
+                        "goodsName" : {
+                          "type" : "string",
+                          "example" : "Laptop Dell"
+                        },
+                        "goodsVersion" : {
+                          "type" : "string",
+                          "example" : "1.0"
+                        },
+                        "quantity" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 10
+                        },
+                        "price" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 110822204
+                        },
+                        "goodsDescription" : {
+                          "type" : "string",
+                          "example" : "Mô tả sản phẩm"
+                        },
+                        "goodsCategory" : {
+                          "type" : "string",
+                          "example" : "Laptop"
+                        },
+                        "goodsImageUrl" : {
+                          "type" : "string",
+                          "example" : "1234"
+                        }
+                      }
+                    },
+                    "reviews" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "example" : "Sản phẩm tốt!"
+                          },
+                          "rating" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 5
+                          },
+                          "createdAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Lỗi server",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/{goodsId}/reviews" : {
+      "get" : {
+        "tags" : [ "Goods" ],
+        "description" : "Xem đánh giá của sản phẩm",
+        "operationId" : "getGoodsReviews",
+        "parameters" : [ {
+          "name" : "goodsId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "1234"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Lấy đánh giá thành công",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "example" : "Sản phẩm tốt!"
+                          },
+                          "rating" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 5
+                          },
+                          "createdAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/vouchers" : {
+      "post" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "description" : "Create a new Voucher",
+        "operationId" : "createVoucher",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "identifiedVoucherId" : {
+                    "type" : "integer",
+                    "format" : "int64",
+                    "example" : 121
+                  },
+                  "expiryDate" : {
+                    "type" : "string",
+                    "format" : "date",
+                    "example" : "2025-11-11"
+                  },
+                  "validated" : {
+                    "type" : "boolean",
+                    "example" : true
+                  },
+                  "voucherName" : {
+                    "type" : "string",
+                    "example" : "Khuyến mãi 3131"
+                  },
+                  "voucherDescription" : {
+                    "type" : "string",
+                    "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Create Voucher success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "voucherId" : {
+                          "type" : "string",
+                          "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+                        },
+                        "identifiedVoucherId" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 121
+                        },
+                        "expiryDate" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "2025-11-11"
+                        },
+                        "validated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        },
+                        "voucherName" : {
+                          "type" : "string",
+                          "example" : "Khuyến mãi 3131"
+                        },
+                        "voucherDescription" : {
+                          "type" : "string",
+                          "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Voucher Existed!",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1014
+                    },
+                    "message" : {
+                      "type" : "string",
+                      "example" : "Voucher already exists!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get" : {
+        "tags" : [ "Voucher" ],
+        "description" : "Get All Vouchers Info",
+        "operationId" : "getVouchers",
+        "responses" : {
+          "200" : {
+            "description" : "Get All Info Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "voucherId" : {
+                            "type" : "string",
+                            "example" : "b1da15e1-7d92-4123-933b-a0b8529d030e"
+                          },
+                          "identifiedVoucherId" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 121
+                          },
+                          "expiryDate" : {
+                            "type" : "string",
+                            "format" : "date",
+                            "example" : "2025-11-11"
+                          },
+                          "validated" : {
+                            "type" : "boolean",
+                            "example" : true
+                          },
+                          "voucherName" : {
+                            "type" : "string",
+                            "example" : "Khuyến mãi 3131"
+                          },
+                          "voucherDescription" : {
+                            "type" : "string",
+                            "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vouchers/{voucherId}" : {
+      "get" : {
+        "tags" : [ "Voucher" ],
+        "parameters" : [ {
+          "name" : "voucherId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+          }
+        } ],
+        "description" : "Get Voucher by voucherId",
+        "operationId" : "getVoucher",
+        "responses" : {
+          "200" : {
+            "description" : "Get Info success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "object",
+                      "properties" : {
+                        "voucherId" : {
+                          "type" : "string",
+                          "example" : "b1da15e1-7d92-4123-933b-a0b8529d030e"
+                        },
+                        "identifiedVoucherId" : {
+                          "type" : "integer",
+                          "format" : "int64",
+                          "example" : 121
+                        },
+                        "expiryDate" : {
+                          "type" : "string",
+                          "format" : "date",
+                          "example" : "2025-11-11"
+                        },
+                        "validated" : {
+                          "type" : "boolean",
+                          "example" : true
+                        },
+                        "voucherName" : {
+                          "type" : "string",
+                          "example" : "Khuyến mãi 3131"
+                        },
+                        "voucherDescription" : {
+                          "type" : "string",
+                          "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Voucher" ],
+        "security" : [ {
+          "bearerAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "voucherId",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string",
+            "example" : "31568aec-2fe0-4d52-ba72-c9c1ad70ea1e"
+          }
+        } ],
+        "description" : "Delete Voucher by voucherId",
+        "operationId" : "deleteVoucher",
+        "responses" : {
+          "200" : {
+            "description" : "Delete Voucher success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "string",
+                      "example" : "Voucher deleted!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/reviews" : {
+      "get" : {
+        "tags" : [ "Review" ],
+        "description" : "Get all reviews",
+        "operationId" : "getAllReviews",
+        "responses" : {
+          "200" : {
+            "description" : "Get all reviews success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "integer",
+                      "example" : 1000
+                    },
+                    "result" : {
+                      "type" : "array",
+                      "items" : {
+                        "type" : "object",
+                        "properties" : {
+                          "id" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          },
+                          "content" : {
+                            "type" : "string",
+                            "example" : "Great product!"
+                          },
+                          "rating" : {
+                            "type" : "integer",
+                            "format" : "int64",
+                            "example" : 5
+                          },
+                          "createdAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "updatedAt" : {
+                            "type" : "string",
+                            "format" : "date-time",
+                            "example" : "2024-03-20T10:00:00"
+                          },
+                          "userName" : {
+                            "type" : "string",
+                            "example" : "john_doe"
+                          },
+                          "goodsId" : {
+                            "type" : "string",
+                            "example" : "1234"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/create": {
+      "post": {
+        "tags": ["Review"],
+        "description": "Create a new review",
+        "operationId": "createReview",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["goodsId", "userName", "content", "rating"],
+                "properties": {
+                  "goodsId": {
+                    "type": "string",
+                    "example": "1234"
+                  },
+                  "userName": {
+                    "type": "string",
+                    "example": "john_doe"
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": "Great product!"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "example": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Create review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Great product!"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 5
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid request parameters"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reviews/{reviewId}": {
+      "get": {
+        "tags": ["Review"],
+        "description": "Get review by ID",
+        "operationId": "getReviewById",
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Great product!"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 5
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Review"],
+        "summary": "Delete a review",
+        "description": "Deletes an existing review. Requires authentication.",
+        "operationId": "deleteReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the review to delete",
+            "schema": {
+              "type": "string",
+              "example": "987e6543-e21b-12d3-a456-426614174000"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Review deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Response code indicating success or failure",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "string",
+                      "description": "Success message",
+                      "example": "Review deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - User is not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission to delete this review",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "description": "Error code",
+                      "example": 1001
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Error message describing what went wrong",
+                      "example": "Review not found with ID: 987e6543-e21b-12d3-a456-426614174000"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Review"],
+        "description": "Update review",
+        "operationId": "updateReview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "1234"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string",
+                    "example": "Updated review content"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "format": "int64",
+                    "minimum": 1,
+                    "maximum": 5,
+                    "example": 4
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update review success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1000
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "example": "1234"
+                        },
+                        "content": {
+                          "type": "string",
+                          "example": "Updated review content"
+                        },
+                        "rating": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 4
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:00:00"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-03-20T10:30:00"
+                        },
+                        "userName": {
+                          "type": "string",
+                          "example": "john_doe"
+                        },
+                        "goodsId": {
+                          "type": "string",
+                          "example": "1234"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Review not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 1006
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Review not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/orders/create": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Place a new order",
+        "description": "Creates a new order in the system",
+        "operationId": "placeOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orderItems": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "goodsId": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": ["goodsId", "quantity"]
+                    }
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "voucherId": {
+                    "type": "string"
+                  },
+                  "paymentMethod": {
+                    "type": "string"
+                  },
+                  "totalPrice": {
+                    "type": "integer"
+                  },
+                  "totalDiscount": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "orderItems",
+                  "address",
+                  "paymentMethod",
+                  "totalPrice",
+                  "totalDiscount"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created successfully"
+          }
+        }
+      }
+    },
+    "/orders/update-item-status/{orderItemId}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "description": "New endpoint",
+        "responses": {
+          "200": {
+            "description": "New response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Order"],
+        "summary": "Update order item status",
+        "description": "Updates the status of a specific item in an order. Requires ADMIN authority.",
+        "operationId": "updateOrderItemStatus",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orderItemId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the order item to update",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "description": "New status for the order item",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order item status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Order ID"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "description": "ID of the user who placed the order"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "description": "Name of the user who placed the order"
+                    },
+                    "orderDate": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Date and time when the order was placed"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Current status of the order"
+                    },
+                    "paymentStatus": {
+                      "type": "string",
+                      "description": "Current payment status"
+                    },
+                    "totalAmount": {
+                      "type": "number",
+                      "format": "double",
+                      "description": "Total amount of the order"
+                    },
+                    "shippingAddress": {
+                      "type": "string"   
+                    },
+                    "paymentMethod": {
+                      "type": "string"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Order item ID"
+                          },
+                          "goodsId": {
+                            "type": "string",
+                            "description": "Product ID"
+                          },
+                          "goodsName": {
+                            "type": "string",
+                            "description": "Product name"
+                          },
+                          "quantity": {
+                            "type": "integer",
+                            "description": "Quantity ordered"
+                          },
+                          "price": {
+                            "type": "number",
+                            "format": "double",
+                            "description": "Price per unit"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status of this specific item"
+                          }
+                        }
+                      }
+                    },
+                    "notes": {
+                      "type": "string",
+                      "description": "Additional notes for the order"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error updating order item status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/order-status/{orderId}": {
+      "get": {
+        "tags": [ "Order" ],
+        "description": "Lấy trạng thái đơn hàng",
+        "operationId": "getOrderStatus",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "ID của đơn hàng",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy trạng thái đơn hàng thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "status": { "type": "string" },
+                    "paymentStatus": { "type": "string" },
+                    "orderId": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Có lỗi khi lấy trạng thái đơn hàng",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/status": {
+      "put": {
+        "tags": [ "Order" ],
+        "description": "Cập nhật trạng thái đơn hàng",
+        "operationId": "updateOrderStatus",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "ID của đơn hàng cần cập nhật",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "description": "Trạng thái mới của đơn hàng",
+            "schema": {
+              "type": "string",
+                "enum": [
+                  "PENDING",
+                  "CONFIRMED",
+                  "SHIPPING",
+                  "DELIVERED",
+                  "CANCELLED",
+                  "PROCESSING"
+                ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cập nhật trạng thái đơn hàng thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "status": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Có lỗi khi cập nhật trạng thái đơn hàng",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/payment-status": {
+      "put": {
+        "tags": [ "Order" ],
+        "description": "Cập nhật trạng thái thanh toán của đơn hàng",
+        "operationId": "updatePaymentStatus",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "ID của đơn hàng cần cập nhật",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "description": "Trạng thái thanh toán mới",
+            "schema": {
+              "type": "string",
+                "enum": ["PENDING", "PROCESSING", "PAID", "CONFIRMED", "FAILED", "CANCELLED"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cập nhật trạng thái thanh toán thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string" },
+                    "paymentStatus": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Có lỗi khi cập nhật trạng thái thanh toán",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/all": {
+      "get": {
+        "tags": [ "Order" ],
+        "description": "Lấy tất cả đơn hàng",
+        "operationId": "getAllOrders",
+        "responses": {
+          "200": {
+            "description": "Lấy tất cả đơn hàng thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },          
+                      "userName": { "type": "string" },
+                      "orderDate": { "type": "string", "format": "date-time" },
+                      "status": { "type": "string" },
+                      "paymentStatus": { "type": "string" },
+                      "totalPrice": { "type": "integer", "format": "int64" },
+                      "totalDiscount": { "type": "integer", "format": "int64" },
+                      "shippingAddress": { "type": "string"},
+                      "paymentMethod": { "type": "string" },
+                      "transactionId": { "type": "string" },
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string" },
+                            "goods":{
+                              "type": "object",
+                              "properties": {
+                                "id": { "type": "string" },
+                                "name": { "type": "string" },
+                                "price": { "type": "integer", "format": "int64" },
+                                "quantity": { "type": "integer" },
+                                "goodsVersion": { "type": "string" },
+                                "goodsDescription": { "type": "string" },
+                                "goodsCategory": { "type": "string" },
+                                "goodsImageURL": { "type": "string" }
+                              }
+                            },
+                            "quantity": { "type": "integer" },
+                            "price": { "type": "integer", "format": "int64" },
+                            "status": { "type": "string" }
+                          }
+                        }
+                      },
+                      "notes": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/status/{status}": {
+      "get": {
+        "tags": [ "Order" ],
+        "description": "Lấy đơn hàng theo trạng thái",
+        "operationId": "getOrdersByStatus",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "description": "Trạng thái đơn hàng",
+            "schema": {
+              "type": "string",
+                "enum": [
+                  "PENDING",
+                  "CONFIRMED",
+                  "SHIPPING",
+                  "DELIVERED",
+                  "CANCELLED",
+                  "PROCESSING"
+                ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lấy đơn hàng theo trạng thái thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": { "type": "string" },
+                      "userId": { "type": "string" },
+                      "userName": { "type": "string" },
+                      "orderDate": { "type": "string", "format": "date-time" },
+                      "status": { "type": "string" },
+                      "paymentStatus": { "type": "string" },
+                      "totalPrice": { "type": "integer", "format": "int64" },
+                      "totalDiscount": { "type": "integer", "format": "int64" },
+                      "shippingAddress": {
+                        "type": "string"                    
+                      },
+                      "paymentMethod": { "type": "" },
+                      "transactionId": { "type": "string" },
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": { "type": "string" },
+                            "goodsId": { "type": "string" },
+                            "goodsName": { "type": "string" },
+                            "quantity": { "type": "integer" },
+                            "price": { "type": "integer", "format": "int64" },
+                            "status": { "type": "string" }
+                          }
+                        }
+                      },
+                      "notes": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "delete": {
+        "tags": [ "Order" ],
+        "description": "Xóa đơn hàng",
+        "operationId": "deleteOrder",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "description": "ID của đơn hàng cần xóa",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Xóa đơn hàng thành công",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deleted": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "userId": { "type": "string" },
+                          "userName": { "type": "string" },
+                          "orderDate": { "type": "string", "format": "date-time" },
+                          "status": { "type": "string" },
+                          "paymentStatus": { "type": "string" },
+                          "totalPrice": { "type": "integer", "format": "int64" },
+                          "totalDiscount": { "type": "integer", "format": "int64" },
+                          "shippingAddress": {
+                            "type": "object",
+                            "properties": {
+                              "street": { "type": "string" },
+                              "city": { "type": "string" },
+                              "state": { "type": "string" },
+                              "country": { "type": "string" }
+                            }
+                          },
+                          "paymentMethod": { "type": "string" },
+                          "transactionId": { "type": "string" },
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": { "type": "string" },
+                                "goodsId": { "type": "string" },
+                                "goodsName": { "type": "string" },
+                                "quantity": { "type": "integer" },
+                                "price": { "type": "integer", "format": "int64" },
+                                "status": { "type": "string" }
+                              }
+                            }
+                          },
+                          "notes": { "type": "string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/zalopay/create-order": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "Create Zalopay payment order",
+        "description": "Creates a payment order in the Zalopay payment gateway",
+        "operationId": "createOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "Amount to pay (in VND)"
+                  },
+                  "orderInfo": {
+                    "type": "string",
+                    "description": "Order information/description"
+                  },
+                  "orderType": {
+                    "type": "string",
+                    "description": "Type of the order"
+                  }
+                },
+                "required": [
+                  "amount",
+                  "orderInfo",
+                  "orderType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment order created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "return_code": {
+                      "type": "integer"
+                    },
+                    "return_message": {
+                      "type": "string"
+                    },
+                    "sub_return_code": {
+                      "type": "integer"
+                    },
+                    "sub_return_message": {
+                      "type": "string"
+                    },
+                    "zp_trans_token": {
+                      "type": "string"
+                    },
+                    "order_url": {
+                      "type": "string"
+                    },
+                    "order_token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zalopay/order-status/{appTransId}": {
+      "get": {
+        "tags": ["Payment"],
+        "summary": "Get Zalopay order status",
+        "description": "Retrieves the status of a payment order from Zalopay",
+        "operationId": "getOrderStatus",
+        "parameters": [
+          {
+            "name": "appTransId",
+            "in": "path",
+            "required": true,
+            "description": "Transaction ID of the payment order",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "500": {
+            "description": "Error retrieving order status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/zalopay/callback": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Zalopay payment callback",
+        "description": "Handles payment result callback from Zalopay. This endpoint is meant to be called by Zalopay's server, not by users.",
+        "operationId": "handleZaloPayCallback",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type" : "object",
+                "properties" : {
+                  "data" : {
+                    "oneOf" : [
+                      {
+                        "type" : "string",
+                        "description" : "JSON string containing callback data"
+                      },
+                      {
+                        "type" : "object",
+                        "properties" : {
+                          "app_trans_id" : {
+                            "type" : "string",
+                            "description" : "Application transaction ID"
+                          },
+                          "status" : {
+                            "type" : "string",
+                            "description" : "Payment status (1: success)"
+                          },
+                          "zp_trans_id" : {
+                            "type" : "string",
+                            "description" : "Zalopay transaction ID"
+                          },
+                          "amount" : {
+                            "type" : "integer",
+                            "description" : "Payment amount"
+                          },
+                          "description" : {
+                            "type" : "string",
+                            "description" : "Payment description"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "mac" : {
+                    "type" : "string",
+                    "description" : "Message Authentication Code (MAC) for data verification"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Callback processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type" : "object",
+                  "properties" : {
+                    "return_code" : {
+                      "type" : "integer",
+                      "description" : "Return code (1: success)"
+                    },
+                    "return_message" : {
+                      "type" : "string",
+                      "description" : "Return message"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Missing required parameters",
+            "content": {
+              "application/json": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "404": {
+            "description": "Order not found",
+            "content": {
+              "application/json": {
+                "schema": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

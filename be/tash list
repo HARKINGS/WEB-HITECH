@@ -1,0 +1,32 @@
+[33mf4fb9a4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mHarkins[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33mf4fb9a4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mHarkins[m[33m)[m HEAD@{1}: commit (merge): Cập nhật chức năng Voucher
+[33mb9658d0[m HEAD@{2}: commit: full Voucher controller
+[33macbc251[m HEAD@{3}: commit: note README.md
+[33m5cd11f0[m HEAD@{4}: commit: update Voucher
+[33mb8b9557[m HEAD@{5}: checkout: moving from Harkins to Harkins
+[33mb8b9557[m HEAD@{6}: commit: note report
+[33m4b6721f[m HEAD@{7}: commit: rename Review to GoodsReview
+[33m7fa2f5c[m HEAD@{8}: rebase (finish): returning to refs/heads/Harkins
+[33m7fa2f5c[m HEAD@{9}: rebase (pick): fix version
+[33m0b6076e[m HEAD@{10}: rebase (start): checkout origin/Harkins
+[33m202f22c[m HEAD@{11}: checkout: moving from test to Harkins
+[33m8e1fac9[m[33m ([m[1;32mtest[m[33m)[m HEAD@{12}: reset: moving to HEAD
+[33m8e1fac9[m[33m ([m[1;32mtest[m[33m)[m HEAD@{13}: commit: change password
+[33mfb6da24[m HEAD@{14}: commit: thay đổi phù hợp ver 17
+[33m9d1f1c2[m HEAD@{15}: commit: test
+[33m202f22c[m HEAD@{16}: checkout: moving from Harkins to test
+[33m202f22c[m HEAD@{17}: reset: moving to HEAD
+[33m202f22c[m HEAD@{18}: reset: moving to HEAD
+[33m202f22c[m HEAD@{19}: reset: moving to HEAD
+[33m202f22c[m HEAD@{20}: commit: fix version
+[33mfb2ebbe[m HEAD@{21}: commit: Authorization(Part1) + Update note + Test
+[33md7a1fde[m HEAD@{22}: checkout: moving from Harkins to Harkins
+[33md7a1fde[m HEAD@{23}: checkout: moving from Harkins to Harkins
+[33md7a1fde[m HEAD@{24}: commit: update lần 2
+[33m9d7c4f9[m HEAD@{25}: rebase (finish): returning to refs/heads/Harkins
+[33m9d7c4f9[m HEAD@{26}: rebase (pick): Update README.md
+[33md98b8a6[m HEAD@{27}: rebase (continue): update report
+[33mc5713da[m HEAD@{28}: rebase (start): checkout origin/Harkins
+[33m669e869[m HEAD@{29}: commit (merge): Update report, but somethings are wrong
+[33m5478078[m HEAD@{30}: checkout: moving from Harkins to Harkins
+[33m5478078[m HEAD@{31}: commit (initial): update report

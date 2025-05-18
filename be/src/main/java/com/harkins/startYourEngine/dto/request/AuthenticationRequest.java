@@ -1,0 +1,19 @@
+package com.harkins.startYourEngine.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AuthenticationRequest {
+    @NotBlank(message = "NOT_EMPTY")
+    String username;
+
+    @NotBlank(message = "NOT_EMPTY")
+    String password;
+}
