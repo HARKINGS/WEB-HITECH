@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './HomePage.css';
 import { getAllGoods } from '../../services/goodsService';
-// Import thư viện slider (ví dụ: react-slick) hoặc bạn có thể tự code slider đơn giản
-// Ví dụ với react-slick: npm install react-slick slick-carousel
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
