@@ -1,7 +1,7 @@
 // src/services/orderService.js
 import axios from 'axios';
 
-const API_URL = `${process.env.REACT_APP_API_BASE_URL}/api/orders`;
+const API_URL = `${process.env.REACT_APP_API_BASE_URL}/orders`;
 
 /**
  * Places a new order.
