@@ -21,6 +21,7 @@ import Vouchers from "./pages/admin/Vouchers";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
+import Logout from "./pages/auth/Logout";
 import HomePage from "./pages/Home/HomePage";
 import ShopPage from "./pages/Shop/ShopPage";
 import NotFoundPage from "./pages/NotFound/NotFoundPage";
@@ -51,6 +52,7 @@ function App() {
                                     </>
                                 }
                             />
+                            <Route path="/logout" element={<Logout />} />
 
                             {/* Admin Routes */}
                             <Route path="/admin" element={<AdminRoute />}>
@@ -64,7 +66,7 @@ function App() {
                                 </Route>
                             </Route>
 
-                            {/* Protected Routes */}
+                            {/* Protected Routes
                             <Route path="/profile" element={<ProtectedRoute />}>
                                 <Route
                                     element={
@@ -78,36 +80,115 @@ function App() {
                                         </>
                                     }
                                 />
-                            </Route>
+                            </Route> */}
 
                             {/* Public Routes */}
                             <Route
+                                path="/"
                                 element={
                                     <div className="App">
                                         <Header />
                                         <main>
-                                            <Routes>
-                                                {/* Temporary homepage for demonstration */}
-                                                <Route path="/" element={<HomePage />} />
-                                                <Route path="/shop" element={<ShopPage />} />
-                                                <Route
-                                                    path="/products/:productId"
-                                                    element={<ProductDetailPage />}
-                                                />{" "}
-                                                {/* Route cho chi tiết SP */}
-                                                <Route path="/contact-us" element={<ContactPage />} />
-                                                <Route path="/cart" element={<CartPage />} />
-                                                <Route path="/checkout" element={<CheckoutPage />} />
-                                                <Route path="/policy" element={<PolicyDetails />} />
-                                            </Routes>
+                                            <HomePage />
                                         </main>
                                         <ThemeToggle />
                                         <Footer />
                                     </div>
                                 }
-                            >
-                                <Route path="*" element={<NotFoundPage />} />
-                            </Route>
+                            />
+                            <Route
+                                path="/shop"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <ShopPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+                            <Route
+                                path="/products/:productId"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <ProductDetailPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+                            <Route
+                                path="/contact-us"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <ContactPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+                            <Route
+                                path="/cart"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <CartPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+                            <Route
+                                path="/checkout"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <CheckoutPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+                            <Route
+                                path="/policy"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <PolicyDetails />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
+
+                            {/* 404 Not Found Route */}
+                            <Route
+                                path="*"
+                                element={
+                                    <div className="App">
+                                        <Header />
+                                        <main>
+                                            <NotFoundPage />
+                                        </main>
+                                        <ThemeToggle />
+                                        <Footer />
+                                    </div>
+                                }
+                            />
                         </Routes>
                     </Router>
                 </AuthProvider>

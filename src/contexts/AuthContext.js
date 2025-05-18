@@ -38,13 +38,13 @@ export const AuthProvider = ({ children }) => {
                 const userData = {
                     id: decodedToken.jti,
                     username: decodedToken.sub,
-                    role: decodedToken.scope.includes("ROLE_ADMIN") ? "ADMIN" : "USER",
+                    role: decodedToken.scope.includes("ROLE_ADMIN") ? "ADMIN" : "STAFF",
                     permissions: decodedToken.scope.split(" "),
                 };
 
                 setUser(userData);
                 setIsAuthenticated(true);
-                setIsAdmin(userData.role === "ADMIN");
+                setIsAdmin(userData.role === "ADMIN" || userData.role === "STAFF");
             } catch (error) {
                 console.error("Error validating token:", error);
                 // Clear invalid cookie
@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
                 const userData = {
                     id: decodedToken.jti,
                     username: decodedToken.sub,
-                    role: decodedToken.scope.includes("ROLE_ADMIN") ? "ADMIN" : "USER",
+                    role: decodedToken.scope.includes("ROLE_ADMIN") ? "ADMIN" : "STAFF",
                     permissions: decodedToken.scope.split(" "),
                 };
 

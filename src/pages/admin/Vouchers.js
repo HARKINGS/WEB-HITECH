@@ -21,20 +21,16 @@ const Vouchers = () => {
         setLoading(true);
         setError(null);
         try {
-            const token = document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("token="))
-                ?.split("=")[1];
+            // const token = document.cookie
+            //     .split("; ")
+            //     .find((row) => row.startsWith("token="))
+            //     ?.split("=")[1];
 
-            if (!token) {
-                throw new Error("Authentication token not found");
-            }
+            // if (!token) {
+            //     throw new Error("Authentication token not found");
+            // }
 
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, {});
 
             if (response.data.code === 1000) {
                 setVouchers(response.data.result);

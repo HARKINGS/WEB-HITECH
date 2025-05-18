@@ -63,7 +63,7 @@ const AdminLayout = () => {
                             </Link>
                         </li>
                         <li className="logout">
-                            <Link to="/">
+                            <Link to="/logout">
                                 <FaSignOutAlt />
                                 {!sidebarCollapsed && <span>Exit Admin</span>}
                             </Link>

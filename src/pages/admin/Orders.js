@@ -1,31 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEye } from "react-icons/fa";
-import { Table, Button, Container, Form, Row, Col, Badge, Pagination } from "react-bootstrap";
+import { Table, Button, Container, Form, Row, Col, Badge, Pagination, Modal, ListGroup } from "react-bootstrap";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const Orders = () => {
-    // Add state for pagination
+    // Add states
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 5; // Number of orders to display per page
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const ordersPerPage = 5;
 
-    // Mock data
-    const orders = [
-        { id: "#1234", customer: "John Doe", date: "2023-06-20", status: "Completed", items: 3, total: "$129.99" },
-        { id: "#1235", customer: "Jane Smith", date: "2023-06-19", status: "Processing", items: 2, total: "$79.99" },
-        { id: "#1236", customer: "Bob Johnson", date: "2023-06-18", status: "Pending", items: 5, total: "$249.99" },
-        { id: "#1237", customer: "Alice Brown", date: "2023-06-17", status: "Completed", items: 1, total: "$59.99" },
-        {
-            id: "#1238",
-            customer: "Charlie Wilson",
-            date: "2023-06-16",
-            status: "Cancelled",
-            items: 4,
-            total: "$189.99",
-        },
-        { id: "#1239", customer: "Eva Green", date: "2023-06-15", status: "Completed", items: 2, total: "$99.99" },
-        { id: "#1240", customer: "David Miller", date: "2023-06-14", status: "Processing", items: 3, total: "$149.99" },
-        { id: "#1241", customer: "Grace Lee", date: "2023-06-13", status: "Pending", items: 1, total: "$29.99" },
-    ];
+    // Format price to currency
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    };
+
+    // Get status badge variant
+    const getStatusVariant = (status) => {
+        switch (status) {
+            case 'COMPLETED':
+                return 'bg-success-subtle text-success-emphasis';
+            case 'PROCESSING':
+                return 'bg-primary-subtle text-primary-emphasis';
+            case 'PENDING':
+                return 'bg-warning-subtle text-warning-emphasis';
+            case 'CANCELLED':
+                return 'bg-danger-subtle text-danger-emphasis';
+            default:
+                return 'bg-secondary-subtle text-secondary-emphasis';
+        }
+    };
+
+    // Fetch orders
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const token = document.cookie
+                    .split("; ")
+                    .find((row) => row.startsWith("token="))
+                    ?.split("=")[1];
+
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/orders/all`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                
+                // Transform the response data to match our table structure
+                const transformedOrders = response.data.map(order => ({
+                    id: order.id,
+                    customer: order.user?.username || 'Anonymous',
+                    date: new Date(order.createdAt).toLocaleDateString('vi-VN'),
+                    status: order.status,
+                    items: order.orderItems?.length || 0,
+                    total: order.totalPrice || 0,
+                    paymentStatus: order.paymentStatus,
+                    paymentMethod: order.paymentMethod || 'N/A',
+                    shippingAddress: order.shippingAddress || 'N/A',
+                    orderItems: order.orderItems || [],
+                    voucher: order.voucher,
+                    totalDiscount: order.totalDiscount || 0,
+                    transactionId: order.transactionId
+                }));
+
+                setOrders(transformedOrders);
+                setError(null);
+            } catch (err) {
+                setError(err.response?.data?.message || "Failed to fetch orders");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrders();
+    }, []);
+
+    // Handle modal open
+    const handleShowModal = (order) => {
+        setSelectedOrder(order);
+        setShowModal(true);
+    };
+
+    // Handle modal close
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedOrder(null);
+    };
 
     // Calculate pagination values
     const indexOfLastOrder = currentPage * ordersPerPage;
@@ -52,6 +116,126 @@ const Orders = () => {
         pageNumbers.push(i);
     }
 
+    // Order Details Modal
+    const OrderDetailsModal = () => {
+        if (!selectedOrder) return null;
+
+        return (
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                size="lg"
+                aria-labelledby="order-details-modal"
+                centered
+                className="text-dark"
+            >
+                <Modal.Header closeButton className="bg-dark text-light">
+                    <Modal.Title id="order-details-modal">
+                        Order Details - #{selectedOrder.id}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="bg-dark text-light">
+                    <div className="mb-4">
+                        <h5>Order Information</h5>
+                        <ListGroup variant="flush">
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Customer:</strong> {selectedOrder.customer}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Date:</strong> {selectedOrder.date}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Status:</strong>{" "}
+                                <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.status)}`}>
+                                    {selectedOrder.status}
+                                </span>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Payment Status:</strong>{" "}
+                                <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.paymentStatus)}`}>
+                                    {selectedOrder.paymentStatus}
+                                </span>
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Payment Method:</strong> {selectedOrder.paymentMethod || 'N/A'}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Transaction ID:</strong> {selectedOrder.transactionId || 'N/A'}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Shipping Address:</strong> {selectedOrder.shippingAddress || 'N/A'}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Voucher:</strong> {selectedOrder.voucher ? selectedOrder.voucher.code : 'N/A'}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Total Price:</strong> {formatPrice(selectedOrder.total)}
+                            </ListGroup.Item>
+                            <ListGroup.Item className="bg-dark text-light">
+                                <strong>Total Discount:</strong> {formatPrice(selectedOrder.totalDiscount)}
+                            </ListGroup.Item>
+                        </ListGroup>
+                    </div>
+
+                    <div>
+                        <h5>Order Items</h5>
+                        <ListGroup variant="flush">
+                            {selectedOrder.orderItems.map((item, index) => (
+                                <ListGroup.Item key={item.id || index} className="bg-dark text-light">
+                                    <Row>
+                                        <Col>
+                                            <div className="d-flex justify-content-between align-items-start mb-2">
+                                                <div style={{ maxWidth: '80%' }}>
+                                                    <h6 className="mb-0 text-truncate">
+                                                        {item.goodsName || "Unknown Product"}
+                                                    </h6>
+                                                    <small className="text-light">
+                                                        Item ID: {item.id || "N/A"} | Goods ID: {item.goodsId || "N/A"}
+                                                    </small>
+                                                </div>
+                                                <div style={{ minWidth: 'fit-content', marginLeft: '8px' }}>
+                                                    <span
+                                                        className={`d-inline-flex  px-3 py-1 small fw-semibold rounded-pill ${getStatusVariant(item.status)}`}
+                                                        style={{ fontSize: "0.65rem" }}
+                                                    >
+                                                        {item.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <p className="mb-1">Quantity: {item.quantity}</p>
+                                            <p className="mb-0">User: {item.username || 'N/A'}</p>
+                                        </Col>
+                                    </Row>
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer className="bg-dark text-light">
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    };
+
+    if (loading) {
+        return (
+            <Container fluid className="py-4 bg-dark text-light">
+                <div>Loading orders...</div>
+            </Container>
+        );
+    }
+
+    if (error) {
+        return (
+            <Container fluid className="py-4 bg-dark text-light">
+                <div className="text-danger">Error: {error}</div>
+            </Container>
+        );
+    }
+
     return (
         <Container fluid className="py-4 bg-dark text-light">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -72,10 +256,10 @@ const Orders = () => {
                     <Form.Group>
                         <Form.Select className="bg-dark text-light border-secondary">
                             <option value="">All Status</option>
-                            <option value="completed">Completed</option>
-                            <option value="processing">Processing</option>
-                            <option value="pending">Pending</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="PROCESSING">Processing</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="CANCELLED">Cancelled</option>
                         </Form.Select>
                     </Form.Group>
                 </Col>
@@ -93,6 +277,7 @@ const Orders = () => {
                         <th>Customer</th>
                         <th>Date</th>
                         <th>Status</th>
+                        <th>Payment Status</th>
                         <th>Items</th>
                         <th>Total</th>
                         <th>Actions</th>
@@ -106,24 +291,24 @@ const Orders = () => {
                             <td>{order.date}</td>
                             <td>
                                 <span
-                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${
-                                        order.status === "Completed"
-                                            ? "bg-success-subtle text-success-emphasis"
-                                            : order.status === "Processing"
-                                            ? "bg-primary-subtle text-primary-emphasis"
-                                            : order.status === "Pending"
-                                            ? "bg-warning-subtle text-warning-emphasis"
-                                            : "bg-danger-subtle text-danger-emphasis"
-                                    }`}
+                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${getStatusVariant(order.status)}`}
                                     style={{ fontSize: "0.85rem" }}
                                 >
                                     {order.status}
                                 </span>
                             </td>
-                            <td>{order.items}</td>
-                            <td>{order.total}</td>
                             <td>
-                                <Button variant="outline-info" size="sm">
+                                <span
+                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${getStatusVariant(order.paymentStatus)}`}
+                                    style={{ fontSize: "0.85rem" }}
+                                >
+                                    {order.paymentStatus}
+                                </span>
+                            </td>
+                            <td>{order.items}</td>
+                            <td>{formatPrice(order.total)}</td>
+                            <td>
+                                <Button variant="outline-info" size="sm" onClick={() => handleShowModal(order)}>
                                     <FaEye />
                                 </Button>
                             </td>
@@ -152,6 +337,9 @@ const Orders = () => {
                     />
                 </Pagination>
             </div>
+
+            {/* Order Details Modal */}
+            <OrderDetailsModal />
         </Container>
     );
 };
