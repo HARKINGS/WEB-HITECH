@@ -35,7 +35,7 @@ services:
     build: ./fe
     container_name: hi-tech-frontend
     ports:
-      - "80:3000"
+      - "80:80"
     environment:
       - REACT_APP_API_BASE_URL=http://${IP}:8080/web
     depends_on:
