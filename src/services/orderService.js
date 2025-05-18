@@ -19,8 +19,6 @@ export const placeOrderAPI = async (orderData) => {
         // Giả sử orderData đã được chuẩn bị đúng cấu trúc CreateOrderRequest
         const response = await axios.post(`${API_URL}/create`, orderData);
 
-        // BE trả về OrderResponse trực tiếp hoặc trong một cấu trúc ApiResponse
-        // Nếu OrderController trả về ResponseEntity.ok(createdOrder) thì data chính là createdOrder
         if (response.data) { // Kiểm tra xem BE có trả về { code: 1000, result: OrderResponse } không
             if (response.data.code === 1000 && response.data.result) {
                 return response.data.result; // Nếu BE dùng ApiResponse wrapper

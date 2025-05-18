@@ -245,7 +245,7 @@
   }
   
   /* Nút Đặt hàng */
-  .place-order-btn {
+.place-order-btn {
     width: 100%;
     padding: 12px 20px;
     font-size: 1.1rem;
@@ -257,7 +257,10 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color var(--transition-fast), opacity var(--transition-fast);
-  }
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
   
   .place-order-btn:hover:not(:disabled) {
     background-color: var(--accent-color-darker);
@@ -321,3 +324,137 @@
       max-width: 50%; /* Điều chỉnh lại chiều rộng tên SP */
     }
   } 
+
+
+  .voucher-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color-light, #eee);
+}
+
+.voucher-section h4 {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.voucher-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.voucher-input-group input[type="text"] {
+  flex-grow: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 4px;
+  font-size: 0.95em;
+}
+
+.voucher-input-group button {
+  padding: 8px 15px;
+  background-color: var(--primary-color-light, #5cb85c); /* Màu xanh lá cây cho nút áp dụng */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.95em;
+}
+
+.voucher-input-group button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.voucher-input-group button:hover:not(:disabled) {
+  background-color: var(--primary-color, #4cae4c);
+}
+
+.applied-voucher-info {
+  padding: 10px;
+  background-color: var(--background-success-light, #dff0d8); /* Nền xanh nhạt khi thành công */
+  border: 1px solid var(--border-success, #d6e9c6);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+}
+.applied-voucher-info p {
+  margin: 0 0 5px 0;
+  color: var(--text-success, #3c763d);
+}
+.btn-remove-voucher {
+  background: none;
+  border: none;
+  color: var(--price-color, #d9534f); /* Màu đỏ cho nút bỏ */
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.9em;
+}
+.btn-remove-voucher:hover {
+  color: var(--price-color-darker, #c9302c);
+}
+
+
+.voucher-error {
+  color: var(--price-color, #d9534f); /* Màu đỏ cho lỗi */
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+.available-vouchers {
+  margin-top: 15px;
+  font-size: 0.9em;
+}
+.available-vouchers ul {
+  list-style: none;
+  padding-left: 0;
+  max-height: 150px; /* Giới hạn chiều cao, thêm scroll nếu nhiều */
+  overflow-y: auto;
+  border: 1px solid var(--border-color-light, #eee);
+  padding: 10px;
+  border-radius: 4px;
+}
+.available-vouchers li {
+  padding: 5px 0;
+  border-bottom: 1px dashed var(--border-color-light, #f0f0f0);
+  cursor: pointer; /* Cho phép click để tự điền mã */
+  color: var(--text-secondary);
+}
+.available-vouchers li:last-child {
+  border-bottom: none;
+}
+.available-vouchers li:hover {
+  color: var(--text-primary);
+}
+.available-vouchers li strong {
+  color: var(--primary-color, #007bff); /* Màu cho mã voucher */
+}
+
+
+/* Cập nhật hiển thị tổng tiền trong order summary */
+.order-summary-box .order-subtotal,
+.order-summary-box .order-discount {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    color: var(--text-secondary);
+}
+.order-summary-box .order-discount .discount-amount {
+    color: var(--primary-color-light, #5cb85c); /* Màu xanh cho số tiền giảm */
+}
+
+.order-summary-box .order-total { /* Giữ nguyên hoặc điều chỉnh */
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color, #ccc);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.order-summary-box .total-amount {
+    color: var(--price-color); /* Màu đỏ cho tổng tiền cuối */
+}
