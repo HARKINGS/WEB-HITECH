@@ -157,8 +157,25 @@ public class GoodsController {
     @PutMapping("/{goodsId}")
     ApiResponse<GoodsResponse> updateGoods(
             @PathVariable("goodsId") String goodsId,
-            @Valid @RequestBody UpdateGoodsRequest request,
+            @RequestParam("goodsName") String goodsName,
+            @RequestParam("goodsVersion") String goodsVersion,
+            @RequestParam("goodsDescription") String goodsDescription,
+            @RequestParam("price") Long price,
+            @RequestParam("quantity") Long quantity,
+            @RequestParam("goodsCategory") String goodsCategory,
+            @RequestParam("goodsBrand") String goodsBrand,
             @RequestParam("imageFile") MultipartFile imageFile) {
+
+        
+        UpdateGoodsRequest request = UpdateGoodsRequest.builder()
+                .goodsName(goodsName)
+                .goodsVersion(goodsVersion)
+                .goodsDescription(goodsDescription)
+                .price(price)
+                .quantity(quantity)
+                .goodsCategory(goodsCategory)
+                .goodsBrand(goodsBrand)
+                .build();        
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request, imageFile))
                 .build();
