@@ -21,6 +21,27 @@ const hasPermission = (token, requiredPermission) => {
     return decodedToken.scope.split(" ").includes(requiredPermission);
 };
 
+// Format price to currency
+const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+};
+
+// Get status badge variant
+const getStatusVariant = (status) => {
+    switch (status) {
+        case 'COMPLETED':
+            return 'bg-success-subtle text-success-emphasis';
+        case 'PROCESSING':
+            return 'bg-primary-subtle text-primary-emphasis';
+        case 'PENDING':
+            return 'bg-warning-subtle text-warning-emphasis';
+        case 'CANCELLED':
+            return 'bg-danger-subtle text-danger-emphasis';
+        default:
+            return 'bg-secondary-subtle text-secondary-emphasis';
+    }
+};
+
 const Dashboard = () => {
     const [stats, setStats] = useState([
         { id: 1, title: "Total Products", value: "...", icon: <FaBoxOpen />, color: "#0d6efd" },
@@ -32,10 +53,12 @@ const Dashboard = () => {
     const [permissions, setPermissions] = useState({
         canViewUsers: false,
         canViewProducts: false,
+        canViewOrders: false,
     });
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [recentOrders, setRecentOrders] = useState([]);
 
     // Check permissions on component mount
     useEffect(() => {
@@ -48,6 +71,7 @@ const Dashboard = () => {
             setPermissions({
                 canViewUsers: hasPermission(token, PERMISSIONS.GET_ALL_USERS),
                 canViewProducts: hasPermission(token, PERMISSIONS.GET_ALL_GOODS),
+                canViewOrders: hasPermission(token, PERMISSIONS.GET_ALL_ORDERS),
             });
         }
     }, []);
@@ -92,6 +116,50 @@ const Dashboard = () => {
                     }
                 }
 
+                // Fetch orders if permitted
+                if (permissions.canViewOrders) {
+                    try {
+                        const ordersResponse = await axios.get(
+                            `${process.env.REACT_APP_API_BASE_URL}/orders/all`,
+                            config
+                        );
+                        if (ordersResponse.data) {
+                            const orders = ordersResponse.data;
+                            // Update total orders count
+                            setStats((currentStats) => {
+                                const newStats = [...currentStats];
+                                newStats[1] = { ...newStats[1], value: orders.length.toString() };
+                                return newStats;
+                            });
+                            
+                            // Calculate total revenue
+                            const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+                            setStats((currentStats) => {
+                                const newStats = [...currentStats];
+                                newStats[3] = { ...newStats[3], value: formatPrice(totalRevenue) };
+                                return newStats;
+                            });
+
+                            // Set recent orders (last 5)
+                            const transformedOrders = orders
+                                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                                .slice(0, 5)
+                                .map(order => ({
+                                    id: order.id,
+                                    customer: order.user?.username || 'Anonymous',
+                                    date: new Date(order.createdAt).toLocaleDateString('vi-VN'),
+                                    status: order.status,
+                                    paymentStatus: order.paymentStatus,
+                                    items: order.orderItems?.length || 0,
+                                    total: order.totalPrice || 0
+                                }));
+                            setRecentOrders(transformedOrders);
+                        }
+                    } catch (error) {
+                        console.error("Error fetching orders:", error);
+                    }
+                }
+
                 // Fetch users count if permitted
                 if (permissions.canViewUsers) {
                     try {
@@ -117,19 +185,10 @@ const Dashboard = () => {
             }
         };
 
-        if (permissions.canViewUsers || permissions.canViewProducts) {
+        if (permissions.canViewUsers || permissions.canViewProducts || permissions.canViewOrders) {
             fetchDashboardData();
         }
     }, [permissions]);
-
-    // Mock data for orders (since API is not available yet)
-    const recentOrders = [
-        { id: "#1234", customer: "John Doe", date: "2023-06-20", status: "Completed", amount: "$129.99" },
-        { id: "#1235", customer: "Jane Smith", date: "2023-06-19", status: "Processing", amount: "$79.99" },
-        { id: "#1236", customer: "Bob Johnson", date: "2023-06-18", status: "Pending", amount: "$249.99" },
-        { id: "#1237", customer: "Alice Brown", date: "2023-06-17", status: "Completed", amount: "$59.99" },
-        { id: "#1238", customer: "Charlie Wilson", date: "2023-06-16", status: "Cancelled", amount: "$189.99" },
-    ];
 
     if (loading) {
         return <div className="admin-page dashboard">Loading dashboard data...</div>;
@@ -183,7 +242,9 @@ const Dashboard = () => {
                                         <th>Customer</th>
                                         <th>Date</th>
                                         <th>Status</th>
-                                        <th>Amount</th>
+                                        <th>Payment Status</th>
+                                        <th>Items</th>
+                                        <th>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -194,21 +255,22 @@ const Dashboard = () => {
                                             <td>{order.date}</td>
                                             <td>
                                                 <span
-                                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${
-                                                        order.status === "Completed"
-                                                            ? "bg-success-subtle text-success-emphasis"
-                                                            : order.status === "Processing"
-                                                            ? "bg-primary-subtle text-primary-emphasis"
-                                                            : order.status === "Pending"
-                                                            ? "bg-warning-subtle text-warning-emphasis"
-                                                            : "bg-danger-subtle text-danger-emphasis"
-                                                    }`}
+                                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${getStatusVariant(order.status)}`}
                                                     style={{ fontSize: "0.85rem" }}
                                                 >
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td>{order.amount}</td>
+                                            <td>
+                                                <span
+                                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${getStatusVariant(order.paymentStatus)}`}
+                                                    style={{ fontSize: "0.85rem" }}
+                                                >
+                                                    {order.paymentStatus}
+                                                </span>
+                                            </td>
+                                            <td>{order.items}</td>
+                                            <td>{formatPrice(order.total)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
