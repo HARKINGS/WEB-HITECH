@@ -15,9 +15,9 @@ jobs:
       - name: Pull/clone & deploy via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          password: ${{ secrets.VPS_PASSWORD }}
+          host: ${{ vars.VPS_HOST }}
+          username: ${{ vars.VPS_USER }}
+          password: ${{ vars.VPS_PASSWORD }}
           port: 22
           script: |
             # where you want your app on the VPS
