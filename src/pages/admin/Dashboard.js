@@ -44,10 +44,10 @@ const getStatusVariant = (status) => {
 
 const Dashboard = () => {
     const [stats, setStats] = useState([
-        { id: 1, title: "Total Products", value: "...", icon: <FaBoxOpen />, color: "#0d6efd" },
-        { id: 2, title: "Total Orders", value: "...", icon: <FaShoppingCart />, color: "#dc3545" },
-        { id: 3, title: "Total Users", value: "...", icon: <FaUsers />, color: "#198754" },
-        { id: 4, title: "Revenue", value: "...", icon: <FaDollarSign />, color: "#ffc107" },
+        { id: 1, title: "Total Products", value: "...", icon: <FaBoxOpen />, color: "var(--accent-color)" },
+        { id: 2, title: "Total Orders", value: "...", icon: <FaShoppingCart />, color: "var(--price-color)" },
+        { id: 3, title: "Total Users", value: "...", icon: <FaUsers />, color: "var(--new-badge-bg)" },
+        { id: 4, title: "Revenue", value: "...", icon: <FaDollarSign />, color: "var(--star-color)" },
     ]);
 
     const [permissions, setPermissions] = useState({
@@ -199,13 +199,17 @@ const Dashboard = () => {
     }
 
     return (
-        <Container fluid className="py-4 bg-dark text-light">
-            <h1 className="mb-4">Dashboard</h1>
+        <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)" }}>
+            <h1 className="mb-4" style={{ color: "var(--text-primary)" }}>Dashboard</h1>
 
             <Row className="g-4 mb-4">
                 {stats.map((stat) => (
                     <Col key={stat.id} xs={12} sm={6} xl={3}>
-                        <Card bg="dark" text="light" className="h-100 border-secondary">
+                        <Card style={{ 
+                            backgroundColor: "var(--background-secondary)",
+                            color: "var(--text-primary)",
+                            border: "1px solid var(--border-color)"
+                        }} className="h-100">
                             <Card.Body className="d-flex align-items-center">
                                 <div
                                     className="rounded-circle p-3 me-3 d-flex align-items-center justify-content-center"
@@ -216,11 +220,11 @@ const Dashboard = () => {
                                         flexShrink: 0,
                                     }}
                                 >
-                                    <div style={{ fontSize: "1.25rem" }}>{stat.icon}</div>
+                                    <div style={{ fontSize: "1.25rem", color: "var(--text-on-accent)" }}>{stat.icon}</div>
                                 </div>
                                 <div>
-                                    <Card.Title className="mb-1 fs-6">{stat.title}</Card.Title>
-                                    <Card.Text className="fs-4 fw-bold mb-0">{stat.value}</Card.Text>
+                                    <Card.Title className="mb-1 fs-6" style={{ color: "var(--text-secondary)" }}>{stat.title}</Card.Title>
+                                    <Card.Text className="fs-4 fw-bold mb-0" style={{ color: "var(--text-primary)" }}>{stat.value}</Card.Text>
                                 </div>
                             </Card.Body>
                         </Card>
@@ -230,13 +234,23 @@ const Dashboard = () => {
 
             <Row>
                 <Col>
-                    <Card bg="dark" text="light" className="border-secondary">
-                        <Card.Header className="border-secondary">
+                    <Card style={{ 
+                        backgroundColor: "var(--background-secondary)",
+                        color: "var(--text-primary)",
+                        border: "1px solid var(--border-color)"
+                    }}>
+                        <Card.Header style={{ borderBottom: "1px solid var(--border-color)" }}>
                             <h5 className="mb-0">Recent Orders</h5>
                         </Card.Header>
                         <Card.Body className="p-0">
-                            <Table responsive hover variant="dark" className="mb-0">
-                                <thead className="border-secondary">
+                            <Table responsive hover className="mb-0" style={{
+                                "--bs-table-bg": "var(--background-secondary)",
+                                "--bs-table-color": "var(--text-primary)",
+                                "--bs-table-border-color": "var(--border-color)",
+                                "--bs-table-hover-bg": "var(--background-primary)",
+                                "--bs-table-hover-color": "var(--text-primary)"
+                            }}>
+                                <thead>
                                     <tr>
                                         <th>Order ID</th>
                                         <th>Customer</th>

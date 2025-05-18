@@ -237,7 +237,7 @@ const Products = () => {
 
     if (loading) {
         return (
-            <Container className="py-4 bg-dark text-light">
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
                 <div>Loading products...</div>
             </Container>
         );
@@ -245,14 +245,14 @@ const Products = () => {
 
     if (error) {
         return (
-            <Container className="py-4 bg-dark">
-                <div className="text-danger">Error: {error}</div>
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)" }}>
+                <div style={{ color: "var(--price-color)" }}>Error: {error}</div>
             </Container>
         );
     }
 
     return (
-        <Container fluid className="py-4 bg-dark text-light">
+        <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
             {/* Product creation/edit modal */}
             <ProductModal
                 isOpen={isModalOpen}
@@ -262,7 +262,7 @@ const Products = () => {
             />
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="text-light">Products</h1>
+                <h1>Products</h1>
                 {permissions.canCreate && (
                     <Button variant="primary" onClick={handleAddProduct}>
                         <FaPlus className="me-2" /> Add New Product
@@ -276,7 +276,11 @@ const Products = () => {
                         <Form.Control
                             type="text"
                             placeholder="Search products..."
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -285,7 +289,11 @@ const Products = () => {
                 <Col md={4}>
                     <Form.Group>
                         <Form.Select
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                             value={selectedCategory}
                             onChange={(e) => setSelectedCategory(e.target.value)}
                         >
@@ -303,7 +311,11 @@ const Products = () => {
                 <Col md={4}>
                     <Form.Group>
                         <Form.Select
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                             value={selectedStatus}
                             onChange={(e) => setSelectedStatus(e.target.value)}
                         >
@@ -316,7 +328,13 @@ const Products = () => {
                 </Col>
             </Row>
 
-            <Table responsive hover variant="dark" className="border-secondary">
+            <Table responsive hover style={{
+                "--bs-table-bg": "var(--background-secondary)",
+                "--bs-table-color": "var(--text-primary)",
+                "--bs-table-border-color": "var(--border-color)",
+                "--bs-table-hover-bg": "var(--background-primary)",
+                "--bs-table-hover-color": "var(--text-primary)"
+            }}>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -334,7 +352,7 @@ const Products = () => {
                             <td>{product.id}</td>
                             <td>{product.name}</td>
                             <td>{product.category}</td>
-                            <td>${product.price}</td>
+                            <td style={{ color: "var(--price-color)" }}>${product.price}</td>
                             <td>{product.stock}</td>
                             <td>
                                 <span
@@ -372,23 +390,23 @@ const Products = () => {
             </Table>
 
             <div className="d-flex justify-content-center mt-4">
-                <Pagination className="pagination-dark">
-                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                <Pagination style={{ "--bs-pagination-bg": "var(--background-secondary)", "--bs-pagination-color": "var(--text-primary)" }}>
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} />
                     {pageNumbers.map((number) => (
                         <Pagination.Item
                             key={number}
                             active={number === currentPage}
                             onClick={() => handlePageChange(number)}
-                            className={number === currentPage ? "active" : "text-light"}
+                            style={number === currentPage ? {
+                                backgroundColor: "var(--accent-color)",
+                                borderColor: "var(--accent-color)",
+                                color: "var(--text-on-accent)"
+                            } : {}}
                         >
                             {number}
                         </Pagination.Item>
                     ))}
-                    <Pagination.Next
-                        onClick={handleNext}
-                        disabled={currentPage === totalPages}
-                        className="text-light"
-                    />
+                    <Pagination.Next onClick={handleNext} disabled={currentPage === totalPages} />
                 </Pagination>
             </div>
         </Container>

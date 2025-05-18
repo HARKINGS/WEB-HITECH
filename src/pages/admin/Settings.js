@@ -134,45 +134,53 @@ const Settings = () => {
 
     if (loading)
         return (
-            <Container fluid className="admin-content p-4">
+            <Container fluid className="p-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
                 <div className="text-center">Loading roles...</div>
             </Container>
         );
 
     if (error)
         return (
-            <Container fluid className="admin-content p-4">
-                <div className="text-center text-danger">{error}</div>
+            <Container fluid className="p-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
+                <div className="text-center" style={{ color: "var(--price-color)" }}>{error}</div>
             </Container>
         );
 
     return (
-        <Container fluid className="admin-content p-4">
+        <Container fluid className="p-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
             <Row>
                 <Col md={4} className="mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h2 className="h4 mb-0 text-light">Quản lý Role</h2>
-                        <Button variant="outline-light" size="sm" onClick={handleCreateRole}>
+                        <h2 className="h4 mb-0">Quản lý Role</h2>
+                        <Button variant="outline-primary" size="sm" onClick={handleCreateRole}>
                             <FaPlus className="me-1" /> Tạo Role mới
                         </Button>
                     </div>
-                    <ListGroup variant="dark">
+                    <ListGroup>
                         {roles.map((role) => (
                             <ListGroup.Item
                                 key={role.name}
-                                className={`d-flex justify-content-between align-items-center bg-dark text-light border-secondary ${
+                                className={`d-flex justify-content-between align-items-center ${
                                     selectedRole?.name === role.name ? "active" : ""
                                 }`}
                                 onClick={() => handleRoleClick(role)}
                                 style={{
                                     cursor: "pointer",
-                                    "--bs-list-group-active-bg": "var(--background-secondary)",
-                                    "--bs-list-group-active-border-color": "var(--border-color)",
+                                    backgroundColor: "var(--background-secondary)",
+                                    color: "var(--text-primary)",
+                                    border: "1px solid var(--border-color)",
+                                    ...(selectedRole?.name === role.name && {
+                                        backgroundColor: "var(--accent-color)",
+                                        color: "var(--text-on-accent)",
+                                        borderColor: "var(--accent-color)"
+                                    })
                                 }}
                             >
                                 <div>
-                                    <div className="fw-bold text-light">{role.name}</div>
-                                    <small className="text-secondary">{role.description}</small>
+                                    <div className="fw-bold">{role.name}</div>
+                                    <small style={{ color: selectedRole?.name === role.name ? "var(--text-on-accent)" : "var(--text-secondary)" }}>
+                                        {role.description}
+                                    </small>
                                 </div>
                                 <div>
                                     <OverlayTrigger
@@ -183,14 +191,14 @@ const Settings = () => {
                                             <Button
                                                 variant="link"
                                                 size="sm"
-                                                className="text-light me-2"
+                                                style={{ color: "var(--text-primary)" }}
+                                                className="me-2"
                                                 title="Edit role"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleEditRole(role);
                                                 }}
                                                 disabled
-                                                style={{ pointerEvents: "none", opacity: 0.5 }}
                                             >
                                                 <FaEdit />
                                             </Button>
@@ -199,7 +207,7 @@ const Settings = () => {
                                     <Button
                                         variant="link"
                                         size="sm"
-                                        className="text-danger"
+                                        style={{ color: "var(--price-color)" }}
                                         title="Delete role"
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -217,23 +225,27 @@ const Settings = () => {
                 <Col md={8}>
                     {selectedRole ? (
                         <div>
-                            <h3 className="h4 mb-3 text-light">Chi tiết Role: {selectedRole.name}</h3>
-                            <p className="text-secondary">{selectedRole.description}</p>
-                            <h4 className="h5 mb-3 text-light">Permissions:</h4>
-                            <ListGroup variant="dark">
+                            <h3 className="h4 mb-3">Chi tiết Role: {selectedRole.name}</h3>
+                            <p style={{ color: "var(--text-secondary)" }}>{selectedRole.description}</p>
+                            <h4 className="h5 mb-3">Permissions:</h4>
+                            <ListGroup>
                                 {selectedRole.permissions.map((permission) => (
                                     <ListGroup.Item
                                         key={permission.name}
-                                        className="bg-dark text-light border-secondary"
+                                        style={{
+                                            backgroundColor: "var(--background-secondary)",
+                                            color: "var(--text-primary)",
+                                            border: "1px solid var(--border-color)"
+                                        }}
                                     >
-                                        <div className="fw-bold text-light">{permission.name}</div>
-                                        <small className="text-secondary">{permission.description}</small>
+                                        <div className="fw-bold">{permission.name}</div>
+                                        <small style={{ color: "var(--text-secondary)" }}>{permission.description}</small>
                                     </ListGroup.Item>
                                 ))}
                             </ListGroup>
                         </div>
                     ) : (
-                        <div className="text-center text-secondary">
+                        <div className="text-center" style={{ color: "var(--text-secondary)" }}>
                             <p>Vui lòng chọn một role để xem chi tiết</p>
                         </div>
                     )}

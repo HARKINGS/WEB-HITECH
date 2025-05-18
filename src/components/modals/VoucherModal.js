@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import { FaTicketAlt } from "react-icons/fa";
+import { Modal, Button, Form, InputGroup } from "react-bootstrap";
+import { FaTicketAlt, FaPercent } from "react-icons/fa";
 
 const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
     const [formData, setFormData] = useState({
         identifiedVoucherId: "",
         voucherName: "",
         voucherDescription: "",
+        discountAmount: "",
         expiryDate: "",
-        validated: true,
     });
     const [errors, setErrors] = useState({});
     const [submitError, setSubmitError] = useState("");
@@ -21,16 +21,16 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
                 identifiedVoucherId: voucher.identifiedVoucherId || "",
                 voucherName: voucher.voucherName || "",
                 voucherDescription: voucher.voucherDescription || "",
+                discountAmount: voucher.discountAmount || "",
                 expiryDate: voucher.expiryDate ? voucher.expiryDate.split("T")[0] : "",
-                validated: voucher.validated ?? true,
             });
         } else {
             setFormData({
                 identifiedVoucherId: "",
                 voucherName: "",
                 voucherDescription: "",
+                discountAmount: "",
                 expiryDate: "",
-                validated: true,
             });
         }
         setErrors({});
@@ -50,6 +50,12 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
 
         if (!formData.voucherDescription.trim()) {
             newErrors.voucherDescription = "Description is required";
+        }
+
+        if (!formData.discountAmount || formData.discountAmount <= 0) {
+            newErrors.discountAmount = "Discount amount must be greater than 0";
+        } else if (formData.discountAmount > 100) {
+            newErrors.discountAmount = "Discount amount cannot exceed 100%";
         }
 
         if (!formData.expiryDate) {
@@ -73,7 +79,13 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
         if (validate()) {
             setIsSubmitting(true);
             try {
-                await onSuccess(formData);
+                // Convert discountAmount to number before submitting
+                const submitData = {
+                    ...formData,
+                    discountAmount: Number(formData.discountAmount),
+                    identifiedVoucherId: Number(formData.identifiedVoucherId)
+                };
+                await onSuccess(submitData);
                 onClose();
             } catch (error) {
                 setSubmitError(
@@ -88,22 +100,26 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
     };
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
+        const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: value,
         }));
     };
 
     return (
-        <Modal show={isOpen} onHide={onClose} size="lg" className="text-light">
-            <Modal.Header closeButton className="bg-dark text-light border-secondary">
+        <Modal show={isOpen} onHide={onClose} size="lg" style={{
+            "--bs-modal-bg": "var(--background-secondary)",
+            "--bs-modal-color": "var(--text-primary)",
+            "--bs-modal-border-color": "var(--border-color)"
+        }}>
+            <Modal.Header closeButton style={{ borderBottom: "1px solid var(--border-color)" }}>
                 <Modal.Title>
                     <FaTicketAlt className="me-2" />
                     {isEditMode ? "Edit Voucher" : "Create New Voucher"}
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body className="bg-dark text-light">
+            <Modal.Body>
                 {submitError && (
                     <div className="alert alert-danger" role="alert">
                         {submitError}
@@ -121,7 +137,11 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
                             onChange={handleChange}
                             isInvalid={!!errors.identifiedVoucherId}
                             disabled={isEditMode}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-primary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                         <Form.Control.Feedback type="invalid">{errors.identifiedVoucherId}</Form.Control.Feedback>
                     </Form.Group>
@@ -135,7 +155,11 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
                             value={formData.voucherName}
                             onChange={handleChange}
                             isInvalid={!!errors.voucherName}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-primary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                         <Form.Control.Feedback type="invalid">{errors.voucherName}</Form.Control.Feedback>
                     </Form.Group>
@@ -150,9 +174,42 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
                             value={formData.voucherDescription}
                             onChange={handleChange}
                             isInvalid={!!errors.voucherDescription}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-primary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                         <Form.Control.Feedback type="invalid">{errors.voucherDescription}</Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Discount Amount (%)*</Form.Label>
+                        <InputGroup>
+                            <Form.Control
+                                type="number"
+                                name="discountAmount"
+                                placeholder="Enter discount percentage"
+                                value={formData.discountAmount}
+                                onChange={handleChange}
+                                isInvalid={!!errors.discountAmount}
+                                min="0"
+                                max="100"
+                                style={{
+                                    backgroundColor: "var(--background-primary)",
+                                    color: "var(--text-primary)",
+                                    border: "1px solid var(--border-color)"
+                                }}
+                            />
+                            <InputGroup.Text style={{
+                                backgroundColor: "var(--background-primary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}>
+                                <FaPercent />
+                            </InputGroup.Text>
+                            <Form.Control.Feedback type="invalid">{errors.discountAmount}</Form.Control.Feedback>
+                        </InputGroup>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -164,25 +221,17 @@ const VoucherModal = ({ isOpen, onClose, voucher, onSuccess }) => {
                             onChange={handleChange}
                             isInvalid={!!errors.expiryDate}
                             min={new Date().toISOString().split("T")[0]}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-primary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                         <Form.Control.Feedback type="invalid">{errors.expiryDate}</Form.Control.Feedback>
                     </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Check
-                            type="switch"
-                            id="validated"
-                            name="validated"
-                            label="Voucher is valid"
-                            checked={formData.validated}
-                            onChange={handleChange}
-                            className="text-light"
-                        />
-                    </Form.Group>
                 </Form>
             </Modal.Body>
-            <Modal.Footer className="bg-dark border-secondary">
+            <Modal.Footer style={{ borderTop: "1px solid var(--border-color)" }}>
                 <Button variant="secondary" onClick={onClose}>
                     Cancel
                 </Button>

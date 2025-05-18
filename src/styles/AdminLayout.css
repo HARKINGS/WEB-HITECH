@@ -101,6 +101,25 @@
 .admin-header-actions {
     display: flex;
     align-items: center;
+    gap: 20px;
+}
+
+.admin-header-actions {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+.admin-header-actions {
+    background-color: var(--background-secondary);
 }
 
 .admin-user {

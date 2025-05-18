@@ -287,7 +287,7 @@ const Users = () => {
 
     if (loading) {
         return (
-            <Container className="py-4 bg-dark text-light">
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
                 <div>Loading users...</div>
             </Container>
         );
@@ -295,14 +295,14 @@ const Users = () => {
 
     if (error) {
         return (
-            <Container className="py-4 bg-dark">
-                <div className="text-danger">Error: {error}</div>
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)" }}>
+                <div style={{ color: "var(--price-color)" }}>Error: {error}</div>
             </Container>
         );
     }
 
     return (
-        <Container fluid className="py-4 bg-dark text-light">
+        <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
             {/* User creation/edit modal */}
             <UserModal
                 isOpen={isModalOpen}
@@ -312,7 +312,7 @@ const Users = () => {
             />
 
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="text-light">Users</h1>
+                <h1>Users</h1>
                 {permissions.canCreate && (
                     <Button variant="primary" onClick={handleAddUser}>
                         <FaUserPlus className="me-2" /> Add New User
@@ -328,7 +328,11 @@ const Users = () => {
                             placeholder="Search users..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                     </Form.Group>
                 </Col>
@@ -337,7 +341,11 @@ const Users = () => {
                         <Form.Select
                             value={selectedRole}
                             onChange={(e) => setSelectedRole(e.target.value)}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         >
                             <option value="">All Roles</option>
                             <option value="ADMIN">Admin</option>
@@ -347,7 +355,13 @@ const Users = () => {
                 </Col>
             </Row>
 
-            <Table responsive hover variant="dark" className="border-secondary align-middle">
+            <Table responsive hover style={{
+                "--bs-table-bg": "var(--background-secondary)",
+                "--bs-table-color": "var(--text-primary)",
+                "--bs-table-border-color": "var(--border-color)",
+                "--bs-table-hover-bg": "var(--background-primary)",
+                "--bs-table-hover-color": "var(--text-primary)"
+            }} className="align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -401,23 +415,23 @@ const Users = () => {
             </Table>
 
             <div className="d-flex justify-content-center mt-4">
-                <Pagination className="pagination-dark">
-                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                <Pagination style={{ "--bs-pagination-bg": "var(--background-secondary)", "--bs-pagination-color": "var(--text-primary)" }}>
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} />
                     {pageNumbers.map((number) => (
                         <Pagination.Item
                             key={number}
                             active={number === currentPage}
                             onClick={() => handlePageChange(number)}
-                            className={number === currentPage ? "active" : "text-light"}
+                            style={number === currentPage ? {
+                                backgroundColor: "var(--accent-color)",
+                                borderColor: "var(--accent-color)",
+                                color: "var(--text-on-accent)"
+                            } : {}}
                         >
                             {number}
                         </Pagination.Item>
                     ))}
-                    <Pagination.Next
-                        onClick={handleNext}
-                        disabled={currentPage === totalPages}
-                        className="text-light"
-                    />
+                    <Pagination.Next onClick={handleNext} disabled={currentPage === totalPages} />
                 </Pagination>
             </div>
         </Container>

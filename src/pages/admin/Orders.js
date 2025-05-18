@@ -127,95 +127,110 @@ const Orders = () => {
                 size="lg"
                 aria-labelledby="order-details-modal"
                 centered
-                className="text-dark"
+                style={{
+                    "--bs-modal-bg": "var(--background-secondary)",
+                    "--bs-modal-color": "var(--text-primary)",
+                    "--bs-modal-border-color": "var(--border-color)"
+                }}
             >
-                <Modal.Header closeButton className="bg-dark text-light">
+                <Modal.Header closeButton style={{ borderBottom: "1px solid var(--border-color)" }}>
                     <Modal.Title id="order-details-modal">
                         Order Details - #{selectedOrder.id}
                     </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="bg-dark text-light">
-                    <div className="mb-4">
-                        <h5>Order Information</h5>
-                        <ListGroup variant="flush">
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Customer:</strong> {selectedOrder.customer}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Date:</strong> {selectedOrder.date}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Status:</strong>{" "}
-                                <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.status)}`}>
-                                    {selectedOrder.status}
-                                </span>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Payment Status:</strong>{" "}
-                                <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.paymentStatus)}`}>
-                                    {selectedOrder.paymentStatus}
-                                </span>
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Payment Method:</strong> {selectedOrder.paymentMethod || 'N/A'}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Transaction ID:</strong> {selectedOrder.transactionId || 'N/A'}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Shipping Address:</strong> {selectedOrder.shippingAddress || 'N/A'}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Voucher:</strong> {selectedOrder.voucher ? selectedOrder.voucher.code : 'N/A'}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Total Price:</strong> {formatPrice(selectedOrder.total)}
-                            </ListGroup.Item>
-                            <ListGroup.Item className="bg-dark text-light">
-                                <strong>Total Discount:</strong> {formatPrice(selectedOrder.totalDiscount)}
-                            </ListGroup.Item>
-                        </ListGroup>
-                    </div>
+                <Modal.Body>
+                    {selectedOrder && (
+                        <>
+                            <div className="mb-4">
+                                <h5>Order Information</h5>
+                                <ListGroup variant="flush">
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Customer:</strong> {selectedOrder.customer}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Date:</strong> {selectedOrder.date}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Status:</strong>{" "}
+                                        <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.status)}`}>
+                                            {selectedOrder.status}
+                                        </span>
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Payment Status:</strong>{" "}
+                                        <span className={`badge rounded-pill ${getStatusVariant(selectedOrder.paymentStatus)}`}>
+                                            {selectedOrder.paymentStatus}
+                                        </span>
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Payment Method:</strong> {selectedOrder.paymentMethod || 'N/A'}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Transaction ID:</strong> {selectedOrder.transactionId || 'N/A'}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Shipping Address:</strong> {selectedOrder.shippingAddress || 'N/A'}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Voucher:</strong> {selectedOrder.voucher ? selectedOrder.voucher.code : 'N/A'}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Total Price:</strong> {formatPrice(selectedOrder.total)}
+                                    </ListGroup.Item>
+                                    <ListGroup.Item style={{ backgroundColor: "var(--background-secondary)", color: "var(--text-primary)", border: "1px solid var(--border-color)" }}>
+                                        <strong>Total Discount:</strong> {formatPrice(selectedOrder.totalDiscount)}
+                                    </ListGroup.Item>
+                                </ListGroup>
+                            </div>
 
-                    <div>
-                        <h5>Order Items</h5>
-                        <ListGroup variant="flush">
-                            {selectedOrder.orderItems.map((item, index) => (
-                                <ListGroup.Item key={item.id || index} className="bg-dark text-light">
-                                    <Row>
-                                        <Col>
-                                            <div className="d-flex justify-content-between align-items-start mb-2">
-                                                <div style={{ maxWidth: '80%' }}>
-                                                    <h6 className="mb-0 text-truncate">
-                                                        {item.goods.goodsName || "Unknown Product"}
-                                                    </h6>
-                                                    <small className="text-light">
-                                                        Item ID: {item.id || "N/A"}
-                                                    </small>
-                                                    <br />
-                                                    <small className="text-light">
-                                                        Goods ID: {item.goods.goodsId || "N/A"}
-                                                    </small>
-                                                </div>
-                                                <div style={{ minWidth: 'fit-content', marginLeft: '8px' }}>
-                                                    <span
-                                                        className={`d-inline-flex  px-3 py-1 small fw-semibold rounded-pill ${getStatusVariant(item.status)}`}
-                                                        style={{ fontSize: "0.65rem" }}
-                                                    >
-                                                        {item.status}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <p className="mb-1">Quantity: {item.quantity}</p>
-                                            <p className="mb-0">User: {item.username || 'N/A'}</p>
-                                        </Col>
-                                    </Row>
-                                </ListGroup.Item>
-                            ))}
-                        </ListGroup>
-                    </div>
+                            <div>
+                                <h5>Order Items</h5>
+                                <ListGroup variant="flush">
+                                    {selectedOrder.orderItems.map((item, index) => (
+                                        <ListGroup.Item 
+                                            key={item.id || index} 
+                                            style={{ 
+                                                backgroundColor: "var(--background-secondary)", 
+                                                color: "var(--text-primary)", 
+                                                border: "1px solid var(--border-color)" 
+                                            }}
+                                        >
+                                            <Row>
+                                                <Col>
+                                                    <div className="d-flex justify-content-between align-items-start mb-2">
+                                                        <div style={{ maxWidth: '80%' }}>
+                                                            <h6 className="mb-0 text-truncate">
+                                                                {item.goods.goodsName || "Unknown Product"}
+                                                            </h6>
+                                                            <small className="text-light">
+                                                                Item ID: {item.id || "N/A"}
+                                                            </small>
+                                                            <br />
+                                                            <small className="text-light">
+                                                                Goods ID: {item.goods.goodsId || "N/A"}
+                                                            </small>
+                                                        </div>
+                                                        <div style={{ minWidth: 'fit-content', marginLeft: '8px' }}>
+                                                            <span
+                                                                className={`d-inline-flex  px-3 py-1 small fw-semibold rounded-pill ${getStatusVariant(item.status)}`}
+                                                                style={{ fontSize: "0.65rem" }}
+                                                            >
+                                                                {item.status}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <p className="mb-1">Quantity: {item.quantity}</p>
+                                                    <p className="mb-0">User: {item.username || 'N/A'}</p>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    ))}
+                                </ListGroup>
+                            </div>
+                        </>
+                    )}
                 </Modal.Body>
-                <Modal.Footer className="bg-dark text-light">
+                <Modal.Footer style={{ borderTop: "1px solid var(--border-color)" }}>
                     <Button variant="secondary" onClick={handleCloseModal}>
                         Close
                     </Button>
@@ -226,7 +241,7 @@ const Orders = () => {
 
     if (loading) {
         return (
-            <Container fluid className="py-4 bg-dark text-light">
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
                 <div>Loading orders...</div>
             </Container>
         );
@@ -234,16 +249,16 @@ const Orders = () => {
 
     if (error) {
         return (
-            <Container fluid className="py-4 bg-dark text-light">
-                <div className="text-danger">Error: {error}</div>
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
+                <div style={{ color: "var(--price-color)" }}>Error: {error}</div>
             </Container>
         );
     }
 
     return (
-        <Container fluid className="py-4 bg-dark text-light">
+        <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="text-light">Orders</h1>
+                <h1>Orders</h1>
             </div>
 
             <Row className="mb-4">
@@ -252,13 +267,21 @@ const Orders = () => {
                         <Form.Control
                             type="text"
                             placeholder="Search orders..."
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                     </Form.Group>
                 </Col>
                 <Col md={4}>
                     <Form.Group>
-                        <Form.Select className="bg-dark text-light border-secondary">
+                        <Form.Select style={{
+                            backgroundColor: "var(--background-secondary)",
+                            color: "var(--text-primary)",
+                            border: "1px solid var(--border-color)"
+                        }}>
                             <option value="">All Status</option>
                             <option value="COMPLETED">Completed</option>
                             <option value="PROCESSING">Processing</option>
@@ -269,12 +292,25 @@ const Orders = () => {
                 </Col>
                 <Col md={4}>
                     <Form.Group>
-                        <Form.Control type="date" className="bg-dark text-light border-secondary" />
+                        <Form.Control 
+                            type="date" 
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
+                        />
                     </Form.Group>
                 </Col>
             </Row>
 
-            <Table responsive hover variant="dark" className="border-secondary">
+            <Table responsive hover style={{
+                "--bs-table-bg": "var(--background-secondary)",
+                "--bs-table-color": "var(--text-primary)",
+                "--bs-table-border-color": "var(--border-color)",
+                "--bs-table-hover-bg": "var(--background-primary)",
+                "--bs-table-hover-color": "var(--text-primary)"
+            }}>
                 <thead>
                     <tr>
                         <th>Order ID</th>
@@ -310,7 +346,7 @@ const Orders = () => {
                                 </span>
                             </td>
                             <td>{order.items}</td>
-                            <td>{formatPrice(order.total)}</td>
+                            <td style={{ color: "var(--price-color)" }}>{formatPrice(order.total)}</td>
                             <td>
                                 <Button variant="outline-info" size="sm" onClick={() => handleShowModal(order)}>
                                     <FaEye />
@@ -322,23 +358,23 @@ const Orders = () => {
             </Table>
 
             <div className="d-flex justify-content-center mt-4">
-                <Pagination className="pagination-dark">
-                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                <Pagination style={{ "--bs-pagination-bg": "var(--background-secondary)", "--bs-pagination-color": "var(--text-primary)" }}>
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} />
                     {pageNumbers.map((number) => (
                         <Pagination.Item
                             key={number}
                             active={number === currentPage}
                             onClick={() => handlePageChange(number)}
-                            className={number === currentPage ? "active" : "text-light"}
+                            style={number === currentPage ? {
+                                backgroundColor: "var(--accent-color)",
+                                borderColor: "var(--accent-color)",
+                                color: "var(--text-on-accent)"
+                            } : {}}
                         >
                             {number}
                         </Pagination.Item>
                     ))}
-                    <Pagination.Next
-                        onClick={handleNext}
-                        disabled={currentPage === totalPages}
-                        className="text-light"
-                    />
+                    <Pagination.Next onClick={handleNext} disabled={currentPage === totalPages} />
                 </Pagination>
             </div>
 
