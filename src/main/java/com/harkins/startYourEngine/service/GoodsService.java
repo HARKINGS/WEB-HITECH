@@ -3,6 +3,8 @@ package com.harkins.startYourEngine.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.harkins.startYourEngine.exception.AppException;
+import com.harkins.startYourEngine.exception.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,14 +58,15 @@ public class GoodsService {
     @PreAuthorize("hasAuthority('CREATE_GOODS')")
     public GoodsResponse createGoods(CreateGoodsRequest request) {
         if (goodsRepository.existsByGoodsName(request.getGoodsName()))
-            throw new RuntimeException("Goods already exists");
+            throw new AppException(ErrorCode.GOODS_EXISTED);
         Goods goods = goodsMapper.toGoods(request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
 
     @PreAuthorize("hasAuthority('GET_GOODS_BY_ID')")
     public GoodsResponse getGoodsById(String goodsId) {
-        Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new RuntimeException("Goods not found!"));
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
         return goodsMapper.toGoodsResponse(goods);
     }
 
@@ -71,9 +74,7 @@ public class GoodsService {
     public List<GoodsResponse> getGoodsByName(String goodsName) {
         List<Goods> goodsList = goodsRepository.findByGoodsNameContainingIgnoreCase(goodsName);
 
-        if (goodsList.isEmpty()) {
-            throw new EntityNotFoundException("No goods found with name '" + goodsName + "'");
-        }
+        if (goodsList.isEmpty()) throw new AppException(ErrorCode.GOODS_NOT_FOUND);
 
         return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
     }
@@ -82,9 +83,7 @@ public class GoodsService {
     public List<GoodsResponse> getGoodsByCategory(String goodsCategory) {
         List<Goods> goodsList = goodsRepository.findByGoodsCategory(goodsCategory);
 
-        if (goodsList.isEmpty()) {
-            throw new EntityNotFoundException("No goods found with category '" + goodsCategory + "'");
-        }
+        if (goodsList.isEmpty()) throw new AppException(ErrorCode.GOODS_NOT_FOUND);
 
         return goodsList.stream().map(goodsMapper::toGoodsResponse).collect(Collectors.toList());
     }
@@ -98,7 +97,8 @@ public class GoodsService {
 
     @PreAuthorize("hasAuthority('UPDATE_GOODS')")
     public GoodsResponse updateGoods(String goodsId, UpdateGoodsRequest request) {
-        Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new RuntimeException("Goods not found!"));
+        Goods goods = goodsRepository.findById(goodsId)
+                .orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
         goodsMapper.updateGoods(goods, request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
