@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateGoodsRequest {
+
     @NotBlank(message = "NOT_EMPTY")
     String goodsName;
 
@@ -30,6 +31,5 @@ public class CreateGoodsRequest {
     @NotBlank(message = "NOT_EMPTY")
     String goodsBrand;
 
-    @NotBlank(message = "NOT_EMPTY")
     String goodsImageURL;
 }

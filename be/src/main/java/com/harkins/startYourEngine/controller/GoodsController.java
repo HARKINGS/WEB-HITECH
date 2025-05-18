@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
@@ -23,7 +24,6 @@ import com.harkins.startYourEngine.service.GoodsReviewService;
 import com.harkins.startYourEngine.service.GoodsService;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-@Builder
 @RequestMapping("/goods")
 public class GoodsController {
 
@@ -53,16 +52,34 @@ public class GoodsController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            log.error("Error retrieving goods details: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to retrieve goods details: " + e.getMessage());
         }
     }
 
-    @PostMapping
-    ApiResponse<GoodsResponse> createGoods(@Valid @RequestBody CreateGoodsRequest request) {
+    @PostMapping()
+    public ApiResponse<GoodsResponse> createGoods(
+            @RequestParam("goodsName") String goodsName,
+            @RequestParam("goodsVersion") String goodsVersion,
+            @RequestParam("goodsDescription") String goodsDescription,
+            @RequestParam("price") Long price,
+            @RequestParam("quantity") Long quantity,
+            @RequestParam("goodsCategory") String goodsCategory,
+            @RequestParam("goodsBrand") String goodsBrand,
+            @RequestParam("imageFile") MultipartFile imageFile) {
+
+        CreateGoodsRequest request = CreateGoodsRequest.builder()
+                .goodsName(goodsName)
+                .goodsVersion(goodsVersion)
+                .goodsDescription(goodsDescription)
+                .price(price)
+                .quantity(quantity)
+                .goodsCategory(goodsCategory)
+                .goodsBrand(goodsBrand)
+                .build();
+
         return ApiResponse.<GoodsResponse>builder()
-                .result(goodsService.createGoods(request))
+                .result(goodsService.createGoods(request, imageFile))
                 .build();
     }
 
@@ -139,9 +156,11 @@ public class GoodsController {
 
     @PutMapping("/{goodsId}")
     ApiResponse<GoodsResponse> updateGoods(
-            @PathVariable("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
+            @PathVariable("goodsId") String goodsId,
+            @Valid @RequestBody UpdateGoodsRequest request,
+            @RequestParam("imageFile") MultipartFile imageFile) {
         return ApiResponse.<GoodsResponse>builder()
-                .result(goodsService.updateGoods(goodsId, request))
+                .result(goodsService.updateGoods(goodsId, request, imageFile))
                 .build();
     }
 

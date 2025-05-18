@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
@@ -26,8 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GoodsService {
 
-    GoodsRepository goodsRepository;
-    GoodsMapper goodsMapper;
+    private final GoodsRepository goodsRepository;
+    private final GoodsMapper goodsMapper;
+    private final FileStorageService fileStorageService;
 
     @PreAuthorize("hasAuthority('GET_GOODS_BY_RATING')")
     public List<GoodsResponse> getGoodsByMinRating(int minRating) {
@@ -51,8 +53,14 @@ public class GoodsService {
     }
 
     @PreAuthorize("hasAuthority('CREATE_GOODS')")
-    public GoodsResponse createGoods(CreateGoodsRequest request) {
-        if (goodsRepository.existsByGoodsName(request.getGoodsName())) throw new AppException(ErrorCode.GOODS_EXISTED);
+    public GoodsResponse createGoods(CreateGoodsRequest request, MultipartFile imageFile) {
+        if (goodsRepository.existsByGoodsName(request.getGoodsName())) {
+            throw new AppException(ErrorCode.GOODS_EXISTED);
+        }
+
+        String imageUrl = fileStorageService.storeFile(imageFile, null);
+        request.setGoodsImageURL(imageUrl);
+
         Goods goods = goodsMapper.toGoods(request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
@@ -89,8 +97,24 @@ public class GoodsService {
     }
 
     @PreAuthorize("hasAuthority('UPDATE_GOODS')")
-    public GoodsResponse updateGoods(String goodsId, UpdateGoodsRequest request) {
+    public GoodsResponse updateGoods(String goodsId, UpdateGoodsRequest request, MultipartFile imageFile) {
         Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
+
+        if (request.getGoodsName() != null && !request.getGoodsName().equals(goods.getGoodsName())) {
+            if (goodsRepository.existsByGoodsName(request.getGoodsName())) {
+                throw new AppException(ErrorCode.GOODS_EXISTED);
+            }
+        }
+
+        String oldImageUrl = goods.getGoodsImageURL();
+        String newImageUrl = fileStorageService.storeFile(imageFile, oldImageUrl);
+
+        if (newImageUrl.isEmpty() && oldImageUrl != null && !oldImageUrl.isEmpty()) {
+            request.setGoodsImageURL(oldImageUrl);
+        } else {
+            request.setGoodsImageURL(newImageUrl);
+        }
+
         goodsMapper.updateGoods(goods, request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }

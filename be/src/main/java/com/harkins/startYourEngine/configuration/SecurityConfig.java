@@ -26,7 +26,9 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
     private static final String[] ALL_METHOD_PUBLIC_ENDPOINTS = {"/orders/**", "/zalopay/**"};
     private static final String[] POST_PUBLIC_ENDPOINTS = {"/auth/**", "/reviews/create"};
-    private static final String[] GET_PUBLIC_ENDPOINTS = {"/goods/**", "/reviews", "/vouchers", "/vouchers/**"};
+    private static final String[] GET_PUBLIC_ENDPOINTS = {
+        "/goods/**", "/reviews", "/vouchers", "/vouchers/**", "/files/upload"
+    };
 
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
@@ -71,6 +73,13 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
                         .permitAll()
+                        // Cho phép tất cả xem ảnh
+                        .requestMatchers(HttpMethod.GET, "/files/**")
+                        .permitAll()
+
+                        // Chỉ STAFF và ADMIN mới được upload ảnh
+                        .requestMatchers(HttpMethod.POST, "/files/upload")
+                        .hasAnyRole("STAFF", "ADMIN")
                         .anyRequest()
                         .authenticated())
                 .anonymous(anon -> anon.authorities(userPermissions.toArray(new String[0])))
