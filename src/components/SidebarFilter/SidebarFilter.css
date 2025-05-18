@@ -46,7 +46,7 @@
   align-items: center;
   cursor: pointer;
   font-size: 0.9rem;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 .filter-content ul li label:hover {
   color: var(--text-accent);

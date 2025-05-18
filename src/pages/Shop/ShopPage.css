@@ -59,6 +59,7 @@
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
+    text-align: center;
   }
   
   /* --- Shop Container Layout --- */
