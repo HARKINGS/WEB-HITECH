@@ -3086,7 +3086,7 @@
     "/orders/create": {
       "post": {
         "tags": [
-          "Orders"
+          "Order"
         ],
         "summary": "Place a new order",
         "description": "Creates a new order in the system",
@@ -3149,6 +3149,9 @@
     },
     "/orders/update-item-status/{orderItemId}": {
       "get": {
+        "tags": [
+          "Order"
+        ],
         "description": "New endpoint",
         "responses": {
           "200": {
