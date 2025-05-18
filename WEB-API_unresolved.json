@@ -19,6 +19,50 @@
         "scheme" : "bearer",
         "bearerFormat" : "JWT"
       }
+    },
+    "schemas": {
+      "ApiResponseOfGoodsList": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 1000
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoodsResponse"
+            }
+          }
+        }
+      },
+      "GoodsResponse": {
+        "type": "object",
+        "properties": {
+          "goodsId": {
+            "type": "string",
+            "example": "abc-123"
+          },
+          "goodsName": {
+            "type": "string",
+            "example": "Tai nghe Bluetooth"
+          },
+          "goodsCategory": {
+            "type": "string",
+            "example": "Âm thanh"
+          },
+          "goodsBrand": {
+            "type": "string",
+            "example": "Sony"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "example": 1290000
+          }
+        }
+      }
+
     }
   },
   "paths" : {
@@ -1409,6 +1453,75 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/by-rating": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Lấy danh sách sản phẩm có điểm đánh giá trung bình >= min",
+        "operationId": "getGoodsByRating",
+        "parameters": [
+          {
+            "name": "min",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "float",
+              "example": 4.0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm phù hợp",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/sort-name-asc": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Sắp xếp sản phẩm theo tên từ A đến Z",
+        "operationId": "getGoodsSortedByNameAsc",
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm A-Z",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/goods/sort-name-desc": {
+      "get": {
+        "tags": ["Goods"],
+        "description": "Sắp xếp sản phẩm theo tên từ Z đến A",
+        "operationId": "getGoodsSortedByNameDesc",
+        "responses": {
+          "200": {
+            "description": "Danh sách sản phẩm Z-A",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfGoodsList"
                 }
               }
             }

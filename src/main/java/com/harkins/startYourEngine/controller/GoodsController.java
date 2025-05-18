@@ -116,6 +116,27 @@ public class GoodsController {
                 .build();
     }
 
+    @GetMapping("/by-rating")
+    public ApiResponse<List<GoodsResponse>> getGoodsByRating(@RequestParam("min") int minRating) {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsByMinRating(minRating))
+                .build();
+    }
+
+    @GetMapping("/sort-name-asc")
+    public ApiResponse<List<GoodsResponse>> sortByNameAsc() {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsSortedByNameAsc())
+                .build();
+    }
+
+    @GetMapping("/sort-name-desc")
+    public ApiResponse<List<GoodsResponse>> sortByNameDesc() {
+        return ApiResponse.<List<GoodsResponse>>builder()
+                .result(goodsService.getGoodsSortedByNameDesc())
+                .build();
+    }
+
     @PutMapping("/{goodsId}")
     ApiResponse<GoodsResponse> updateGoods(@PathVariable("goodsId") String goodsId,
                                            @Valid @RequestBody UpdateGoodsRequest request) {

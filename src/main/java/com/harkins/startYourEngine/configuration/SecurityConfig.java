@@ -40,6 +40,8 @@ public class SecurityConfig {
             "GET_GOODS_BY_BRANCH",
             "GET_GOODS_BY_PRICE_RANGE",
             "GET_GOODS_BY_PRICE",
+            "GET_GOODS_BY_RATING",
+            "GET_GOODS_SORTED",
             "GET_VOUCHER",
             "GET_ALL_VOUCHERS",
             "CREATE_REVIEWS",

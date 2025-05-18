@@ -65,6 +65,8 @@ public class ApplicationInitConfig {
 
         //        GoodsService
         addPermission("CREATE_GOODS", "Create a goods");
+        addPermission("GET_GOODS_BY_RATING", "Lọc hàng hóa theo đánh giá");
+        addPermission("GET_GOODS_SORTED", "Sắp xếp hàng hóa theo tên");
         addPermission("GET_ALL_GOODS", "Get info of all goods");
         addPermission("GET_GOODS_BY_PRICE", "Get GoodsList by Price");
         addPermission("GET_GOODS_BY_PRICE_RANGE", "Get GoodsList By Price Range");
@@ -136,6 +138,8 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_BRANCH",
                         "GET_GOODS_BY_PRICE_RANGE",
                         "GET_GOODS_BY_PRICE",
+                        "GET_GOODS_BY_RATING",
+                        "GET_GOODS_SORTED",
                         "GET_VOUCHER",
                         "GET_ALL_VOUCHERS",
                         "CREATE_REVIEWS",
@@ -167,6 +171,8 @@ public class ApplicationInitConfig {
                         "GET_GOODS_BY_BRANCH",
                         "GET_GOODS_BY_PRICE_RANGE",
                         "GET_GOODS_BY_PRICE",
+                        "GET_GOODS_BY_RATING",
+                        "GET_GOODS_SORTED",
                         "CREATE_VOUCHER",
                         "DELETE_VOUCHER",
                         "GET_VOUCHER",

@@ -1,5 +1,6 @@
 package com.harkins.startYourEngine.service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -72,11 +73,28 @@ public class UserService {
     public UserResponse updateUser(String userId, UpdateUserRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        if (request.getPassword() != null && request.getPassword().length() < 6) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        if (request.getDob() != null) {
+            LocalDate today = LocalDate.now();
+            LocalDate minDateOfBirth = today.minusYears(18);
+
+            if (request.getDob().isAfter(minDateOfBirth)) {
+                throw new AppException(ErrorCode.INVALID_DOB);
+            }
+
+            user.setDob(request.getDob());
+        }
+
         userMapper.updateUser(user, request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
+        if (request.getRoles() != null) {
+            user.setRoles(new HashSet<>(roles));
+        }
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

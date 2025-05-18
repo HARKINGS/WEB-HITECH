@@ -29,6 +29,30 @@ public class GoodsService {
     GoodsRepository goodsRepository;
     GoodsMapper goodsMapper;
 
+    @PreAuthorize("hasAuthority('GET_GOODS_BY_RATING')")
+    public List<GoodsResponse> getGoodsByMinRating(int minRating) {
+        return goodsRepository.findByAverageRatingGreaterThanEqual(minRating)
+                .stream()
+                .map(goodsMapper::toGoodsResponse)
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('GET_GOODS_SORTED')")
+    public List<GoodsResponse> getGoodsSortedByNameAsc() {
+        return goodsRepository.findAllByOrderByGoodsNameAsc()
+                .stream()
+                .map(goodsMapper::toGoodsResponse)
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAuthority('GET_GOODS_SORTED')")
+    public List<GoodsResponse> getGoodsSortedByNameDesc() {
+        return goodsRepository.findAllByOrderByGoodsNameDesc()
+                .stream()
+                .map(goodsMapper::toGoodsResponse)
+                .collect(Collectors.toList());
+    }
+
     @PreAuthorize("hasAuthority('CREATE_GOODS')")
     public GoodsResponse createGoods(CreateGoodsRequest request) {
         if (goodsRepository.existsByGoodsName(request.getGoodsName()))
