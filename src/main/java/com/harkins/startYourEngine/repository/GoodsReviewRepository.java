@@ -14,5 +14,5 @@ public interface GoodsReviewRepository extends JpaRepository<GoodsReview, String
 
     boolean existsByGoodsAndUserName(Goods goods, String userName);
 
-//    List<Goods> findGoodsByRating(double rating);
+    //    List<Goods> findGoodsByRating(double rating);
 }

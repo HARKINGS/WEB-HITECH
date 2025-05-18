@@ -1,5 +1,6 @@
 package com.harkins.startYourEngine.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,34 +41,64 @@ public class OrderService {
     @PreAuthorize("hasAuthority('PLACE_ORDER')")
     @Transactional(rollbackFor = Exception.class)
     public OrderResponse placeOrder(CreateOrderRequest request) throws NotFoundException {
-        // Lấy voucher (nếu có)
+        // Validate request
+        if (request.getOrderItems() == null || request.getOrderItems().isEmpty()) {
+            throw new IllegalArgumentException("Order must contain at least one item");
+        }
+
+        // Lấy và validate voucher (nếu có)
         Voucher voucher = null;
-        if (request.getVoucherId() != null) {
-            voucher = voucherRepo.findById(request.getVoucherId()).orElse(null);
+        if (request.getVoucher() != null) {
+            voucher = voucherRepo
+                    .findById(request.getVoucher().getVoucherId())
+                    .orElseThrow(() -> new IllegalArgumentException("Voucher not found"));
+
+            // Kiểm tra voucher còn hiệu lực không
+            if (voucher.getExpiryDate().isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Voucher has expired");
+            }
+
+            // Kiểm tra voucher đã được sử dụng chưa
+            if (voucher.isValidated()) {
+                throw new IllegalArgumentException("Voucher has already been used");
+            }
         }
 
         // Tạo đơn hàng mới
         Order order = new Order();
-        order.setShippingAddress(request.getShippingAddress());
-        order.setVoucher(voucher);
-        order.setTotalPrice(request.getTotalPrice());
-        order.setTotalDiscount(request.getTotalDiscount());
-        if (request.getPaymentMethod() == PaymentMethod.ZALOPAY || request.getPaymentMethod() == PaymentMethod.VNPAY) {
-            order.setStatus(OrderStatus.PROCESSING);
-            order.setPaymentStatus(PaymentStatus.PROCESSING);
-            order.setPaymentMethod(request.getPaymentMethod().toString());
+
+        // Tính toán giá cuối cùng
+        if (voucher != null) {
+            double discountAmount = voucher.getDiscountAmount() / 100.0;
+            double discountedPrice = request.getTotalPrice() * (1 - discountAmount);
+            order.setFinalPrice(discountedPrice);
+            order.setVoucher(voucher);
+            // Đánh dấu voucher đã sử dụng
+            voucher.setValidated(true);
+            voucherRepo.save(voucher);
         } else {
-            order.setStatus(OrderStatus.PENDING);
-            order.setPaymentStatus(PaymentStatus.PENDING);
-            order.setPaymentMethod(request.getPaymentMethod().toString());
+            // Nếu không có voucher, finalPrice = totalPrice
+            order.setFinalPrice(request.getTotalPrice().doubleValue());
         }
 
-        // Xử lý các item
+        order.setShippingAddress(request.getShippingAddress());
+        order.setTotalPrice(request.getTotalPrice());
+
+        // Xử lý các item và kiểm tra tồn kho
         List<OrderItem> orderItems = new ArrayList<>();
         for (CreateOrderItemRequest itemReq : request.getOrderItems()) {
             Goods goods = goodsRepo
                     .findById(itemReq.getGoodsId())
-                    .orElseThrow(() -> new RuntimeException("Goods not found with id: " + itemReq.getGoodsId()));
+                    .orElseThrow(
+                            () -> new IllegalArgumentException("Goods not found with id: " + itemReq.getGoodsId()));
+            // Kiểm tra số lượng tồn kho
+            if (goods.getQuantity() < itemReq.getQuantity()) {
+                throw new IllegalArgumentException("Insufficient stock for goods: " + goods.getGoodsName());
+            }
+
+            // Cập nhật số lượng tồn kho
+            goods.setQuantity(goods.getQuantity() - itemReq.getQuantity());
+            goodsRepo.save(goods);
 
             OrderItem item = new OrderItem();
             item.setGoods(goods);
@@ -79,6 +110,16 @@ public class OrderService {
         }
 
         order.setOrderItems(orderItems);
+
+        // Set trạng thái đơn hàng và thanh toán
+        if (request.getPaymentMethod() == PaymentMethod.ZALOPAY || request.getPaymentMethod() == PaymentMethod.VNPAY) {
+            order.setStatus(OrderStatus.PROCESSING);
+            order.setPaymentStatus(PaymentStatus.PROCESSING);
+        } else {
+            order.setStatus(OrderStatus.PENDING);
+            order.setPaymentStatus(PaymentStatus.PENDING);
+        }
+        order.setPaymentMethod(request.getPaymentMethod().toString());
 
         // Lưu đơn hàng
         Order savedOrder = orderRepo.save(order);

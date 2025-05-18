@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,4 +36,8 @@ public class Voucher {
 
     String voucherName;
     String voucherDescription;
+
+    @Min(value = 0, message = "Discount amount must be greater than or equal to 0")
+    @Max(value = 100, message = "Discount amount must be less than or equal to 100")
+    Double discountAmount;
 }

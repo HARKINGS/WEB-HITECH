@@ -18,4 +18,5 @@ public class VoucherResponse {
 
     String voucherName;
     String voucherDescription;
+    Double discountAmount;
 }

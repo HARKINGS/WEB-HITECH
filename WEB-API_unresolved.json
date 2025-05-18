@@ -2305,6 +2305,10 @@
                   "voucherDescription" : {
                     "type" : "string",
                     "example" : "Giảm 10% mặt hàng giá từ 10tr trở lên"
+                  },
+                  "discountAmount" : {
+                    "type" : "number",
+                    "example" : 10
                   }
                 }
               }
@@ -3113,11 +3117,16 @@
                       "required": ["goodsId", "quantity"]
                     }
                   },
-                  "address": {
+                  "shippingAddress": {
                     "type": "string"
                   },
-                  "voucherId": {
-                    "type": "string"
+                  "voucher": {
+                    "type": "object",
+                    "properties": {
+                      "voucherId": {
+                        "type": "string"
+                      }
+                    }
                   },
                   "paymentMethod": {
                     "type": "string"
@@ -3134,7 +3143,8 @@
                   "address",
                   "paymentMethod",
                   "totalPrice",
-                  "totalDiscount"
+                  "totalDiscount",
+                  "finalPrice"
                 ]
               }
             }

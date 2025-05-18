@@ -25,15 +25,14 @@ public interface GoodsRepository extends JpaRepository<Goods, String> {
     List<Goods> findByPriceBetween(Long minPrice, Long maxPrice);
 
     @Query("""
-        SELECT g FROM Goods g
-        JOIN g.goodsReviews r
-        GROUP BY g
-        HAVING AVG(r.rating) >= :minRating
-    """)
+		SELECT g FROM Goods g
+		JOIN g.goodsReviews r
+		GROUP BY g
+		HAVING AVG(r.rating) >= :minRating
+	""")
     List<Goods> findByAverageRatingGreaterThanEqual(@Param("minRating") int minRating);
 
     List<Goods> findAllByOrderByGoodsNameAsc();
 
     List<Goods> findAllByOrderByGoodsNameDesc();
-
 }

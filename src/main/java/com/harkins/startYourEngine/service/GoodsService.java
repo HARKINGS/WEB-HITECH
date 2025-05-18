@@ -3,10 +3,6 @@ package com.harkins.startYourEngine.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.harkins.startYourEngine.exception.AppException;
-import com.harkins.startYourEngine.exception.ErrorCode;
-import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +10,8 @@ import com.harkins.startYourEngine.dto.request.CreateGoodsRequest;
 import com.harkins.startYourEngine.dto.request.UpdateGoodsRequest;
 import com.harkins.startYourEngine.dto.response.GoodsResponse;
 import com.harkins.startYourEngine.entity.Goods;
+import com.harkins.startYourEngine.exception.AppException;
+import com.harkins.startYourEngine.exception.ErrorCode;
 import com.harkins.startYourEngine.mapper.GoodsMapper;
 import com.harkins.startYourEngine.repository.GoodsRepository;
 
@@ -33,40 +31,35 @@ public class GoodsService {
 
     @PreAuthorize("hasAuthority('GET_GOODS_BY_RATING')")
     public List<GoodsResponse> getGoodsByMinRating(int minRating) {
-        return goodsRepository.findByAverageRatingGreaterThanEqual(minRating)
-                .stream()
+        return goodsRepository.findByAverageRatingGreaterThanEqual(minRating).stream()
                 .map(goodsMapper::toGoodsResponse)
                 .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('GET_GOODS_SORTED')")
     public List<GoodsResponse> getGoodsSortedByNameAsc() {
-        return goodsRepository.findAllByOrderByGoodsNameAsc()
-                .stream()
+        return goodsRepository.findAllByOrderByGoodsNameAsc().stream()
                 .map(goodsMapper::toGoodsResponse)
                 .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('GET_GOODS_SORTED')")
     public List<GoodsResponse> getGoodsSortedByNameDesc() {
-        return goodsRepository.findAllByOrderByGoodsNameDesc()
-                .stream()
+        return goodsRepository.findAllByOrderByGoodsNameDesc().stream()
                 .map(goodsMapper::toGoodsResponse)
                 .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('CREATE_GOODS')")
     public GoodsResponse createGoods(CreateGoodsRequest request) {
-        if (goodsRepository.existsByGoodsName(request.getGoodsName()))
-            throw new AppException(ErrorCode.GOODS_EXISTED);
+        if (goodsRepository.existsByGoodsName(request.getGoodsName())) throw new AppException(ErrorCode.GOODS_EXISTED);
         Goods goods = goodsMapper.toGoods(request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }
 
     @PreAuthorize("hasAuthority('GET_GOODS_BY_ID')")
     public GoodsResponse getGoodsById(String goodsId) {
-        Goods goods = goodsRepository.findById(goodsId)
-                .orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
+        Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
         return goodsMapper.toGoodsResponse(goods);
     }
 
@@ -97,8 +90,7 @@ public class GoodsService {
 
     @PreAuthorize("hasAuthority('UPDATE_GOODS')")
     public GoodsResponse updateGoods(String goodsId, UpdateGoodsRequest request) {
-        Goods goods = goodsRepository.findById(goodsId)
-                .orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
+        Goods goods = goodsRepository.findById(goodsId).orElseThrow(() -> new AppException(ErrorCode.GOODS_NOT_FOUND));
         goodsMapper.updateGoods(goods, request);
         return goodsMapper.toGoodsResponse(goodsRepository.save(goods));
     }

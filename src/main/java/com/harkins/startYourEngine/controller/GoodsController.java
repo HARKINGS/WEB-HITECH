@@ -109,8 +109,8 @@ public class GoodsController {
     }
 
     @GetMapping("/{minPrice}_{maxPrice}")
-    ApiResponse<List<GoodsResponse>> getGoodsByPrice(@PathVariable("minPrice") Long minPrice,
-                                                     @PathVariable("maxPrice") Long maxPrice) {
+    ApiResponse<List<GoodsResponse>> getGoodsByPrice(
+            @PathVariable("minPrice") Long minPrice, @PathVariable("maxPrice") Long maxPrice) {
         return ApiResponse.<List<GoodsResponse>>builder()
                 .result(goodsService.getGoodsByPriceRange(minPrice, maxPrice))
                 .build();
@@ -138,8 +138,8 @@ public class GoodsController {
     }
 
     @PutMapping("/{goodsId}")
-    ApiResponse<GoodsResponse> updateGoods(@PathVariable("goodsId") String goodsId,
-                                           @Valid @RequestBody UpdateGoodsRequest request) {
+    ApiResponse<GoodsResponse> updateGoods(
+            @PathVariable("goodsId") String goodsId, @Valid @RequestBody UpdateGoodsRequest request) {
         return ApiResponse.<GoodsResponse>builder()
                 .result(goodsService.updateGoods(goodsId, request))
                 .build();

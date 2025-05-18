@@ -28,7 +28,7 @@ public class CreateGoodsReviewRequest {
     @Min(value = 1, message = "Rating must be between 1 and 5")
     @Max(value = 5, message = "Rating must be between 1 and 5")
     Integer rating;
-//    double rating;
+    //    double rating;
 
     @NotBlank(message = "NOT_EMPTY")
     Date createdAt;
