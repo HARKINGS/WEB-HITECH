@@ -1,0 +1,342 @@
+/* ShopPage.css */
+
+/* --- Biến màu Dark Theme (Ví dụ) --- */
+.dark-theme {
+    --shop-bg: #111111;
+    --widget-bg: #1c1c1c; /* Nền widget sidebar/card tối nhẹ */
+    --text-color-primary: #e0e0e0; /* Chữ chính sáng */
+    --text-color-secondary: #a0a0a0; /* Chữ phụ xám */
+    --border-color-light: #333333; /* Border sáng hơn trên nền tối */
+    --border-color-dark: #000000; /* Border tối hơn */
+    /* --accent-text-color: #111111;  */
+    --link-hover-color: var(--accent-color);
+    --card-bg: #ffffff; /* **NOTE**: Card sản phẩm nền trắng như ảnh */
+    --card-text: #1c1c1c; 
+    --card-border-hover: #e0e0e0;
+  }
+  
+  .shop-page {
+    /* background-color: var(--shop-bg); */
+    color: var(--text-color-primary);
+    padding: 100px 0 50px 0; /* Bỏ padding top, thêm padding bottom */
+  }
+  
+  .container {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  /* --- Shop Header (Breadcrumbs & Title) --- */
+  .shop-header {
+    padding: 25px 15px; /* Padding cho header */
+    border-bottom: 1px solid var(--border-color-light);
+    margin-bottom: 30px;
+  }
+  
+  .breadcrumbs {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 8px;
+  }
+  
+  .breadcrumbs a {
+    color: var(--text-color-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  
+  .breadcrumbs a:hover {
+    color: var(--link-hover-color);
+  }
+  
+  .breadcrumbs span {
+    color: var(--text-color-primary); /* Phần trang hiện tại sáng hơn */
+  }
+  
+  h1.page-title {
+    font-size: 2rem; /* To hơn */
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    text-align: center;
+  }
+  
+  /* --- Shop Container Layout --- */
+  .shop-container {
+    display: grid;
+    /* Layout: Sidebar bên trái, content bên phải */
+    grid-template-columns: 20% 80%; /* Tăng nhẹ chiều rộng sidebar */
+    gap: 35px; /* Tăng khoảng cách */
+  }
+  
+  /* --- Sidebar --- */
+  .shop-sidebar {
+
+    .filter-widget {
+      background-color: var(--widget-bg);
+      padding: 20px;
+      margin-bottom: 25px;
+      border: 1px solid var(--border-color-light);
+      border-radius: 5px;
+    }
+    .widget-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 0;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color-light);
+      color: var(--text-color-primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer; /* Nếu có thể thu gọn */
+    }
+     .widget-title::after { /* Icon +/- nếu có thể thu gọn */
+        content: '-'; /* Hoặc dùng icon */
+        font-size: 1.2rem;
+    }
+  
+     /* Style ví dụ cho danh sách filter */
+    .filter-list { list-style: none; padding: 0; margin: 0; }
+    .filter-list li { margin-bottom: 8px; }
+    .filter-list a, .filter-list label {
+        color: var(--text-color-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+        display: flex; /* Để căn chỉnh checkbox/số lượng */
+        align-items: center;
+        gap: 8px;
+     }
+     .filter-list a:hover, .filter-list label:hover { color: var(--link-hover-color); }
+     .filter-list .count { margin-left: auto; font-size: 0.8rem; } /* Số lượng bên phải */
+  
+     /* Style ví dụ cho checkbox */
+     .filter-list input[type="checkbox"] {
+         /* Style checkbox tùy chỉnh nếu muốn */
+         margin-right: 5px; /* Hoặc dùng gap của flex */
+         accent-color: var(--primary-color); /* Màu khi check */
+     }
+     /* ... Thêm style cho color swatches, range slider ... */
+  }
+  
+  /* --- Main Content --- */
+  .shop-main-content {
+    /* Không cần style đặc biệt ở đây */
+  }
+  
+  /* --- Shop Controls --- */
+  .shop-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px; /* Tăng khoảng cách dưới */
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color-light);
+      font-size: 0.9rem;
+  }
+  
+  .controls-left .shop-info {
+      color: var(--text-primary);
+      margin: 0; /* Reset margin p */
+  }
+  
+  .controls-right {
+      display: flex;
+      align-items: center;
+      gap: 15px; /* Khoảng cách giữa các control bên phải */
+  }
+  
+  /* Sorting dropdown */
+  .sort-options select.orderby {
+      padding: 8px 12px; /* Tăng padding */
+      padding-right: 30px; /* Chỗ cho mũi tên */
+      border: 1px solid var(--border-color-light);
+      border-radius: 3px;
+      background-color: var(--widget-bg); /* Nền tối nhẹ */
+      color: var(--text-color-secondary); /* Chữ xám */
+      font-size: 0.85rem;
+      appearance: none; /* Ẩn mũi tên mặc định */
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23a0a0a0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); /* Mũi tên SVG màu xám */
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 8px 10px;
+      cursor: pointer;
+  }
+  .sort-options select.orderby:focus {
+      outline: none;
+      border-color: var(--accent-color);
+  }
+  
+  /* View options buttons */
+  .view-options {
+      display: flex;
+      gap: 5px;
+  }
+  .view-options .view-btn {
+      background: none;
+      border: 1px solid var(--border-color-light); /* Border nhẹ */
+      padding: 6px 8px; /* Padding vừa phải */
+      cursor: pointer;
+      color: var(--text-color-secondary); /* Icon màu xám */
+      border-radius: 3px;
+      transition: all 0.2s ease;
+      line-height: 1; /* Đảm bảo icon căn giữa */
+      font-size: 1rem; /* Kích thước icon */
+  }
+  .view-options .view-btn:hover {
+      background-color: var(--widget-bg);
+      color: var(--text-color-primary);
+      border-color: #555;
+  }
+  .view-options .view-btn.active {
+      background-color: var(--accent-color);
+      color: var(--accent-text-color); /* Chữ tối trên nền vàng */
+      border-color: var(--accent-color);
+  }
+  .view-options .view-btn svg {
+      display: block; /* Để loại bỏ khoảng trống thừa dưới icon */
+  }
+  
+  
+  /* --- Product Grid --- */
+  .shop-product-grid {
+    display: grid;
+    /* Layout 4 cột trên màn hình lớn */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px; /* Khoảng cách giữa các card */
+    margin-bottom: 40px;
+  }
+  
+  /* --- **QUAN TRỌNG** --- */
+  /* Style cho ProductCard component cần được định nghĩa riêng */
+  /* Ví dụ placeholder cho card trong grid */
+  .shop-product-grid .product-card { /* Giả sử component ProductCard có class này */
+     background-color: var(--card-bg); /* Nền trắng cho card */
+     color: var(--card-text);          /* Chữ tối trên card */
+     border: 1px solid var(--border-color-light); /* Border nhẹ */
+     border-radius: 5px;
+     padding: 15px;
+     text-align: center;
+     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+     position: relative; /* Cho badge */
+  }
+  .shop-product-grid .product-card:hover {
+      border-color: var(--card-border-hover);
+      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05); /* Shadow nhẹ sáng */
+  }
+  /* ... Các style khác cho image, title, price, rating trong ProductCard ... */
+  /* Ví dụ: */
+  .product-card .product-image img { max-width: 100%; height: 180px; object-fit: contain; margin-bottom: 15px;}
+  .product-card .product-name { font-size: 0.9rem; font-weight: 500; margin-bottom: 10px; height: 2.8em; overflow: hidden; line-height: 1.4em;}
+  .product-card .product-price { font-weight: 600; color: var(--accent-color); margin-bottom: 8px; }
+  .product-card .product-rating { color: var(--star-color); font-size: 0.8rem; margin-bottom: 10px;}
+  .product-card .badge-sale-percent { /* Badge % sale */
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: var(--accent-color);
+      color: var(--accent-text-color);
+      font-size: 0.7rem;
+      font-weight: bold;
+      padding: 3px 6px;
+      border-radius: 3px;
+      z-index: 2;
+  }
+  
+  /* --- Pagination --- */
+  .shop-pagination {
+    text-align: center;
+    margin-top: 30px; /* Khoảng cách trên pagination */
+  }
+  .shop-pagination .page-numbers {
+      display: inline-block;
+      padding: 8px 14px; /* Padding lớn hơn */
+      margin: 0 4px;
+      border: 1px solid var(--border-color-light);
+      border-radius: 3px;
+      color: var(--text-color-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+  }
+  .shop-pagination .page-numbers.current {
+      background-color: var(--accent-color);
+      color: var(--accent-text-color);
+      border-color: var(--accent-color);
+      font-weight: 600;
+  }
+  .shop-pagination .page-numbers:not(.current):hover {
+      background-color: var(--widget-bg);
+      color: var(--text-color-primary);
+      border-color: #555;
+  }
+  
+  
+  /* --- Responsive Adjustments --- */
+  @media (max-width: 1320px) {
+    .container {
+      max-width: 90%;
+    }
+}
+  @media (max-width: 1199px) {
+      .shop-product-grid {
+          grid-template-columns: repeat(3, 1fr); /* 3 cột */
+      }
+  }
+  
+  @media (max-width: 991px) {
+      .shop-container {
+          grid-template-columns: 1fr; /* Sidebar nhỏ hơn */
+          gap: 25px;
+      }
+       .shop-product-grid {
+          grid-template-columns: repeat(2, 1fr); /* 2 cột */
+          gap: 20px;
+      }
+  }
+  
+  @media (max-width: 767px) {
+      .container {
+        padding: 0;
+      }
+      .shop-container {
+          grid-template-columns: 1fr; /* Stack */
+      }
+        .shop-page {
+          padding: 120px 0 50px 0; /* Bỏ padding top, thêm padding bottom */
+        }
+      .shop-sidebar {
+          margin-bottom: 30px;
+          /* Cần JS/nút để toggle sidebar */
+      }
+      .shop-controls {
+          flex-direction: column; /* Stack controls */
+          align-items: stretch; /* Kéo dài control */
+          gap: 15px;
+      }
+      .controls-left, .controls-right { width: 100%; }
+      .controls-right {
+          justify-content: space-between; /* Dàn đều sort và view */
+      }
+       .controls-left .shop-info { text-align: center; }
+       .shop-product-grid {
+          grid-template-columns: repeat(2, 1fr); /* Vẫn 2 cột trên mobile nhỏ */
+          gap: 15px;
+      }
+  }
+  @media (max-width: 575px) {
+       .shop-product-grid {
+          grid-template-columns: 1fr; /* 1 cột trên mobile rất nhỏ */
+          gap: 20px;
+      }
+       .controls-right {
+           flex-direction: column; /* Stack sort và view */
+           gap: 10px;
+           align-items: stretch;
+       }
+        .sort-options select.orderby { width: 100%; }
+        .view-options { justify-content: center; } /* Căn giữa nút view */
+  }

@@ -1,0 +1,168 @@
+/* Basic Footer Styling - Cần bổ sung rất nhiều */
+.site-footer {
+    background-color: var(--background-secondary); /* Hoặc màu tối hơn */
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+  
+  /* Newsletter */
+  .newsletter-section {
+    background-color: var(--accent-color); /* Will be blue in light, yellow in dark */
+    color: var(--text-on-accent);
+    padding: 30px 0;
+  }
+  .newsletter-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+  }
+  .newsletter-text h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+  }
+  .newsletter-text p {
+    margin: 0;
+    opacity: 0.9;
+  }
+  .newsletter-text h3, .newsletter-text p {
+    /* Prevent selection on newsletter prompt text */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+  .newsletter-form {
+    display: flex;
+    min-width: 400px; /* Chiều rộng tối thiểu */
+  }
+  .newsletter-form input {
+    padding: 10px 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px 0 0 5px;
+    flex-grow: 1;
+    outline: none;
+  }
+  .newsletter-form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--text-primary); /* Darker button on accent bg */
+    color: var(--background-primary);
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .newsletter-form button:hover {
+    opacity: 0.9;
+  }
+  
+  
+  /* Footer Widgets */
+  .footer-widgets {
+    padding: 50px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .footer-widget {
+    padding: 0 50px;
+  }
+  .widgets-inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 30px;
+  }
+  .footer-widget h4 {
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-size: 1rem;
+    /* Prevent selection on widget titles */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .footer-widget p {
+    line-height: 1.6;
+    margin-bottom: 15px; /* Khoảng cách cho app stores */
+  }
+  .footer-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footer-widget ul li {
+    margin-bottom: 8px;
+  }
+  .footer-widget ul a {
+    color: var(--text-secondary);
+  }
+  .footer-widget ul a:hover {
+    color: var(--text-accent);
+  }
+  .app-stores a {
+      display: inline-block;
+      margin-right: 10px;
+      border: 1px solid var(--border-color);
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+  }
+  .app-stores a:hover {
+      background-color: var(--background-primary);
+      border-color: var(--text-accent);
+  }
+  .contact-info p {
+      display: flex;
+      align-items: start; /* Canh icon và text */
+      gap: 8px;
+      margin-bottom: 10px;
+  }
+  .contact-info i { /* Placeholder cho icon */
+      margin-top: 3px;
+  }
+  
+  /* Footer Bottom */
+  .footer-bottom {
+    padding: 20px 0;
+    background-color: var(--background-primary); /* Hoặc màu nền khác */
+  }
+  .bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+  .social-links a {
+    color: var(--text-secondary);
+    margin-right: 15px;
+    font-size: 1.1rem;
+  }
+  .social-links a:hover {
+    color: var(--text-accent);
+  }
+  .payment-methods img {
+    height: 20px; /* Điều chỉnh kích thước */
+    margin-left: 8px;
+    opacity: 0.7;
+  }
+  @media (max-width: 999px) {
+    .footer-widget {padding: 0 20px;}
+  }
+  
+  /* Responsive for Footer */
+  @media (max-width: 768px) {
+      .newsletter-inner { flex-direction: column; text-align: center; }
+      .newsletter-form { min-width: 100%; width: 100%; max-width: 400px;}
+      .widgets-inner { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+      .bottom-inner { flex-direction: column; gap: 15px; text-align: center;}
+      .social-links { order: 2; }
+      .copyright { order: 3; -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;}
+      .payment-methods { order: 1; }
+        .footer-widget {padding: 0 10px;}
+  }

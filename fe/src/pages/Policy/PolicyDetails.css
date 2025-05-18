@@ -1,0 +1,121 @@
+/* === Policy Details CSS using CSS Variables === */
+
+.policy-detail-container {
+    max-width: 900px; /* Có thể hẹp hơn trang chính để dễ đọc text dài */
+    margin: 40px auto;
+    padding: 80px 30px 30px 30px;
+    font-family: var(--font-secondary, sans-serif); /* Dùng font phụ cho dễ đọc */
+    color: var(--text-primary);
+    background-color: var(--background-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    line-height: 1.7; 
+}
+
+.policy-detail-title {
+    text-align: center;
+    font-size: 1.8rem; /* Nhỏ hơn tiêu đề trang chính chút */
+    margin-bottom: 40px;
+    color: var(--text-primary);
+    font-family: var(--font-primary); /* Dùng font chính cho tiêu đề */
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent-color); /* Thêm đường kẻ chân màu accent */
+    padding: 30px 0;
+}
+
+.policy-section {
+    margin-bottom: 50px; /* Khoảng cách giữa các mục chính sách */
+    padding-top: 20px; /* Khoảng đệm phía trên khi scroll tới, hữu ích nếu có header cố định */
+    border-bottom: 1px dashed var(--border-color); /* Phân cách nhẹ giữa các mục */
+    padding-bottom: 30px;
+}
+
+.policy-section:last-child {
+    border-bottom: none; /* Bỏ border cho mục cuối */
+    margin-bottom: 0;
+}
+
+.policy-section h2 {
+    font-size: 1.5rem;
+    color: var(--accent-color); /* Tiêu đề mục dùng màu accent */
+    margin-bottom: 20px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.policy-content-wrapper {
+    padding-left: 15px; /* Thụt lề nhẹ cho nội dung */
+    border-left: 3px solid var(--border-color); /* Đường kẻ trang trí bên trái */
+}
+
+.policy-content-wrapper p {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.policy-content-wrapper h3,
+.policy-content-wrapper h4 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+
+.policy-content-wrapper ul,
+.policy-content-wrapper ol {
+    margin-left: 20px; /* Thụt lề cho danh sách */
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.policy-content-wrapper li {
+    margin-bottom: 8px;
+}
+
+.policy-content-wrapper strong {
+    font-weight: 600;
+    color: var(--text-primary); /* Làm nổi bật chữ đậm */
+}
+
+.policy-content-wrapper a { /* Style cho link trong nội dung chính sách */
+    color: var(--accent-color);
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+
+.policy-content-wrapper a:hover {
+    color: var(--accent-color-darker);
+}
+
+/* Optional: Highlight section khi được trỏ tới bằng hash link */
+.policy-section:target {
+    /* background-color: rgba(var(--accent-color-rgb, 255, 215, 0), 0.05); */ /* Cần định nghĩa --accent-color-rgb */
+    /* Hoặc đơn giản hơn: */
+     border-left: 3px solid var(--accent-color); /* Thay đổi màu đường kẻ trái */
+     padding-left: 15px; /* Giữ nguyên padding */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .policy-detail-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+    .policy-detail-title {
+        font-size: 1.6rem;
+        margin-bottom: 30px;
+    }
+    .policy-section h2 {
+        font-size: 1.3rem;
+    }
+     .policy-content-wrapper {
+        padding-left: 10px;
+    }
+    .policy-content-wrapper ul,
+    .policy-content-wrapper ol {
+        margin-left: 10px;
+        padding-left: 15px;
+    }
+}
