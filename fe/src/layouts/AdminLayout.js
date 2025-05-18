@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
+import ThemeToggle from "../components/ThemeToggle/ThemeToggle";
 import "../styles/AdminLayout.css";
+import adminAvatar from "../assets/images/admin.png";
 
 const AdminLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -77,8 +79,9 @@ const AdminLayout = () => {
                         <input type="text" placeholder="Search..." />
                     </div>
                     <div className="admin-header-actions">
+                        <ThemeToggle />
                         <div className="admin-user">
-                            <img src="https://via.placeholder.com/40" alt="Admin" />
+                            <img src={adminAvatar} alt="Admin" />
                             <span>Admin User</span>
                         </div>
                     </div>

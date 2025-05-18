@@ -127,8 +127,14 @@ const Vouchers = () => {
                 throw new Error("Authentication token not found");
             }
 
-            // Create new voucher
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, formData, {
+            // Create new voucher with the new data format
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, {
+                voucherName: formData.voucherName,
+                voucherDescription: formData.voucherDescription,
+                discountAmount: formData.discountAmount,
+                expiryDate: formData.expiryDate,
+                identifiedVoucherId: formData.identifiedVoucherId
+            }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
@@ -148,7 +154,7 @@ const Vouchers = () => {
 
     if (loading) {
         return (
-            <Container fluid className="py-4 bg-dark text-light">
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
                 <div>Loading vouchers...</div>
             </Container>
         );
@@ -156,7 +162,7 @@ const Vouchers = () => {
 
     if (error) {
         return (
-            <Container fluid className="py-4 bg-dark text-light">
+            <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)" }}>
                 <div className="alert alert-danger" role="alert">
                     {error}
                 </div>
@@ -165,10 +171,10 @@ const Vouchers = () => {
     }
 
     return (
-        <Container fluid className="py-4 bg-dark text-light">
+        <Container fluid className="py-4" style={{ backgroundColor: "var(--background-primary)", color: "var(--text-primary)" }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <h1 className="text-light">Vouchers</h1>
-                <Button variant="success" onClick={handleCreateVoucher}>
+                <h1>Vouchers</h1>
+                <Button variant="primary" onClick={handleCreateVoucher}>
                     <FaPlus className="me-1" /> Create New Voucher
                 </Button>
             </div>
@@ -181,14 +187,22 @@ const Vouchers = () => {
                             placeholder="Search vouchers..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                         />
                     </Form.Group>
                 </Col>
                 <Col md={4}>
                     <Form.Group>
                         <Form.Select
-                            className="bg-dark text-light border-secondary"
+                            style={{
+                                backgroundColor: "var(--background-secondary)",
+                                color: "var(--text-primary)",
+                                border: "1px solid var(--border-color)"
+                            }}
                             value={filterValidated}
                             onChange={(e) => setFilterValidated(e.target.value)}
                         >
@@ -200,12 +214,19 @@ const Vouchers = () => {
                 </Col>
             </Row>
 
-            <Table responsive hover variant="dark" className="border-secondary">
+            <Table responsive hover style={{
+                "--bs-table-bg": "var(--background-secondary)",
+                "--bs-table-color": "var(--text-primary)",
+                "--bs-table-border-color": "var(--border-color)",
+                "--bs-table-hover-bg": "var(--background-primary)",
+                "--bs-table-hover-color": "var(--text-primary)"
+            }}>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
                         <th>Description</th>
+                        <th>Discount</th>
                         <th>Expiry Date</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -217,17 +238,18 @@ const Vouchers = () => {
                             <td>{voucher.identifiedVoucherId}</td>
                             <td>{voucher.voucherName}</td>
                             <td>{voucher.voucherDescription}</td>
+                            <td>{voucher.discountAmount}%</td>
                             <td>{new Date(voucher.expiryDate).toLocaleDateString()}</td>
                             <td>
                                 <span
                                     className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${
-                                        voucher.validated
+                                        new Date(voucher.expiryDate) > new Date()
                                             ? "bg-success-subtle text-success-emphasis"
                                             : "bg-danger-subtle text-danger-emphasis"
                                     }`}
                                     style={{ fontSize: "0.85rem" }}
                                 >
-                                    {voucher.validated ? "Valid" : "Invalid"}
+                                    {new Date(voucher.expiryDate) > new Date() ? "Valid" : "Expired"}
                                 </span>
                             </td>
                             <td>
@@ -254,23 +276,23 @@ const Vouchers = () => {
             </Table>
 
             <div className="d-flex justify-content-center mt-4">
-                <Pagination className="pagination-dark">
-                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} className="text-light" />
+                <Pagination style={{ "--bs-pagination-bg": "var(--background-secondary)", "--bs-pagination-color": "var(--text-primary)" }}>
+                    <Pagination.Prev onClick={handlePrevious} disabled={currentPage === 1} />
                     {pageNumbers.map((number) => (
                         <Pagination.Item
                             key={number}
                             active={number === currentPage}
                             onClick={() => handlePageChange(number)}
-                            className={number === currentPage ? "active" : "text-light"}
+                            style={number === currentPage ? {
+                                backgroundColor: "var(--accent-color)",
+                                borderColor: "var(--accent-color)",
+                                color: "var(--text-on-accent)"
+                            } : {}}
                         >
                             {number}
                         </Pagination.Item>
                     ))}
-                    <Pagination.Next
-                        onClick={handleNext}
-                        disabled={currentPage === totalPages}
-                        className="text-light"
-                    />
+                    <Pagination.Next onClick={handleNext} disabled={currentPage === totalPages} />
                 </Pagination>
             </div>
 
