@@ -86,11 +86,6 @@ const Vouchers = () => {
         setShowModal(true);
     };
 
-    const handleEditVoucher = (voucher) => {
-        setSelectedVoucher(voucher);
-        setShowModal(true);
-    };
-
     const handleDeleteVoucher = async (voucherId) => {
         if (window.confirm("Are you sure you want to delete this voucher?")) {
             try {
@@ -132,25 +127,19 @@ const Vouchers = () => {
                 throw new Error("Authentication token not found");
             }
 
-            if (selectedVoucher) {
-                // Update existing voucher
-                // Note: The API doesn't have an update endpoint, so we'll need to implement it
-                throw new Error("Update functionality not implemented in API");
-            } else {
-                // Create new voucher
-                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, formData, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "application/json",
-                    },
-                });
+            // Create new voucher
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/vouchers`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
-                if (response.data.code !== 1000) {
-                    throw new Error(response.data.message || "Failed to create voucher");
-                }
-
-                await fetchVouchers(); // Refresh the list
+            if (response.data.code !== 1000) {
+                throw new Error(response.data.message || "Failed to create voucher");
             }
+
+            await fetchVouchers(); // Refresh the list
         } catch (error) {
             console.error("Error saving voucher:", error);
             throw error;
@@ -243,10 +232,11 @@ const Vouchers = () => {
                             </td>
                             <td>
                                 <Button
-                                    variant="outline-primary"
+                                    variant="outline-secondary"
                                     size="sm"
                                     className="me-2"
-                                    onClick={() => handleEditVoucher(voucher)}
+                                    disabled
+                                    title="Edit functionality not available"
                                 >
                                     <FaEdit />
                                 </Button>
@@ -287,7 +277,6 @@ const Vouchers = () => {
             <VoucherModal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                voucher={selectedVoucher}
                 onSuccess={handleVoucherSubmit}
             />
         </Container>

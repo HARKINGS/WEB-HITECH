@@ -73,10 +73,11 @@ const Products = () => {
                     id: product.goodsId,
                     name: product.goodsName,
                     category: product.goodsCategory,
+                    brand: product.goodsBrand,
                     price: product.price,
                     stock: product.quantity,
                     description: product.goodsDescription,
-                    image: product.goodsImageUrl,
+                    image: product.goodsImageURL,
                     version: product.goodsVersion,
                     status: determineStatus(product.quantity),
                 }));
@@ -90,7 +91,7 @@ const Products = () => {
             setError("Failed to load products. Please try again later.");
             setLoading(false);
         }
-    }, []); // No dependencies as it only uses functions from props
+    }, []);
 
     // Fetch products from API or use mock data
     useEffect(() => {
@@ -124,47 +125,30 @@ const Products = () => {
             };
 
             if (currentProduct) {
-                // Update existing product - map to API format
-                const apiData = {
-                    goodsId: currentProduct.id,
-                    goodsName: productData.name,
-                    goodsDescription: productData.description,
-                    goodsCategory: productData.category,
-                    price: productData.price,
-                    quantity: productData.stock,
-                    goodsImageUrl: productData.image,
-                    goodsVersion: currentProduct.version || "1.0",
-                };
-
+                // Update existing product
                 const response = await axios.put(
                     `${process.env.REACT_APP_API_BASE_URL}/goods/${currentProduct.id}`,
-                    apiData,
+                    {
+                        ...productData,
+                        goodsId: currentProduct.id,
+                    },
                     config
                 );
                 if (response.data.code.toString() === "1000") {
-                    await fetchProducts();
+                    await fetchProducts(); // Reload products after update
                 } else {
                     throw new Error("Failed to update product");
                 }
             } else {
-                // Add new product - map to API format
-                const apiData = {
-                    goodsName: productData.name,
-                    goodsDescription: productData.description,
-                    goodsCategory: productData.category,
-                    price: productData.price,
-                    quantity: productData.stock,
-                    goodsImageUrl: productData.image,
-                    goodsVersion: "1.0",
-                };
-
-                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/goods`, apiData, config);
+                // Add new product
+                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/goods`, productData, config);
                 if (response.data.code.toString() === "1000") {
-                    await fetchProducts();
+                    await fetchProducts(); // Reload products after creation
                 } else {
                     throw new Error("Failed to create product");
                 }
             }
+            setIsModalOpen(false);
         } catch (err) {
             console.error("Error saving product:", err);
             alert("Failed to save product. Please try again.");
@@ -179,13 +163,17 @@ const Products = () => {
                     .split("; ")
                     .find((row) => row.startsWith("token="))
                     ?.split("=")[1];
-                await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/goods/${productId}`, {
+                const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/goods/${productId}`, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                setProducts(products.filter((product) => product.id !== productId));
+                if (response.data.code.toString() === "1000") {
+                    await fetchProducts(); // Reload products after deletion
+                } else {
+                    throw new Error("Failed to delete product");
+                }
             } catch (err) {
                 console.error("Error deleting product:", err);
                 alert("Failed to delete product. Please try again.");
@@ -231,6 +219,20 @@ const Products = () => {
         if (quantity <= 0) return "Out of Stock";
         if (quantity <= 5) return "Low Stock";
         return "In Stock";
+    };
+
+    // Get status badge variant
+    const getStatusVariant = (status) => {
+        switch (status) {
+            case 'In Stock':
+                return 'bg-success-subtle text-success-emphasis';
+            case 'Out of Stock':
+                return 'bg-danger-subtle text-danger-emphasis';
+            case 'Low Stock':
+                return 'bg-warning-subtle text-warning-emphasis';
+            default:
+                return 'bg-secondary-subtle text-secondary-emphasis';
+        }
     };
 
     if (loading) {
@@ -335,17 +337,12 @@ const Products = () => {
                             <td>${product.price}</td>
                             <td>{product.stock}</td>
                             <td>
-                                <Badge
-                                    bg={
-                                        product.status === "In Stock"
-                                            ? "success"
-                                            : product.status === "Out of Stock"
-                                            ? "danger"
-                                            : "warning"
-                                    }
+                                <span
+                                    className={`d-inline-flex align-items-center rounded-pill px-3 py-1 small fw-semibold ${getStatusVariant(product.status)}`}
+                                    style={{ fontSize: "0.85rem" }}
                                 >
                                     {product.status}
-                                </Badge>
+                                </span>
                             </td>
                             <td>
                                 <div className="d-flex gap-2">

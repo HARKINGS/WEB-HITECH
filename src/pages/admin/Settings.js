@@ -60,25 +60,38 @@ const Settings = () => {
 
     const handleRoleModalSuccess = async (formData) => {
         try {
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
             if (editingRole) {
                 // Handle edit
                 const response = await axios.put(
                     `${process.env.REACT_APP_API_BASE_URL}/roles/${editingRole.name}`,
-                    formData
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
                 );
                 if (response.data.success) {
-                    const updatedRoles = roles.map((role) =>
-                        role._id === editingRole._id ? response.data.result : role
-                    );
-                    setRoles(updatedRoles);
+                    await fetchRoles(); // Reload roles after successful update
                 }
             } else {
                 // Handle create
-                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}`, formData);
+                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/roles`, formData, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 if (response.data.success) {
-                    setRoles([...roles, response.data.result]);
+                    await fetchRoles(); // Reload roles after successful creation
                 }
             }
+            setShowRoleModal(false); // Close modal after success
         } catch (error) {
             console.error("Error saving role:", error);
             throw error;
@@ -92,11 +105,23 @@ const Settings = () => {
             return;
         }
 
+        if (!window.confirm(`Are you sure you want to delete the role "${role.name}"?`)) {
+            return;
+        }
+
         try {
-            const response = await axios.delete(`/api/roles/${role.name}`);
+            const token = document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("token="))
+                ?.split("=")[1];
+            const response = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/roles/${role.name}`,{
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             if (response.data.code.toString() === "1000") {
-                // Remove the role from the state
-                setRoles(roles.filter((r) => r._id !== role._id));
+                await fetchRoles(); // Reload roles after successful deletion
                 if (selectedRole && selectedRole._id === role._id) {
                     setSelectedRole(null);
                 }

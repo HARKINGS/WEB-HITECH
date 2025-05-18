@@ -15,6 +15,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
         permissions: [],
     });
     const [showPassword, setShowPassword] = useState(false);
+    const [changePassword, setChangePassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
@@ -33,6 +34,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                 birthDate: user.birthDate || "",
                 permissions: Array.isArray(user.permissions) ? user.permissions : [],
             });
+            setChangePassword(false); // Reset password change toggle when modal opens
         } else {
             setFormData({
                 username: "",
@@ -75,7 +77,7 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
             newErrors.username = "Username is required";
         }
 
-        if (!isEditMode) {
+        if (!isEditMode || (isEditMode && changePassword)) {
             if (!formData.password) {
                 newErrors.password = "Password is required";
             } else if (formData.password.length < 6) {
@@ -102,7 +104,25 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
         if (validate()) {
             setIsSubmitting(true);
             try {
-                await onSuccess(formData);
+                // Format data according to API requirements
+                const submissionData = {
+                    username: formData.username,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    birthDate: formData.birthDate,
+                };
+
+                // Only include password if it's a new user or password change is enabled
+                if (!isEditMode || changePassword) {
+                    submissionData.password = formData.password;
+                }
+
+                // Only include roles/permissions for edit mode
+                if (isEditMode) {
+                    submissionData.roles = formData.permissions;
+                }
+
+                await onSuccess(submissionData);
                 onClose();
             } catch (error) {
                 setSubmitError(
@@ -188,7 +208,20 @@ const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
                         <Form.Control.Feedback type="invalid">{errors.birthDate}</Form.Control.Feedback>
                     </Form.Group>
 
-                    {!isEditMode && (
+                    {isEditMode && (
+                        <Form.Group className="mb-3">
+                            <Form.Check
+                                type="checkbox"
+                                id="change-password"
+                                label="Change Password"
+                                checked={changePassword}
+                                onChange={(e) => setChangePassword(e.target.checked)}
+                                className="text-light mb-3"
+                            />
+                        </Form.Group>
+                    )}
+
+                    {(!isEditMode || changePassword) && (
                         <>
                             <Form.Group className="mb-3">
                                 <Form.Label className="text-light">Password*</Form.Label>

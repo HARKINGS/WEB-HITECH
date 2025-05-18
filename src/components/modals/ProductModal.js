@@ -4,12 +4,14 @@ import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 
 const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        category: "",
+        goodsName: "",
+        goodsDescription: "",
+        goodsCategory: "",
+        goodsBrand: "",
         price: "",
-        stock: "",
-        imageUrl: "",
+        quantity: "",
+        goodsImageURL: "",
+        goodsVersion: "1.0",
         status: "In Stock",
     });
     const [errors, setErrors] = useState({});
@@ -22,22 +24,26 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     useEffect(() => {
         if (product) {
             setFormData({
-                name: product.name || "",
-                description: product.description || "",
-                category: product.category || "",
+                goodsName: product.name || "",
+                goodsDescription: product.description || "",
+                goodsCategory: product.category || "",
+                goodsBrand: product.brand || "",
                 price: product.price?.toString() || "",
-                stock: product.stock?.toString() || "",
-                imageUrl: product.image || "", // Updated to match API field name
+                quantity: product.stock?.toString() || "",
+                goodsImageURL: product.image || "https://example.com/image.jpg",
+                goodsVersion: product.version || "1.0",
                 status: determineStatus(product.stock) || "In Stock",
             });
         } else {
             setFormData({
-                name: "",
-                description: "",
-                category: "",
+                goodsName: "",
+                goodsDescription: "",
+                goodsCategory: "",
+                goodsBrand: "",
                 price: "",
-                stock: "",
-                imageUrl: "",
+                quantity: "",
+                goodsImageURL: "",
+                goodsVersion: "1.0",
                 status: "In Stock",
             });
         }
@@ -57,13 +63,18 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         const newErrors = {};
 
         // Name validation
-        if (!formData.name.trim()) {
-            newErrors.name = "Product name is required";
+        if (!formData.goodsName.trim()) {
+            newErrors.goodsName = "Product name is required";
         }
 
         // Category validation
-        if (!formData.category.trim()) {
-            newErrors.category = "Category is required";
+        if (!formData.goodsCategory.trim()) {
+            newErrors.goodsCategory = "Category is required";
+        }
+
+        // Brand validation
+        if (!formData.goodsBrand.trim()) {
+            newErrors.goodsBrand = "Brand is required";
         }
 
         // Price validation
@@ -74,14 +85,14 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         }
 
         // Stock validation
-        if (!formData.stock) {
-            newErrors.stock = "Stock quantity is required";
+        if (!formData.quantity) {
+            newErrors.quantity = "Stock quantity is required";
         } else if (
-            isNaN(Number(formData.stock)) ||
-            !Number.isInteger(Number(formData.stock)) ||
-            Number(formData.stock) < 0
+            isNaN(Number(formData.quantity)) ||
+            !Number.isInteger(Number(formData.quantity)) ||
+            Number(formData.quantity) < 0
         ) {
-            newErrors.stock = "Stock must be a non-negative integer";
+            newErrors.quantity = "Stock must be a non-negative integer";
         }
 
         setErrors(newErrors);
@@ -98,15 +109,17 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
             try {
                 // Format the data for API
                 const submissionData = {
-                    name: formData.name,
-                    description: formData.description,
-                    category: formData.category,
+                    goodsName: formData.goodsName,
+                    goodsDescription: formData.goodsDescription,
+                    goodsCategory: formData.goodsCategory,
+                    goodsBrand: formData.goodsBrand,
                     price: Number(formData.price),
-                    stock: Number(formData.stock),
-                    image: formData.imageUrl, // Updated to match API field name
+                    quantity: Number(formData.quantity),
+                    goodsImageURL: formData.goodsImageURL || "https://example.com/image.jpg",
+                    goodsVersion: formData.goodsVersion,
                 };
 
-                onSuccess(submissionData);
+                await onSuccess(submissionData);
                 onClose();
             } catch (error) {
                 console.error("Form submission error:", error);
@@ -148,14 +161,14 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                             </span>
                             <Form.Control
                                 type="text"
-                                name="name"
+                                name="goodsName"
                                 placeholder="Enter product name"
-                                value={formData.name}
+                                value={formData.goodsName}
                                 onChange={handleChange}
-                                isInvalid={!!errors.name}
+                                isInvalid={!!errors.goodsName}
                                 className="bg-dark text-light border-secondary"
                             />
-                            <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">{errors.goodsName}</Form.Control.Feedback>
                         </div>
                     </Form.Group>
 
@@ -163,40 +176,64 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                         <Form.Label>Description</Form.Label>
                         <Form.Control
                             as="textarea"
-                            name="description"
+                            name="goodsDescription"
                             rows={3}
                             placeholder="Enter product description"
-                            value={formData.description}
+                            value={formData.goodsDescription}
                             onChange={handleChange}
                             className="bg-dark text-light border-secondary"
                         />
                     </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Label>Category</Form.Label>
-                        <div className="input-group">
-                            <span className="input-group-text bg-dark text-light border-secondary">
-                                <FaLayerGroup />
-                            </span>
-                            <Form.Select
-                                name="category"
-                                value={formData.category}
-                                onChange={handleChange}
-                                isInvalid={!!errors.category}
-                                className="bg-dark text-light border-secondary"
-                            >
-                                <option value="">Select a category</option>
-                                <option value="Phones">Phone</option>
-                                <option value="Laptops">Laptop</option>
-                                <option value="Tablets">Tablet</option>
-                                <option value="Audio">Audio</option>
-                                <option value="Wearables">Wearable</option>
-                                <option value="Gaming">Gaming</option>
-                                <option value="Cameras">Camera</option>
-                            </Form.Select>
-                            <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
-                        </div>
-                    </Form.Group>
+                    <Row>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Category</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaLayerGroup />
+                                    </span>
+                                    <Form.Select
+                                        name="goodsCategory"
+                                        value={formData.goodsCategory}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.goodsCategory}
+                                        className="bg-dark text-light border-secondary"
+                                    >
+                                        <option value="">Select a category</option>
+                                        <option value="Phone">Phone</option>
+                                        <option value="Laptop">Laptop</option>
+                                        <option value="Tablet">Tablet</option>
+                                        <option value="Audio">Audio</option>
+                                        <option value="Wearable">Wearable</option>
+                                        <option value="Gaming">Gaming</option>
+                                        <option value="Camera">Camera</option>
+                                    </Form.Select>
+                                    <Form.Control.Feedback type="invalid">{errors.goodsCategory}</Form.Control.Feedback>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                        <Col md={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Brand</Form.Label>
+                                <div className="input-group">
+                                    <span className="input-group-text bg-dark text-light border-secondary">
+                                        <FaLayerGroup />
+                                    </span>
+                                    <Form.Control
+                                        type="text"
+                                        name="goodsBrand"
+                                        placeholder="Enter brand name"
+                                        value={formData.goodsBrand}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.goodsBrand}
+                                        className="bg-dark text-light border-secondary"
+                                    />
+                                    <Form.Control.Feedback type="invalid">{errors.goodsBrand}</Form.Control.Feedback>
+                                </div>
+                            </Form.Group>
+                        </Col>
+                    </Row>
 
                     <Row>
                         <Col md={6}>
@@ -228,14 +265,14 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                     </span>
                                     <Form.Control
                                         type="text"
-                                        name="stock"
+                                        name="quantity"
                                         placeholder="0"
-                                        value={formData.stock}
+                                        value={formData.quantity}
                                         onChange={handleChange}
-                                        isInvalid={!!errors.stock}
+                                        isInvalid={!!errors.quantity}
                                         className="bg-dark text-light border-secondary"
                                     />
-                                    <Form.Control.Feedback type="invalid">{errors.stock}</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">{errors.quantity}</Form.Control.Feedback>
                                 </div>
                             </Form.Group>
                         </Col>
@@ -249,9 +286,9 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                             </span>
                             <Form.Control
                                 type="text"
-                                name="imageUrl"
+                                name="goodsImageURL"
                                 placeholder="https://example.com/image.jpg"
-                                value={formData.imageUrl}
+                                value={formData.goodsImageURL}
                                 onChange={handleChange}
                                 className="bg-dark text-light border-secondary"
                             />

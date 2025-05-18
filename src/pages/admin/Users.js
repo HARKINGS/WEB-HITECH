@@ -137,21 +137,20 @@ const Users = () => {
                 throw new Error("Authentication token not found");
             }
 
-            // Format the data according to API requirements
-            const apiData = {
-                username: userData.username,
-                firstName: userData.firstName || "",
-                lastName: userData.lastName || "",
-                birthDate: userData.birthDate || "2000-01-01",
-            };
-
             let response;
 
             if (!currentUser) {
                 // Create new user
-                apiData.password = userData.password;
-                const roleType = "STAFF"; // Set default role type for new users
-                response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/${roleType}`, apiData, {
+                const createData = {
+                    username: userData.username,
+                    password: userData.password,
+                    firstName: userData.firstName || "",
+                    lastName: userData.lastName || "",
+                    birthDate: userData.birthDate || "2000-01-01",
+                };
+                
+                const roleType = "STAFF";
+                response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/users/${roleType}`, createData, {
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
@@ -161,10 +160,7 @@ const Users = () => {
                 // Update existing user
                 response = await axios.put(
                     `${process.env.REACT_APP_API_BASE_URL}/users/${currentUser.id}`,
-                    {
-                        ...apiData,
-                        permissions: userData.permissions,
-                    },
+                    userData, // Use the formatted data directly from UserModal
                     {
                         headers: {
                             "Content-Type": "application/json",
@@ -182,10 +178,10 @@ const Users = () => {
                             user.id === currentUser.id
                                 ? {
                                       ...user,
-                                      name: `${apiData.firstName} ${apiData.lastName}`.trim() || apiData.username,
-                                      username: apiData.username,
-                                      email: apiData.username,
-                                      permissions: userData.permissions,
+                                      name: `${userData.firstName} ${userData.lastName}`.trim(),
+                                      firstName: userData.firstName,
+                                      lastName: userData.lastName,
+                                      permissions: userData.roles, // Update permissions from roles
                                   }
                                 : user
                         )
@@ -193,13 +189,14 @@ const Users = () => {
                 } else {
                     // Add new user to the list
                     const newUser = {
-                        id: response.data.userId,
-                        name: `${apiData.firstName} ${apiData.lastName}`.trim() || apiData.username,
-                        username: apiData.username,
-                        email: apiData.username,
-                        role: "Staff",
+                        id: response.data.result.userId,
+                        name: `${userData.firstName} ${userData.lastName}`.trim(),
+                        username: userData.username,
+                        email: userData.username,
+                        role: "STAFF",
                         status: "Active",
-                        joined: new Date().toISOString().split("T")[0],
+                        joined: userData.birthDate,
+                        permissions: [],
                     };
                     setUsers([...users, newUser]);
                 }

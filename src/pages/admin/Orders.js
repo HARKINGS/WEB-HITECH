@@ -187,10 +187,14 @@ const Orders = () => {
                                             <div className="d-flex justify-content-between align-items-start mb-2">
                                                 <div style={{ maxWidth: '80%' }}>
                                                     <h6 className="mb-0 text-truncate">
-                                                        {item.goodsName || "Unknown Product"}
+                                                        {item.goods.goodsName || "Unknown Product"}
                                                     </h6>
                                                     <small className="text-light">
-                                                        Item ID: {item.id || "N/A"} | Goods ID: {item.goodsId || "N/A"}
+                                                        Item ID: {item.id || "N/A"}
+                                                    </small>
+                                                    <br />
+                                                    <small className="text-light">
+                                                        Goods ID: {item.goods.goodsId || "N/A"}
                                                     </small>
                                                 </div>
                                                 <div style={{ minWidth: 'fit-content', marginLeft: '8px' }}>
