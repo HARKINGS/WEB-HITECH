@@ -21,6 +21,6 @@ public class OrderResponse {
     private PaymentStatus paymentStatus;
     private String paymentMethod;
     private Long totalPrice;
-    private Long totalDiscount;
+    private Double finalPrice;
     private String transactionId;
 }

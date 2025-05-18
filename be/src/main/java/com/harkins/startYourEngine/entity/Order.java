@@ -45,7 +45,7 @@ public class Order {
     Long totalPrice;
 
     @Positive
-    Long totalDiscount;
+    Double finalPrice;
 
     @Column(nullable = true)
     String transactionId;
