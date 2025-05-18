@@ -363,8 +363,8 @@ background: var(--text-secondary, #999);
 .cart-preview-actions {
     margin-top: 15px;
     display: flex;
-    gap: 10px; /* Space between buttons if you add more */
-    justify-content: center; /* Center button(s) */
+    justify-content: center; 
+    gap: 10px; 
 }
 
 /* General button styling (assuming you have base .btn styles) */
@@ -377,6 +377,8 @@ background: var(--text-secondary, #999);
   border-radius: 4px;
   font-weight: 500;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  justify-content: center;
 }
 
 /* Primary button (Checkout) - Adapt colors */
@@ -433,24 +435,24 @@ background: var(--text-secondary, #999);
 /* ============================================ */
 
 .header-nav {
-  background-color: var(--accent-color);
-  color: var(--text-on-accent);
-  border-top: 1px solid var(--accent-color-darker);
-  border-bottom: 1px solid var(--accent-color-darker);
+  background-color: var(--accent-color, #343a40); /* Fallback nếu var không tồn tại */
+  color: var(--text-on-accent, #f8f9fa);
+  border-top: 1px solid var(--accent-color-darker, #23272b);
+  border-bottom: 1px solid var(--accent-color-darker, #23272b);
   position: sticky;
-  top: 0;
-  z-index: 1020;
+  top: 0; /* Đảm bảo header-nav dính lại khi cuộn nếu site-header không fixed */
+  z-index: 1020; /* Giữ nguyên z-index */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-nav-inner {
   display: flex;
-  align-items: stretch;
+  align-items: stretch; /* Quan trọng để các .nav-item con có thể chiếm full height */
   height: 50px;
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0;
+  padding: 0; /* Bỏ padding ở đây nếu .main-navigation đã có padding */
 }
 
 /* --- Browse All Categories Button --- */
@@ -479,44 +481,60 @@ background: var(--text-secondary, #999);
 /* --- Main Navigation Container --- */
 .main-navigation {
   display: flex;
-  align-items: stretch;
+  align-items: stretch; /* Đảm bảo các nav-item con cao bằng main-navigation */
   height: 100%;
-  flex-grow: 1; /* This allows .main-navigation to fill the .header-nav-inner */
+  flex-grow: 1; 
   min-width: 0;
-  justify-content: center; /* Added: This centers the navigation items */
+  justify-content: center; 
   gap: 54px; 
 }
 
 /* --- Individual Nav Items & Links --- */
 .nav-item {
   position: relative;
-  display: flex;
-  align-items: center;
-  height: 100%;
+  display: flex; 
+  align-items: center; 
+  height: 100%; 
   margin: 0;
 }
 
 .nav-item > a {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  padding: 0; /* Reset padding link */
-  color: var(--text-on-accent);
+  display: flex; 
+  align-items: center; 
+  height: 100%; /* Link chiếm toàn bộ chiều cao của nav-item */
+  padding: 0 36px; /* Padding ngang cho vùng click và background, bỏ padding: 0; cũ */
+  color: var(--text-on-accent, #f8f9fa); 
   font-weight: 600;
   font-size: 1rem;
-  gap: 5px;
-  white-space: nowrap;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  text-decoration: none; /* Bỏ gạch chân mặc định */
+  white-space: nowrap; 
+  border-radius: 4px; /* Bo tròn nhẹ cho đẹp mắt khi có background */
+  transition: color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+.nav-item > a:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Nền mờ nhẹ khi hover */
+  color: var(--text-on-accent, #f8f9fa); 
+  opacity: 1; /* Bỏ opacity 0.85 nếu đã có background hover */
 }
 .nav-item > a:hover {
   color: var(--text-on-accent);
   opacity: 0.85;
 }
+.nav-item > a.active {
+  background-color: var(--primary-color, #ffc107); /* Màu nền active (ví dụ: vàng cam) */
+  color: var(--text-primary, #212529); /* Màu chữ active (ví dụ: đen/xám đậm để tương phản) */
+  font-weight: 700; /* Chữ đậm hơn */
+  opacity: 1;
+}
+.nav-item > a.active:hover {
+  background-color: var(--primary-color-darker, #e0a800); /* Màu nền active đậm hơn khi hover */
+  color: var(--text-primary, #212529);  
+}
 .nav-item > a svg {
   opacity: 0.7;
   font-size: 0.8em;
   margin-left: 2px;
-  color: var(--text-on-accent);
+  /* color: var(--text-on-accent); */
 }
 
 /* Badges */

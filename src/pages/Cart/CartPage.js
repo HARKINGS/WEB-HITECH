@@ -101,7 +101,7 @@ const formatCurrency = (amount) => {
 
                 <div className="cart-summary">
                     <div className="summary-row">
-                        <span>Subtotal:</span>
+                        <span>Tổng cộng:</span>
                         <span>{formatCurrency(cartTotal)}</span>
                     </div>
                     {/* Add rows for Shipping, Tax if applicable */}
