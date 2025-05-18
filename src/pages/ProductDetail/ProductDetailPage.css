@@ -238,7 +238,6 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Grid nhỏ hơn cho related */
 }
 
-
 /* Responsive for Product Detail */
 @media (max-width: 768px) {
     .product-detail-main {

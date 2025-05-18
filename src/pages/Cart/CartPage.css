@@ -290,14 +290,14 @@
     margin-bottom: 12px; /* Tăng khoảng cách giữa các dòng */
     font-size: 0.95rem;
     /* Màu chữ mặc định cho label và value (ví dụ: Subtotal) */
-    color: var(--text-on-dark-secondary, #adb5bd);
+    color: var(--text-secondary, #adb5bd);
   }
   /* Đảm bảo label và value có màu phù hợp */
   .summary-row span:first-child { /* Label (e.g., "Subtotal:") */
-      color: var(--text-on-dark-secondary, #adb5bd);
+      color: var(--text-secondary, #adb5bd);
   }
   .summary-row span:last-child { /* Value (e.g., "$0.00") */
-      color: var(--text-on-dark-primary, #dee2e6); /* Giá trị có thể sáng hơn label một chút */
+      color: var(--text-primary, #dee2e6); /* Giá trị có thể sáng hơn label một chút */
       font-weight: 500;
   }
   
@@ -322,7 +322,7 @@
   
   /* Nút Checkout */
   .btn-checkout {
-    width: 100%;
+    /* width: 100%; */
     padding: 12px 15px;
     font-size: 1rem;
     font-weight: 600;

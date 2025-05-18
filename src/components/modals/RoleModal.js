@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 import { PERMISSIONS } from "../../constants/permissions";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const RoleModal = ({ isOpen, onClose, role = null, onSuccess }) => {
     const [formData, setFormData] = useState({

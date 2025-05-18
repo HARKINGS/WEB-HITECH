@@ -4,7 +4,6 @@ import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Form, Button } from "react-bootstrap";
 import { useAuth } from "../../hooks/useAuth";
 import "../../styles/Auth.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const Login = () => {
     const [username, setUsername] = useState("");

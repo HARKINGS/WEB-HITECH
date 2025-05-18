@@ -298,9 +298,15 @@
   }
   
   @media (max-width: 767px) {
+      .container {
+        padding: 0;
+      }
       .shop-container {
           grid-template-columns: 1fr; /* Stack */
       }
+        .shop-page {
+          padding: 120px 0 50px 0; /* Bỏ padding top, thêm padding bottom */
+        }
       .shop-sidebar {
           margin-bottom: 30px;
           /* Cần JS/nút để toggle sidebar */

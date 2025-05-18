@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+// src/components/SidebarFilter/SidebarFilter.js
+import React, { useState, useEffect, useCallback } from 'react';
 import './SidebarFilter.css';
-import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const FilterSection = ({ title, children }) => (
   <div className="filter-section">
@@ -9,216 +9,119 @@ const FilterSection = ({ title, children }) => (
   </div>
 );
 
+const CATEGORIES_DATA = [
+    { id: 'Laptop', name: 'Laptop' },
+    { id: 'PC_Gaming', name: 'PC Gaming' },
+    { id: 'Phụ kiện', name: 'Phụ kiện' },
+];
+
 const SidebarFilter = ({ onFilterChange }) => {
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [highlightFilters, setHighlightFilters] = useState({
-    promotion: false,
-    newArrivals: false,
-  });
-  const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedRating, setSelectedRating] = useState(0);
 
   const handlePriceInputChange = (e) => {
     const { name, value } = e.target;
-    const numericValue = value === '' ? '' : parseFloat(value.replace(/[^0-9]/g, '')); // Loại bỏ ký tự không phải số trước khi parse
-
-    if (value === '' || (!isNaN(numericValue) && numericValue >= 0)) {
-      setPriceRange(prev => ({
-        ...prev,
-        [name]: value, // Lưu dạng string, có thể chứa dấu phẩy, vd "100.000"
-      }));
-    }
-  };
-
-  const formatCurrency = (value) => {
-    if (value === '' || value === null || value === undefined) return '';
-    const num = parseFloat(String(value).replace(/[^0-9]/g, ''));
-    if (isNaN(num)) return '';
-    return num.toLocaleString('vi-VN'); // Định dạng số theo kiểu Việt Nam, vd: 100.000
-  };
-
-
-  const handleCategoryChange = (categoryName) => {
-    setSelectedCategories(prev =>
-      prev.includes(categoryName)
-        ? prev.filter(c => c !== categoryName)
-        : [...prev, categoryName]
-    );
-  };
-
-  const handleHighlightChange = (e) => {
-    const { name, checked } = e.target;
-    setHighlightFilters(prev => ({
+    const numericValue = value.replace(/[^0-9]/g, ''); // Chỉ giữ lại số
+    setPriceRange(prev => ({
       ...prev,
-      [name]: checked,
+      [name]: numericValue,
     }));
   };
 
-  const handleColorChange = (color) => {
-    setSelectedColors(prev =>
-      prev.includes(color)
-        ? prev.filter(c => c !== color)
-        : [...prev, color]
+  const formatDisplayPrice = (value) => {
+    if (value === '' || value === null || value === undefined) return '';
+    const num = parseFloat(value); // value đã là chuỗi số
+    if (isNaN(num)) return '';
+    return num.toLocaleString('vi-VN'); // Ví dụ: 100000 -> "100.000"
+  };
+
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategories(prev =>
+      prev.includes(categoryId)
+        ? prev.filter(cId => cId !== categoryId)
+        : [...prev, categoryId]
     );
   };
-
-  const availableColors = [
-    { name: 'Đỏ', code: '#ff0000' },
-    { name: 'Xanh dương', code: '#0000ff' },
-    { name: 'Xanh lá', code: '#008000' },
-    { name: 'Vàng', code: '#ffff00' },
-    { name: 'Đen', code: '#000000' },
-    { name: 'Trắng', code: '#ffffff', border: true },
-  ];
-
-  const handleRatingChange = (rating) => {
-    setSelectedRating(prevRating => (prevRating === rating ? 0 : rating));
-  };
+  
+  const memoizedOnFilterChange = useCallback(onFilterChange, [onFilterChange]);
 
   useEffect(() => {
-    const parsePrice = (priceStr) => {
+    const parsePriceForFilter = (priceStr) => {
         if (priceStr === '' || priceStr === null || priceStr === undefined) return null;
-        // Loại bỏ tất cả các ký tự không phải là số (ví dụ: dấu chấm, dấu phẩy, chữ '₫')
-        const cleanedStr = String(priceStr).replace(/[^0-9]/g, '');
+        const cleanedStr = String(priceStr).replace(/[^0-array]/g, ''); // Should be unnecessary if input is controlled
         if (cleanedStr === '') return null;
         return parseFloat(cleanedStr);
     };
 
     const filters = {
       priceRange: {
-        min: parsePrice(priceRange.min),
-        max: parsePrice(priceRange.max),
+        min: parsePriceForFilter(priceRange.min),
+        max: parsePriceForFilter(priceRange.max),
       },
       categories: selectedCategories,
-      highlights: highlightFilters,
-      colors: selectedColors,
-      rating: selectedRating,
     };
-    // console.log("Filters updated (Vietnamese):", filters);
-    if (onFilterChange) {
-      onFilterChange(filters);
+    
+    if (memoizedOnFilterChange) {
+        memoizedOnFilterChange(filters);
     }
-  }, [priceRange, selectedCategories, highlightFilters, selectedColors, selectedRating, onFilterChange]);
-
-  const categoriesData = [
-    { name: 'Cửa hàng', id: 'our-store' },
-    { name: 'Điện thoại thông minh', id: 'smartphones' },
-    { name: 'Laptop & Máy tính', id: 'laptops-computers' },
-    { name: 'Ưu đãi đặc biệt', id: 'special-offer' },
-    { name: 'Máy ảnh', id: 'cameras'},
-    { name: 'TV & Âm thanh', id: 'tv-audio'},
-    { name: 'Phụ kiện', id: 'accessories'},
-  ];
-
-  const renderStars = (count) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        i <= count ? (
-          <FaStar key={i} />
-        ) : (
-          <FaRegStar key={i} />
-        )
-      );
-    }
-    return stars;
-  };
+  }, [priceRange, selectedCategories, memoizedOnFilterChange]);
 
   return (
     <aside className="sidebar-filters">
       <FilterSection title="Lọc theo danh mục">
-        <ul>
-          {categoriesData.map(cat => (
-            <li key={cat.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selectedCategories.includes(cat.id)}
-                  onChange={() => handleCategoryChange(cat.id)}
-                />
-                {cat.name}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </FilterSection>
-
-      <FilterSection title="Nổi bật">
-         <div>
-           <label>
-             <input
-               type="checkbox"
-               name="promotion"
-               checked={highlightFilters.promotion}
-               onChange={handleHighlightChange}
-             /> Khuyến mãi
-           </label>
-         </div>
-         <div>
-           <label>
-             <input
-               type="checkbox"
-               name="newArrivals"
-               checked={highlightFilters.newArrivals}
-               onChange={handleHighlightChange}
-             /> Hàng mới về
-           </label>
-         </div>
-      </FilterSection>
-
-      <FilterSection title="Lọc theo màu sắc">
-        <div className="color-filter">
-          {availableColors.map(color => (
-            <span
-              key={color.code}
-              className={`color-swatch ${selectedColors.includes(color.code) ? 'active' : ''} ${color.border ? 'has-border' : ''}`}
-              style={{ backgroundColor: color.code }}
-              title={color.name}
-              onClick={() => handleColorChange(color.code)}
-            ></span>
-          ))}
-        </div>
+        {/* ... (phần category giữ nguyên) ... */}
+         {CATEGORIES_DATA.length > 0 ? (
+            <ul>
+            {CATEGORIES_DATA.map(cat => (
+                <li key={cat.id}>
+                <label>
+                    <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat.id)}
+                    onChange={() => handleCategoryChange(cat.id)}
+                    />
+                    {cat.name}
+                </label>
+                </li>
+            ))}
+            </ul>
+        ) : (
+            <p className="no-categories-message">Không có danh mục nào.</p>
+        )}
       </FilterSection>
 
       <FilterSection title="Lọc theo giá">
         <div className="price-input-group">
           <input
-            type="text" // Đổi sang text để cho phép nhập dấu phẩy/chấm
+            type="text"
             name="min"
-            placeholder="Thấp nhất ₫"
-            value={priceRange.min} // Sẽ hiển thị dạng đã format nếu muốn, nhưng state vẫn là chuỗi số
+            // THAY ĐỔI PLACEHOLDER
+            placeholder="vd: 100.000" // Hoặc "Từ 000 ₫"
+            value={formatDisplayPrice(priceRange.min)}
             onChange={handlePriceInputChange}
             className="price-input"
+            // pattern="[0-9]*" // Có thể thêm pattern để bàn phím mobile hiển thị số (tùy trình duyệt)
+            // inputMode="numeric" // Gợi ý bàn phím số
           />
           <span className="price-separator">-</span>
           <input
-            type="text"   
+            type="text"
             name="max"
-            placeholder="Cao nhất ₫"
-            value={priceRange.max}
+            // THAY ĐỔI PLACEHOLDER
+            placeholder="vd: 5.000.000" // Hoặc "Đến 000 ₫"
+            value={formatDisplayPrice(priceRange.max)}
             onChange={handlePriceInputChange}
             className="price-input"
+            // pattern="[0-9]*"
+            // inputMode="numeric"
           />
         </div>
-        <div className="price-display-text">
-          Giá: {formatCurrency(priceRange.min) || '0'}₫ - {formatCurrency(priceRange.max) || 'Không giới hạn'}
-          {priceRange.max && '₫'}
-        </div>
-      </FilterSection>
-
-      <FilterSection title="Đánh giá trung bình">
-        <div className="rating-filter">
-          {[5, 4, 3, 2, 1].map(ratingValue => (
-            <div
-              key={ratingValue}
-              className={`rating-option ${selectedRating === ratingValue ? 'selected' : ''}`}
-              onClick={() => handleRatingChange(ratingValue)}
-            >
-              {renderStars(ratingValue)}
-            </div>
-          ))}
-        </div>
+        {/* Bạn có thể hiển thị giá trị đang được lọc ở đây nếu muốn */}
+        {/* <div className="current-filter-price-display">
+            Đang lọc từ: {formatDisplayPrice(priceRange.min) || '0'}₫
+            đến: {formatDisplayPrice(priceRange.max) || 'Không giới hạn'}
+            {priceRange.max ? '₫' : ''}
+        </div> */}
       </FilterSection>
     </aside>
   );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes, FaBox, FaLayerGroup, FaDollarSign, FaWarehouse, FaImage } from "react-icons/fa";
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
     const [formData, setFormData] = useState({

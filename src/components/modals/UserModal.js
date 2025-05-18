@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Modal, Form, Button, Row, Col, Container } from "react-bootstrap";
 import { PERMISSIONS } from "../../constants/permissions";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 const UserModal = ({ isOpen, onClose, user = null, onSuccess }) => {
     const [formData, setFormData] = useState({

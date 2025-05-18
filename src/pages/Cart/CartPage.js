@@ -110,7 +110,7 @@ const formatCurrency = (amount) => {
                         <span className="grand-total">{formatCurrency(cartTotal)}</span>
                     </div>
                     <Link to="/checkout" className="btn btn-primary btn-checkout">
-                        Proceed to Checkout
+                        Thanh toán
                     </Link>
                 </div>
             </div>

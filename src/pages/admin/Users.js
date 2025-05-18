@@ -4,7 +4,6 @@ import axios from "axios";
 import { Table, Button, Container, Form, Row, Col, Badge, Pagination } from "react-bootstrap";
 import UserModal from "../../components/modals/UserModal";
 import { PERMISSIONS } from "../../constants/permissions";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 // Helper function to decode JWT token
 const decodeJwt = (token) => {

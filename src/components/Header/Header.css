@@ -481,8 +481,10 @@ background: var(--text-secondary, #999);
   display: flex;
   align-items: stretch;
   height: 100%;
-  flex-grow: 1;
+  flex-grow: 1; /* This allows .main-navigation to fill the .header-nav-inner */
   min-width: 0;
+  justify-content: center; /* Added: This centers the navigation items */
+  gap: 54px; 
 }
 
 /* --- Individual Nav Items & Links --- */
@@ -491,7 +493,7 @@ background: var(--text-secondary, #999);
   display: flex;
   align-items: center;
   height: 100%;
-  margin: 0 54px 0 0;
+  margin: 0;
 }
 
 .nav-item > a {
@@ -556,9 +558,10 @@ background: var(--text-secondary, #999);
 /* ============= DROPDOWN MENUS =============== */
 /* ============================================ */
 
+/* Header.css - Sửa lại */
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* Sát nav */
+  top: 100%;
   left: 0;
   z-index: 1030;
   background-color: var(--background-primary);
@@ -566,22 +569,26 @@ background: var(--text-secondary, #999);
   border-top: none;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   border-radius: 0 0 5px 5px;
-  padding: 0; /* Reset padding, dùng padding cho list con */
+  padding: 0;
   min-width: 220px;
 
+  /* BỎ !important ở đây */
   opacity: 0;
   visibility: hidden;
   transform: translateY(5px);
   pointer-events: none;
+  /* THÊM LẠI TRANSITION CHO TRẠNG THÁI ẨN ĐỂ MƯỢT MÀ KHI ẨN ĐI */
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
 }
 
 .nav-item.has-dropdown:hover > .dropdown-menu,
 .browse-categories-wrapper:hover > .dropdown-menu {
+  /* CÓ THỂ BỎ !important ở đây nếu không có xung đột nào khác từ Bootstrap */
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
+  /* Transition khi hiện ra */
   transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0s;
 }
 
@@ -709,23 +716,20 @@ background: var(--text-secondary, #999);
     .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 960px; }
     .shop-menu.mega-menu, .products-menu.mega-menu, .top-deals-menu.mega-menu { min-width: 800px; }
     .product-grid-mini { grid-template-columns: repeat(2, 1fr); }
-    .nav-item { padding: 0 10px; } /* Giảm padding nav item trên màn hình nhỏ hơn */
+    .nav-item { padding: 0 10px; } 
 }
 
 @media (max-width: 991px) {
     .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 720px; padding: 0 10px; }
     .search-form { max-width: 400px; }
-    .main-navigation { display: none; }
-    .header-top-nav { display: none; }
-    .todays-deals { display: none; }
     .browse-categories-wrapper { margin-right: auto; }
-    .browse-categories { border-right: none; } /* Bỏ border nút browse khi chỉ còn nó */
     .mobile-menu-toggle { display: block; }
+    .nav-item { padding: 0 8px; } 
+
 }
 
 @media (max-width: 767px) {
     .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 100%; padding: 0 10px; }
-    .header-message { display: none; }
     .header-main-inner { flex-wrap: wrap; justify-content: space-between; gap: 10px; }
     .logo { order: 1; flex-basis: 50%; }
     .header-actions { order: 2; gap: 10px; flex-basis: 40%; justify-content: flex-end; }
@@ -736,6 +740,7 @@ background: var(--text-secondary, #999);
     .header-action-item .cart-text { display: none; }
     .mega-menu { min-width: calc(100vw - 20px) !important; width: calc(100vw - 20px) !important; left: 10px !important; transform: none !important; padding: 15px; }
     .dropdown-menu:not(.mega-menu) { min-width: 200px; }
+    .nav-item { padding: 0 5px; } 
 }
 
 @media (max-width: 575px) {
@@ -749,6 +754,9 @@ background: var(--text-secondary, #999);
     .product-grid-mini { grid-template-columns: 1fr; gap: 15px; }
     .category-icons-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* Sửa thành 2 cột */
     .product-showcase-mini img { max-width: 50px; height: 50px;}
+    .nav-item { padding: 0; } 
+  
+    .main-navigation {max-width: 20%;}
 }
 
 /* Mobile Menu Toggle Button */
