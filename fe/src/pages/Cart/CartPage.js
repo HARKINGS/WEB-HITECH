@@ -44,7 +44,7 @@ const formatCurrency = (amount) => {
                     <tr key={item.id} className="cart-item-row">
                       <td className="cart-item-product">
                         <Link to={`/products/${item.id}`} className="cart-item-image-link">
-                           <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+                           <img src={`${process.env.REACT_APP_API_BASE_URL}${item.imageUrl}`} alt={item.name} className="cart-item-image" />
                         </Link>
                         <div className="cart-item-details">
                             <Link to={`/products/${item.id}`} className="cart-item-name">{item.name}</Link>
