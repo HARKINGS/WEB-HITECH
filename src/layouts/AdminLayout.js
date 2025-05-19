@@ -1,13 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaBoxOpen, FaShoppingCart, FaUsers, FaCog, FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
 import ThemeToggle from "../components/ThemeToggle/ThemeToggle";
 import "../styles/AdminLayout.css";
 import adminAvatar from "../assets/images/admin.png";
 
+// Helper function to decode JWT token
+const decodeJwt = (token) => {
+    try {
+        return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+        return null;
+    }
+};
+
 const AdminLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [username, setUsername] = useState("Admin User");
     const location = useLocation();
+
+    useEffect(() => {
+        // Get token from cookie
+        const token = document.cookie
+            .split("; ")
+            .find((row) => row.startsWith("token="))
+            ?.split("=")[1];
+
+        if (token) {
+            const decodedToken = decodeJwt(token);
+            if (decodedToken && decodedToken.sub) {
+                setUsername(decodedToken.sub);
+            }
+        }
+    }, []);
 
     const isActive = (path) => {
         return location.pathname === path ? "active" : "";
@@ -84,7 +109,7 @@ const AdminLayout = () => {
                         <ThemeToggle />
                         <div className="admin-user">
                             <img src={adminAvatar} alt="Admin" />
-                            <span>Admin User</span>
+                            <span>{username}</span>
                         </div>
                     </div>
                 </div>

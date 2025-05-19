@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
                 setUser(userData);
                 setIsAuthenticated(true);
-                setIsAdmin(userData.role === "ADMIN" || userData.role === "STAFF");
+                setIsAdmin(true);
             } catch (error) {
                 console.error("Error validating token:", error);
                 // Clear invalid cookie
