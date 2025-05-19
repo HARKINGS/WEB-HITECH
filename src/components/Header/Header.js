@@ -106,7 +106,7 @@ const Header = () => {
                             {cartItems.map(item => (
                                 <li key={item.id} className="cart-preview-item">
                                     <img
-                                        src={item.imageUrl || '/assets/images/placeholder-image.png'}
+                                        src={`${process.env.REACT_APP_API_BASE_URL}${item.imageUrl}` || '/assets/images/placeholder-image.png'}
                                         alt={item.name}
                                         className="cart-preview-image"
                                     />
