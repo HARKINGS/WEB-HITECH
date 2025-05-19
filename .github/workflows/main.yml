@@ -33,6 +33,7 @@ jobs:
 
             # finally, rebuild & restart
             cd "$APP_DIR"
+            export IP=${{ vars.VPS_HOST }}
             docker stop $(docker ps -aq)
             docker rm $(docker ps -aq)
             docker compose up --build -d
