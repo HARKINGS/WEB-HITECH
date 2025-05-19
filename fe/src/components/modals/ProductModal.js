@@ -10,7 +10,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         goodsBrand: "",
         price: "",
         quantity: "",
-        goodsImage: null,
+        imageFile: null,
         goodsVersion: "1.0",
         status: "In Stock",
     });
@@ -31,7 +31,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                 goodsBrand: product.brand || "",
                 price: product.price?.toString() || "",
                 quantity: product.stock?.toString() || "",
-                goodsImage: null,
+                imageFile: null,
                 goodsVersion: product.version || "1.0",
                 status: determineStatus(product.stock) || "In Stock",
             });
@@ -47,7 +47,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                 goodsBrand: "",
                 price: "",
                 quantity: "",
-                goodsImage: null,
+                imageFile: null,
                 goodsVersion: "1.0",
                 status: "In Stock",
             });
@@ -70,7 +70,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         if (file) {
             setFormData((prev) => ({
                 ...prev,
-                goodsImage: file
+                imageFile: file
             }));
             
             // Create preview URL
@@ -116,8 +116,8 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         }
 
         // Image validation only for new products
-        if (!isEditMode && !formData.goodsImage && !previewImage) {
-            newErrors.goodsImage = "Product image is required";
+        if (!isEditMode && !formData.imageFile && !previewImage) {
+            newErrors.imageFile = "Product image is required";
         }
 
         setErrors(newErrors);
@@ -143,8 +143,8 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                 submitFormData.append("goodsVersion", formData.goodsVersion);
 
                 // Handle image upload
-                if (formData.goodsImage) {
-                    submitFormData.append("goodsImage", formData.goodsImage);
+                if (formData.imageFile) {
+                    submitFormData.append("imageFile", formData.imageFile);
                 }
 
                 // If editing, append the product ID and handle image differently
@@ -152,7 +152,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                     submitFormData.append("goodsId", product.id);
                     
                     // If no new image is uploaded but there's an existing image
-                    if (!formData.goodsImage && previewImage === product.image) {
+                    if (!formData.imageFile && previewImage === product.image) {
                         submitFormData.append("goodsImageURL", product.image);
                     }
                 }
@@ -325,13 +325,13 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                                 </span>
                                 <Form.Control
                                     type="file"
-                                    name="goodsImage"
+                                    name="imageFile"
                                     onChange={handleImageChange}
                                     accept="image/*"
-                                    isInvalid={!!errors.goodsImage}
+                                    isInvalid={!!errors.imageFile}
                                     className="bg-dark text-light border-secondary"
                                 />
-                                <Form.Control.Feedback type="invalid">{errors.goodsImage}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">{errors.imageFile}</Form.Control.Feedback>
                             </div>
                             {previewImage && (
                                 <div style={{ width: '100px', height: '100px' }}>
