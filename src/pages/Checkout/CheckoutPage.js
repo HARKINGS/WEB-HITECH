@@ -269,18 +269,22 @@ const CheckoutPage = () => {
 
         setIsSubmitting(true);
 
-        const shippingInfoPayload = {
-            fullName: formData.fullName, phone: formData.phone, email: formData.email || null,
-            provinceName: formData.provinceName, districtName: formData.districtName, wardName: formData.wardName,
-            street: formData.streetAddress, notes: formData.notes || null,
-        };
+        // const shippingInfoPayload = {
+        //     fullName: formData.fullName, phone: formData.phone, email: formData.email || null,
+        //     provinceName: formData.provinceName, districtName: formData.districtName, wardName: formData.wardName,
+        //     street: formData.streetAddress, notes: formData.notes || null,
+        // };
+        const fullAddressString = `${formData.streetAddress}, ${formData.wardName}, ${formData.districtName}, ${formData.provinceName}`;
+
         const orderItemsPayload = cartItems.map(item => ({ goodsId: item.id, quantity: item.quantity, unitPrice: item.price }));
         const orderPayload = {
-            orderItems: orderItemsPayload, shippingInfo: shippingInfoPayload,
-            paymentMethod: paymentMethod, // Sẽ là CASH, VNPAY, hoặc ZALOPAY
-            totalPrice: finalTotalPrice, originalPrice: originalCartTotal,
+            orderItems: orderItemsPayload,
+            shippingAddress: fullAddressString, // Gửi dạng chuỗi
+            paymentMethod: paymentMethod,
+            totalPrice: finalTotalPrice,
             voucherId: appliedVoucher?.validated ? appliedVoucher.voucherId : null,
-            totalDiscount: totalDiscountAmount, notes: formData.notes || null,
+            totalDiscount: totalDiscountAmount,
+            // notes: formData.notes || null, // Trường này có thể không được BE xử lý nếu nó mong đợi address là string
         };
 
         try {
@@ -304,6 +308,7 @@ const CheckoutPage = () => {
             // Sử dụng CASH, VNPAY, ZALOPAY
             if (paymentMethod === 'CASH' || paymentMethod === 'VNPAY') {
                 setOrderPlaced(true);
+                clearCart();
             } else if (paymentMethod === 'ZALOPAY') {
                 const zaloPayInitData = {
                     appOrderSn: systemOrderId,
@@ -353,7 +358,7 @@ const CheckoutPage = () => {
                          </div>
                     )}
                     <p>Chúng tôi sẽ liên hệ với bạn sớm để xác nhận đơn hàng.</p>
-                     <button onClick={() => { clearCart(); navigate('/'); }} className="btn btn-secondary">Tiếp tục mua sắm</button>
+                     <button onClick={() => {navigate('/shop'); }} className="btn btn-secondary btn-continue-shopping">Tiếp tục mua sắm</button>
                 </div>
             </div>
         );
