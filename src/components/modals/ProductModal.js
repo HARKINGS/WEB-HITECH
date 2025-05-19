@@ -10,10 +10,11 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
         goodsBrand: "",
         price: "",
         quantity: "",
-        goodsImageURL: "",
+        imageFile: null,
         goodsVersion: "1.0",
         status: "In Stock",
     });
+    const [previewImage, setPreviewImage] = useState(null);
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
@@ -30,10 +31,14 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                 goodsBrand: product.brand || "",
                 price: product.price?.toString() || "",
                 quantity: product.stock?.toString() || "",
-                goodsImageURL: product.image || "https://example.com/image.jpg",
+                imageFile: null,
                 goodsVersion: product.version || "1.0",
                 status: determineStatus(product.stock) || "In Stock",
             });
+            // Set the preview image from existing product
+            if (product.image) {
+                setPreviewImage(product.image);
+            }
         } else {
             setFormData({
                 goodsName: "",
@@ -42,10 +47,11 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                 goodsBrand: "",
                 price: "",
                 quantity: "",
-                goodsImageURL: "",
+                imageFile: null,
                 goodsVersion: "1.0",
                 status: "In Stock",
             });
+            setPreviewImage(null);
         }
         setErrors({});
         setSubmitError("");
@@ -57,6 +63,20 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
             ...prev,
             [name]: value,
         }));
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setFormData((prev) => ({
+                ...prev,
+                imageFile: file
+            }));
+            
+            // Create preview URL
+            const previewURL = URL.createObjectURL(file);
+            setPreviewImage(previewURL);
+        }
     };
 
     const validate = () => {
@@ -95,6 +115,11 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
             newErrors.quantity = "Stock must be a non-negative integer";
         }
 
+        // Image validation only for new products
+        if (!isEditMode && !formData.imageFile && !previewImage) {
+            newErrors.imageFile = "Product image is required";
+        }
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -107,19 +132,32 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
             setIsSubmitting(true);
 
             try {
-                // Format the data for API
-                const submissionData = {
-                    goodsName: formData.goodsName,
-                    goodsDescription: formData.goodsDescription,
-                    goodsCategory: formData.goodsCategory,
-                    goodsBrand: formData.goodsBrand,
-                    price: Number(formData.price),
-                    quantity: Number(formData.quantity),
-                    goodsImageURL: formData.goodsImageURL || "https://example.com/image.jpg",
-                    goodsVersion: formData.goodsVersion,
-                };
+                // Create FormData object
+                const submitFormData = new FormData();
+                submitFormData.append("goodsName", formData.goodsName);
+                submitFormData.append("goodsDescription", formData.goodsDescription);
+                submitFormData.append("goodsCategory", formData.goodsCategory);
+                submitFormData.append("goodsBrand", formData.goodsBrand);
+                submitFormData.append("price", Number(formData.price));
+                submitFormData.append("quantity", Number(formData.quantity));
+                submitFormData.append("goodsVersion", formData.goodsVersion);
 
-                await onSuccess(submissionData);
+                // Handle image upload
+                if (formData.imageFile) {
+                    submitFormData.append("imageFile", formData.imageFile);
+                }
+
+                // If editing, append the product ID and handle image differently
+                if (isEditMode) {
+                    submitFormData.append("goodsId", product.id);
+                    
+                    // If no new image is uploaded but there's an existing image
+                    if (!formData.imageFile && previewImage === product.image) {
+                        submitFormData.append("goodsImageURL", product.image);
+                    }
+                }
+
+                await onSuccess(submitFormData, isEditMode);
                 onClose();
             } catch (error) {
                 console.error("Form submission error:", error);
@@ -238,7 +276,7 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Price ($)</Form.Label>
+                                <Form.Label>Price (₫)</Form.Label>
                                 <div className="input-group">
                                     <span className="input-group-text bg-dark text-light border-secondary">
                                         <FaDollarSign />
@@ -279,19 +317,36 @@ const ProductModal = ({ isOpen, onClose, product = null, onSuccess }) => {
                     </Row>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Image URL</Form.Label>
-                        <div className="input-group">
-                            <span className="input-group-text bg-dark text-light border-secondary">
-                                <FaImage />
-                            </span>
-                            <Form.Control
-                                type="text"
-                                name="goodsImageURL"
-                                placeholder="https://example.com/image.jpg"
-                                value={formData.goodsImageURL}
-                                onChange={handleChange}
-                                className="bg-dark text-light border-secondary"
-                            />
+                        <Form.Label>Product Image</Form.Label>
+                        <div className="d-flex align-items-center gap-3">
+                            <div className="input-group">
+                                <span className="input-group-text bg-dark text-light border-secondary">
+                                    <FaImage />
+                                </span>
+                                <Form.Control
+                                    type="file"
+                                    name="imageFile"
+                                    onChange={handleImageChange}
+                                    accept="image/*"
+                                    isInvalid={!!errors.imageFile}
+                                    className="bg-dark text-light border-secondary"
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.imageFile}</Form.Control.Feedback>
+                            </div>
+                            {previewImage && (
+                                <div style={{ width: '100px', height: '100px' }}>
+                                    <img
+                                        src={previewImage}
+                                        alt="Preview"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            borderRadius: '4px'
+                                        }}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </Form.Group>
                 </Form>

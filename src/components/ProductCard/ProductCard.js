@@ -77,7 +77,7 @@ const ProductCard = ({ product }) => {
             <Link to={productUrl} className="product-image-link">
                 <img
                     src={finalDisplayImageUrl}
-                    alt={goodsName}
+                    alt={goodsName}          
                     className="product-image"
                     onError={(e) => { e.target.onerror = null; e.target.src='/placeholder-product-image.png'; }}
                 />
