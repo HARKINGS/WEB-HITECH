@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
         goodsId = '',
         goodsName = 'Sản phẩm không tên',
         price = 0,
-        goodsImageURL = '',
+        goodsImageURL,
         quantity = 0, // Thêm quantity để kiểm tra hết hàng
         averageRating = 0 // Giả sử có trường này từ product prop
     } = product || {};
@@ -40,12 +40,12 @@ const ProductCard = ({ product }) => {
 
     const productUrl = `/products/${goodsId}`;
 
-    let displayImageUrl = goodsImageURL;
-    if (goodsImageURL && !goodsImageURL.startsWith('http') && !goodsImageURL.startsWith('//')) {
-        const separator = (apiBaseUrl.endsWith('/') || goodsImageURL.startsWith('/')) ? '' : '/';
-        displayImageUrl = `${apiBaseUrl}${separator}${goodsImageURL.startsWith('/') ? goodsImageURL.substring(1) : goodsImageURL}`;
-    }
-    const finalDisplayImageUrl = displayImageUrl || '/placeholder-product-image.png';
+    // let displayImageUrl = goodsImageURL;
+    // if (goodsImageURL && !goodsImageURL.startsWith('http') && !goodsImageURL.startsWith('//')) {
+    //     const separator = (apiBaseUrl.endsWith('/') || goodsImageURL.startsWith('/')) ? '' : '/';
+    //     displayImageUrl = `${apiBaseUrl}${separator}${goodsImageURL.startsWith('/') ? goodsImageURL.substring(1) : goodsImageURL}`;
+    // }
+    // const finalDisplayImageUrl = displayImageUrl || '/placeholder-product-image.png';
 
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -76,10 +76,9 @@ const ProductCard = ({ product }) => {
         <div className="product-card">
             <Link to={productUrl} className="product-image-link">
                 <img
-                    src={finalDisplayImageUrl}
-                    alt={goodsName}          
+                    src={`${process.env.REACT_APP_API_BASE_URL}${goodsImageURL}` || '/placeholder-product-image.png'}
+                    alt={goodsName || 'Product Image'}
                     className="product-image"
-                    onError={(e) => { e.target.onerror = null; e.target.src='/placeholder-product-image.png'; }}
                 />
             </Link>
             <div className="product-info">
