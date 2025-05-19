@@ -571,3 +571,10 @@
     font-weight: bold;
     color: var(--price-color); /* Hoặc màu chính của trang */
 }
+
+.btn-continue-shopping {
+  background-color: var(--accent-color);
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

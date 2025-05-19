@@ -11,9 +11,9 @@ const CartPage = () => {
   // Helper to format currency
 const formatCurrency = (amount) => {
   if (typeof amount !== 'number' || isNaN(amount)) {
-    return '$0.00'; 
+    return '0 ₫'; 
   }
-  return `$${amount.toFixed(2)}`;
+  return `${amount} ₫`;
 };
 
   return (
@@ -94,17 +94,11 @@ const formatCurrency = (amount) => {
 
             {/* Cart Summary and Actions */}
             <div className="cart-summary-actions">
-                {/* <div className="cart-actions">
-                     <Link to="/shop" className="btn btn-secondary">Continue Shopping</Link>
-                     <button onClick={clearCart} className="btn btn-outline">Clear Cart</button>
-                </div> */}
-
                 <div className="cart-summary">
                     <div className="summary-row">
                         <span>Tổng cộng:</span>
                         <span>{formatCurrency(cartTotal)}</span>
                     </div>
-                    {/* Add rows for Shipping, Tax if applicable */}
                     <div className="summary-row total-row">
                         <span>Total:</span>
                         <span className="grand-total">{formatCurrency(cartTotal)}</span>
