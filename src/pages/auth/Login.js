@@ -17,11 +17,18 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    // Get redirect URL from query parameters
+    const getRedirectUrl = () => {
+        const params = new URLSearchParams(location.search);
+        const redirect = params.get('redirect');
+        return redirect ? decodeURIComponent(redirect) : "/";
+    };
+
     // Only redirect if user is already authenticated and we've checked localStorage (not loading)
     useEffect(() => {
         if (!loading && isAuthenticated) {
-            const from = location.state?.from?.pathname || "/";
-            navigate(from, { replace: true });
+            const redirectUrl = getRedirectUrl();
+            navigate(redirectUrl, { replace: true });
         }
     }, [isAuthenticated, loading, navigate, location]);
 
@@ -49,8 +56,8 @@ const Login = () => {
             try {
                 const success = await login({ username, password });
                 if (success) {
-                    const from = location.state?.from?.pathname || "/";
-                    navigate(from, { replace: true });
+                    const redirectUrl = getRedirectUrl();
+                    navigate(redirectUrl, { replace: true });
                 }
             } catch (error) {
                 setLoginError(error.message || "Failed to login. Please try again.");

@@ -11,7 +11,9 @@ const AdminRoute = () => {
     }
 
     if (!isAuthenticated || !isAdmin) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        // Create the redirect URL with the current path
+        const redirectUrl = encodeURIComponent(location.pathname + location.search);
+        return <Navigate to={`/login?redirect=${redirectUrl}`} replace />;
     }
 
     return <Outlet />;
