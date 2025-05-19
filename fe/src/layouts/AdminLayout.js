@@ -21,7 +21,9 @@ const AdminLayout = () => {
         <div className={`admin-layout ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
             <div className="admin-sidebar">
                 <div className="sidebar-header">
-                    <h2>{sidebarCollapsed ? "ET" : "Electech"}</h2>
+                    <a href="/" className="logo-link">
+                        <h2>{sidebarCollapsed ? "ET" : "Electech"}</h2>
+                    </a>
                     <button className="toggle-sidebar" onClick={toggleSidebar}>
                         ☰
                     </button>
