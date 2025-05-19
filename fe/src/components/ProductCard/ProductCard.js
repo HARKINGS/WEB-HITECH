@@ -58,7 +58,7 @@ const ProductCard = ({ product }) => {
         <div className="product-card">
             <Link to={productUrl} className="product-image-link">
                 <img
-                    src={goodsImageURL || '/path/to/placeholder.jpg'}
+                    src={`${process.env.REACT_APP_API_BASE_URL}/${goodsImageURL}` || '/path/to/placeholder.jpg'}
                     alt={goodsName || 'Product Image'}
                     className="product-image"
                 />
