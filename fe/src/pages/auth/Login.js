@@ -28,9 +28,12 @@ const Login = () => {
     useEffect(() => {
         if (!loading && isAuthenticated) {
             const redirectUrl = getRedirectUrl();
-            navigate(redirectUrl, { replace: true });
+            // Only navigate if we're not already on the target page
+            if (location.pathname !== redirectUrl) {
+                navigate(redirectUrl, { replace: true });
+            }
         }
-    }, [isAuthenticated, loading, navigate, location]);
+    }, [isAuthenticated, loading]); // Remove location and navigate from dependencies
 
     const validate = () => {
         const newErrors = {};
@@ -57,7 +60,10 @@ const Login = () => {
                 const success = await login({ username, password });
                 if (success) {
                     const redirectUrl = getRedirectUrl();
-                    navigate(redirectUrl, { replace: true });
+                    // Only navigate if we're not already on the target page
+                    if (location.pathname !== redirectUrl) {
+                        navigate(redirectUrl, { replace: true });
+                    }
                 }
             } catch (error) {
                 setLoginError(error.message || "Failed to login. Please try again.");
