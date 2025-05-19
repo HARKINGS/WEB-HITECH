@@ -120,7 +120,7 @@
                   <div className="product-detail-main">
                       <div className="product-gallery">
                           <div className="main-image">
-                              <img src={product.goodsImageURL || '/path/to/placeholder.jpg'} alt={product.goodsName} />
+                              <img src={`${process.env.REACT_APP_API_BASE_URL}${product.goodsImageURL}` || '/path/to/placeholder.jpg'} alt={product.goodsName} />
                               {/* {product.salePercent && <span className="badge badge-sale">-{product.salePercent}%</span>} */}
                           </div>
                       </div>
