@@ -99,6 +99,7 @@ const formatCurrency = (amount) => {
                         <span>Tổng cộng:</span>
                         <span>{formatCurrency(cartTotal)}</span>
                     </div>
+                    {/* Add rows for Shipping, Tax if applicable */}
                     <div className="summary-row total-row">
                         <span>Total:</span>
                         <span className="grand-total">{formatCurrency(cartTotal)}</span>

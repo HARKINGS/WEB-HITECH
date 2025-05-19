@@ -243,4 +243,7 @@
     .product-detail-main {
         grid-template-columns: 1fr; /* Stack gallery và info */
     }
+    .product-detail-page {
+      padding: 80px 0 30px 0;
+    }
 }

@@ -114,22 +114,21 @@
 }
 
 .product-name {
-  font-size: 0.9rem; /* Giảm nhẹ kích thước chữ */
+  font-size: 0.9rem; 
   font-weight: 500;
-  margin: 0 0 8px 0; /* Điều chỉnh margin */
-  min-height: 3em; /* Đảm bảo ít nhất 2 dòng cho tên sản phẩm, điều chỉnh nếu cần */
-  line-height: 1.5em; /* Cải thiện khả năng đọc */
-  overflow: hidden; /* Ẩn phần text thừa */
-  text-overflow: ellipsis; /* Thêm dấu "..." cho text dài */
-  /* Để hiển thị nhiều dòng với dấu "...", bạn cần kỹ thuật phức tạp hơn với -webkit-line-clamp */
+  margin: 0 0 8px 0; 
+  min-height: 3em; 
+  line-height: 1.5em;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Số dòng tối đa muốn hiển thị */
-  line-clamp: 2; /* Standard property for compatibility */
+  -webkit-line-clamp: 2; 
+  line-clamp: 2; 
   -webkit-box-orient: vertical;
 }
 .product-name > a {
-  font-size: 0.9rem; /* Đồng bộ kích thước chữ */
-  color: var(--text-primary); /* Đảm bảo màu chữ nhất quán */
+  font-size: 1rem; /* Đồng bộ kích thước chữ */
+  color: #000;
   text-decoration: none;
 }
 .product-name a:hover {
