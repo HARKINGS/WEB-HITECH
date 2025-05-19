@@ -73,13 +73,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, GET_PUBLIC_ENDPOINTS)
                         .permitAll()
-                        // Cho phép tất cả xem ảnh
-                        .requestMatchers(HttpMethod.GET, "/files/**")
+                        .requestMatchers("/uploads/**")
                         .permitAll()
-
-                        // Chỉ STAFF và ADMIN mới được upload ảnh
-                        .requestMatchers(HttpMethod.POST, "/files/upload")
-                        .hasAnyRole("STAFF", "ADMIN")
                         .anyRequest()
                         .authenticated())
                 .anonymous(anon -> anon.authorities(userPermissions.toArray(new String[0])))

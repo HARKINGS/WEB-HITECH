@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("zalopay")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class ZalopayController {
 
     private final ZalopayService zalopayService;

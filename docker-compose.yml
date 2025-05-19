@@ -11,6 +11,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/webhitech?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root_password
+    volumes:
+      - ./be/uploads:/app/uploads  # Mount thư mục uploads từ be vào container
     depends_on:
       - mysql
     networks:
@@ -26,6 +28,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=webhitech
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - web-network
     restart: unless-stopped
@@ -47,3 +51,6 @@ services:
 networks:
   web-network:
     driver: bridge
+
+volumes:
+  mysql_data:
