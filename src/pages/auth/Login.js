@@ -29,9 +29,7 @@ const Login = () => {
         if (!loading && isAuthenticated) {
             const redirectUrl = getRedirectUrl();
             // Only navigate if we're not already on the target page
-            if (location.pathname !== redirectUrl) {
-                navigate(redirectUrl, { replace: true });
-            }
+            navigate(redirectUrl);
         }
     }, [isAuthenticated, loading]); // Remove location and navigate from dependencies
 
