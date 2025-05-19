@@ -1,50 +1,38 @@
 name: Copy code to folder be and fe
-# Allow this workflow to push back to the repo
+
 permissions:
   contents: write
 
 on:
   push:
     branches:
-      - Harkins   # your back-end branch
-      - fe        # your front-end branch
+      - Harkins
+      - fe
 
 jobs:
   update-subtree:
     runs-on: ubuntu-latest
-
     steps:
-      # 1) check out the main branch (and fetch all history & other branches)
       - name: Checkout main
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: true  # so that subsequent git push uses $GITHUB_TOKEN
+          persist-credentials: true
 
-      # 2) configure a dummy git user for the merge commit
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 3) depending on which branch triggered, pull into the right prefix
       - name: Update subtree
         run: |
           BRANCH=${{ github.ref_name }}
           case "$BRANCH" in
-            Harkins)
-              git subtree pull --prefix=be origin Harkins
-              ;;
-            fe)
-              git subtree pull --prefix=fe origin fe
-              ;;
-            *)
-              echo "No matching subtree for branch $BRANCH; exiting."
-              exit 0
-              ;;
+            Harkins) git subtree pull --prefix=be  origin Harkins ;;
+            fe)      git subtree pull --prefix=fe  origin fe      ;;
+            *)       echo "No matching subtree for $BRANCH"; exit 0 ;;
           esac
 
-      # 4) push your updated main back up
       - name: Push changes
         run: git push origin main
