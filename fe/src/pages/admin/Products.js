@@ -111,47 +111,52 @@ const Products = () => {
     };
 
     // Handle product modal success
-    const handleProductSuccess = async (productData) => {
+    const handleProductSuccess = async (formData, isEditMode) => {
         try {
             const token = document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("token="))
                 ?.split("=")[1];
+
+            if (!token) {
+                throw new Error("Authentication token not found");
+            }
+
             const config = {
                 headers: {
-                    "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
                 },
             };
 
-            if (currentProduct) {
+            let response;
+            if (isEditMode) {
                 // Update existing product
-                const response = await axios.put(
+                response = await axios.put(
                     `${process.env.REACT_APP_API_BASE_URL}/goods/${currentProduct.id}`,
-                    {
-                        ...productData,
-                        goodsId: currentProduct.id,
-                    },
+                    formData,
                     config
                 );
-                if (response.data.code.toString() === "1000") {
-                    await fetchProducts(); // Reload products after update
-                } else {
-                    throw new Error("Failed to update product");
-                }
             } else {
                 // Add new product
-                const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/goods`, productData, config);
-                if (response.data.code.toString() === "1000") {
-                    await fetchProducts(); // Reload products after creation
-                } else {
-                    throw new Error("Failed to create product");
-                }
+                response = await axios.post(
+                    `${process.env.REACT_APP_API_BASE_URL}/goods`,
+                    formData,
+                    config
+                );
             }
-            setIsModalOpen(false);
+
+            if (response.data.code.toString() === "1000") {
+                await fetchProducts(); // Reload products after operation
+                setIsModalOpen(false);
+            } else {
+                throw new Error(isEditMode ? "Failed to update product" : "Failed to create product");
+            }
         } catch (err) {
             console.error("Error saving product:", err);
-            alert("Failed to save product. Please try again.");
+            const errorMessage = err.response?.data?.message || 
+                               (isEditMode ? "Failed to update product" : "Failed to create product");
+            alert(`${errorMessage}. Please try again.`);
         }
     };
 
@@ -352,7 +357,7 @@ const Products = () => {
                             <td>{product.id}</td>
                             <td>{product.name}</td>
                             <td>{product.category}</td>
-                            <td style={{ color: "var(--price-color)" }}>${product.price}</td>
+                            <td style={{ color: "var(--price-color)" }}>₫{product.price}</td>
                             <td>{product.stock}</td>
                             <td>
                                 <span

@@ -1,12 +1,11 @@
 // // src/components/Header/Header.js
 // import React, { useState, useRef, useEffect } from 'react';
-// import { Link, useNavigate, createSearchParams } from 'react-router-dom';
+// import { NavLink, Link, useNavigate, createSearchParams } from 'react-router-dom';
 // import './Header.css';
 // import {
 //     FaSearch, FaShoppingCart, FaTimes, FaPlus, FaMinus
-// } from 'react-icons/fa'; // Bỏ FaBars và FaChevronDown
+// } from 'react-icons/fa';
 // import { useCart } from '../../contexts/CartContext';
-// // Không cần getAllGoods nữa nếu không hiển thị danh mục động ở đây
 
 // const Header = () => {
 //     const [searchTerm, setSearchTerm] = useState('');
@@ -16,14 +15,6 @@
 //     const [isAnimating, setIsAnimating] = useState(false);
 //     const prevCartItemCount = useRef(cartItemCount);
 //     const navigate = useNavigate();
-
-//     // Không cần state cho categories ở đây nữa
-//     // const [allAvailableCategories, setAllAvailableCategories] = useState([]);
-//     // const [loadingCategories, setLoadingCategories] = useState(true);
-
-//     // useEffect(() => {
-//     //     // Không cần fetch categories ở đây nữa
-//     // }, []);
 
 //     useEffect(() => {
 //         if (cartItemCount > prevCartItemCount.current) {
@@ -54,20 +45,20 @@
 
 //     const handleCartMouseEnter = () => {
 //         clearTimeout(leaveTimeoutRef.current);
-//         setIsCartPreviewOpen(true); // Luôn mở khi hover vào icon
+//         setIsCartPreviewOpen(true);
 //     };
     
 //     const handleCartMouseLeave = () => {
 //         leaveTimeoutRef.current = setTimeout(() => {
 //             setIsCartPreviewOpen(false);
-//         }, 200); // Thời gian chờ trước khi đóng
+//         }, 200);
 //     };
 
 //     const renderCartPreview = () => {
 //         return (
 //             <div
 //                 className="cart-preview-dropdown"
-//                 onMouseEnter={handleCartMouseEnter} // Giữ mở khi hover vào dropdown
+//                 onMouseEnter={handleCartMouseEnter}
 //                 onMouseLeave={handleCartMouseLeave}
 //             >
 //                 {cartItems.length === 0 ? (
@@ -121,47 +112,62 @@
 //         <header className="site-header">
 //             <div className="header-main">
 //                 <div className="container header-main-inner">
-//                      <div className="logo">
-//                          <Link to="/">
-//                              <span className="logo-text noselect">electech</span>
-//                          </Link>
-//                      </div>
-//                      <form className="search-form" onSubmit={handleSearch}>
-//                          <input
-//                              type="text"
-//                              placeholder="Tìm kiếm sản phẩm..."
-//                              value={searchTerm}
-//                              onChange={(e) => setSearchTerm(e.target.value)}
-//                              className="search-input"
-//                          />
-//                          <button type="submit" className="search-button"><FaSearch /></button>
-//                      </form>
-//                       <div className="header-actions">
-//                          <div
-//                              className="header-action-item cart-action-wrapper"
-//                              onMouseEnter={handleCartMouseEnter}
-//                              onMouseLeave={handleCartMouseLeave}
-//                           >
-//                              <Link to="/cart" className={`cart-link-icon ${isAnimating ? 'cart-shake' : ''}`}>
-//                                  <FaShoppingCart />
-//                                  <span className="noselect">
-//                                      Giỏ hàng <span className="cart-count">{cartItemCount}</span>
-//                                  </span>
-//                              </Link>
-//                               {isCartPreviewOpen && renderCartPreview()}
-//                          </div>
-//                      </div>
-//                  </div>
+//                     <div className="logo">
+//                         <Link to="/">
+//                             <span className="logo-text noselect">electech</span>
+//                         </Link>
+//                     </div>
+//                     <form className="search-form" onSubmit={handleSearch}>
+//                         <input
+//                             type="text"
+//                             placeholder="Tìm kiếm sản phẩm..."
+//                             value={searchTerm}
+//                             onChange={(e) => setSearchTerm(e.target.value)}
+//                             className="search-input"
+//                         />
+//                         <button type="submit" className="search-button"><FaSearch /></button>
+//                     </form>
+//                     <div className="header-actions">
+//                         <div
+//                             className="header-action-item cart-action-wrapper"
+//                             onMouseEnter={handleCartMouseEnter}
+//                             onMouseLeave={handleCartMouseLeave}
+//                         >
+//                             <Link to="/cart" className={`cart-link-icon ${isAnimating ? 'cart-shake' : ''}`}>
+//                                 <FaShoppingCart />
+//                                 <span className="noselect">
+//                                     Giỏ hàng <span className="cart-count">{cartItemCount}</span>
+//                                 </span>
+//                             </Link>
+//                             {isCartPreviewOpen && renderCartPreview()}
+//                         </div>
+//                     </div>
+//                 </div>
 //             </div>
 
 //             <nav className="header-nav">
-//                  <div className="container header-nav-inner">
-//                     {/* Bỏ phần "Danh mục sản phẩm" ở đây */}
+//                 <div className="container header-nav-inner">
 //                     <div className="main-navigation">
-//                         <div className="nav-item"><Link to="/">Trang chủ</Link></div>
-//                         <div className="nav-item"><Link to="/shop">Cửa hàng</Link></div>
-//                         <div className="nav-item"><Link to="/contact-us">Liên hệ</Link></div>
-//                         <div className="nav-item"><Link to="/policy">Chính sách</Link></div>
+//                         <div className="nav-item">
+//                             <NavLink to="/" end>
+//                                 Trang chủ
+//                             </NavLink>
+//                         </div>
+//                         <div className="nav-item">
+//                             <NavLink to="/shop">
+//                                 Cửa hàng
+//                             </NavLink>
+//                         </div>
+//                         <div className="nav-item">
+//                             <NavLink to="/contact-us">
+//                                 Liên hệ
+//                             </NavLink>
+//                         </div>
+//                         <div className="nav-item">
+//                             <NavLink to="/policy">
+//                                 Chính sách
+//                             </NavLink>
+//                         </div>
 //                     </div>
 //                 </div>
 //             </nav>
@@ -176,7 +182,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, Link, useNavigate, createSearchParams } from 'react-router-dom';
 import './Header.css';
 import {
-    FaSearch, FaShoppingCart, FaTimes, FaPlus, FaMinus
+    FaSearch, FaShoppingCart, FaTimes, FaPlus, FaMinus, FaBars // THÊM FaBars
 } from 'react-icons/fa';
 import { useCart } from '../../contexts/CartContext';
 
@@ -189,6 +195,9 @@ const Header = () => {
     const prevCartItemCount = useRef(cartItemCount);
     const navigate = useNavigate();
 
+    // --- STATE CHO MOBILE MENU ---
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
     useEffect(() => {
         if (cartItemCount > prevCartItemCount.current) {
             setIsAnimating(true);
@@ -197,6 +206,13 @@ const Header = () => {
         }
         prevCartItemCount.current = cartItemCount;
     }, [cartItemCount]);
+
+    // --- ĐÓNG MOBILE MENU KHI CLICK LINK ---
+    const handleNavLinkClick = () => {
+        setIsMobileMenuOpen(false);
+        // Nếu cart preview đang mở, cũng có thể đóng nó lại
+        // setIsCartPreviewOpen(false);
+    };
 
     const handleSearch = async (e) => {
         e.preventDefault();
@@ -211,6 +227,7 @@ const Header = () => {
                 search: searchParams.toString()
             });
             setSearchTerm('');
+            setIsMobileMenuOpen(false); // Đóng mobile menu sau khi search
         } catch (error) {
             console.error('Search error:', error);
         }
@@ -220,7 +237,7 @@ const Header = () => {
         clearTimeout(leaveTimeoutRef.current);
         setIsCartPreviewOpen(true);
     };
-    
+
     const handleCartMouseLeave = () => {
         leaveTimeoutRef.current = setTimeout(() => {
             setIsCartPreviewOpen(false);
@@ -228,6 +245,7 @@ const Header = () => {
     };
 
     const renderCartPreview = () => {
+        // ... (giữ nguyên)
         return (
             <div
                 className="cart-preview-dropdown"
@@ -250,7 +268,7 @@ const Header = () => {
                                         <Link
                                             to={`/products/${item.id}`}
                                             className="cart-preview-name"
-                                            onClick={() => setIsCartPreviewOpen(false)}
+                                            onClick={() => { setIsCartPreviewOpen(false); handleNavLinkClick(); }} // Đóng cả preview và mobile menu
                                         >
                                             {item.name}
                                         </Link>
@@ -272,8 +290,8 @@ const Header = () => {
                             <span className="cart-preview-total">{(typeof cartTotal === 'number' ? cartTotal : 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                         </div>
                         <div className="cart-preview-actions">
-                            <Link to="/cart" className="btn btn-secondary btn-sm" onClick={() => setIsCartPreviewOpen(false)}>Xem giỏ hàng</Link>
-                            <Link to="/checkout" className="btn btn-primary btn-sm" onClick={() => setIsCartPreviewOpen(false)}>Thanh toán</Link>
+                            <Link to="/cart" className="btn btn-secondary btn-sm" onClick={() => { setIsCartPreviewOpen(false); handleNavLinkClick(); }}>Xem giỏ hàng</Link>
+                            <Link to="/checkout" className="btn btn-primary btn-sm" onClick={() => { setIsCartPreviewOpen(false); handleNavLinkClick(); }}>Thanh toán</Link>
                         </div>
                     </>
                 )}
@@ -286,11 +304,21 @@ const Header = () => {
             <div className="header-main">
                 <div className="container header-main-inner">
                     <div className="logo">
-                        <Link to="/">
+                        <Link to="/" onClick={handleNavLinkClick}> {/* Đóng mobile menu khi click logo */}
                             <span className="logo-text noselect">electech</span>
                         </Link>
                     </div>
-                    <form className="search-form" onSubmit={handleSearch}>
+                    {/* NÚT TOGGLE MOBILE MENU - sẽ hiển thị trên mobile */}
+                    <button
+                        className="mobile-menu-toggle"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle navigation"
+                        aria-expanded={isMobileMenuOpen}
+                    >
+                        {isMobileMenuOpen ? <FaTimes /> : <FaBars />} {/* Thay đổi icon */}
+                    </button>
+
+                    <form className={`search-form ${isMobileMenuOpen ? 'mobile-search-open' : ''}`} onSubmit={handleSearch}> {/* Thêm class cho mobile */}
                         <input
                             type="text"
                             placeholder="Tìm kiếm sản phẩm..."
@@ -300,15 +328,15 @@ const Header = () => {
                         />
                         <button type="submit" className="search-button"><FaSearch /></button>
                     </form>
-                    <div className="header-actions">
+                    <div className="header-actions"> {/* header-actions sẽ được xử lý vị trí bằng CSS */}
                         <div
                             className="header-action-item cart-action-wrapper"
                             onMouseEnter={handleCartMouseEnter}
                             onMouseLeave={handleCartMouseLeave}
                         >
-                            <Link to="/cart" className={`cart-link-icon ${isAnimating ? 'cart-shake' : ''}`}>
+                            <Link to="/cart" className={`cart-link-icon ${isAnimating ? 'cart-shake' : ''}`} onClick={handleNavLinkClick}>
                                 <FaShoppingCart />
-                                <span className="noselect">
+                                <span className="noselect cart-text-label"> {/* Thêm class để ẩn trên mobile nếu cần */}
                                     Giỏ hàng <span className="cart-count">{cartItemCount}</span>
                                 </span>
                             </Link>
@@ -318,26 +346,28 @@ const Header = () => {
                 </div>
             </div>
 
-            <nav className="header-nav">
+            {/* Thêm class is-open cho header-nav khi isMobileMenuOpen là true */}
+            <nav className={`header-nav ${isMobileMenuOpen ? 'is-open' : ''}`}>
                 <div className="container header-nav-inner">
+                    {/* Main navigation sẽ được ẩn/hiện bằng CSS */}
                     <div className="main-navigation">
                         <div className="nav-item">
-                            <NavLink to="/" end>
+                            <NavLink to="/" end onClick={handleNavLinkClick}>
                                 Trang chủ
                             </NavLink>
                         </div>
                         <div className="nav-item">
-                            <NavLink to="/shop">
+                            <NavLink to="/shop" onClick={handleNavLinkClick}>
                                 Cửa hàng
                             </NavLink>
                         </div>
                         <div className="nav-item">
-                            <NavLink to="/contact-us">
+                            <NavLink to="/contact-us" onClick={handleNavLinkClick}>
                                 Liên hệ
                             </NavLink>
                         </div>
                         <div className="nav-item">
-                            <NavLink to="/policy">
+                            <NavLink to="/policy" onClick={handleNavLinkClick}>
                                 Chính sách
                             </NavLink>
                         </div>

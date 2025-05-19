@@ -458,3 +458,123 @@
 .order-summary-box .total-amount {
     color: var(--price-color); /* Màu đỏ cho tổng tiền cuối */
 }
+
+.voucher-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--border-color-light, #eee);
+}
+
+.voucher-section h4 {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.voucher-input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.voucher-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.btn-apply-voucher {
+    padding: 8px 15px;
+    font-size: 0.95em;
+    /* Kế thừa style từ .btn hoặc .btn-secondary */
+    background-color: var(--button-secondary-bg, #6c757d);
+    color: var(--button-secondary-text, #fff);
+    border: 1px solid var(--button-secondary-bg, #6c757d);
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-apply-voucher:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.btn-apply-voucher:hover:not(:disabled) {
+    background-color: var(--button-secondary-hover-bg, #5a6268);
+}
+
+
+.voucher-message {
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+.voucher-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+.voucher-message.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.applied-voucher-info {
+    background-color: #e7f3ff;
+    border: 1px solid #b8daff;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+.applied-voucher-info p {
+    margin: 0 0 5px 0;
+    color: #004085;
+}
+.btn-remove-voucher {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.85em;
+    padding: 0;
+}
+
+
+/* Tổng tiền */
+.order-total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 1em;
+}
+.order-total-row span:first-child {
+    color: var(--text-secondary);
+}
+.order-total-row span:last-child {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.order-total-row.discount-row span:last-child {
+    color: var(--price-color); /* Màu đỏ cho số tiền giảm */
+}
+.order-total-row.final-total-row {
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 1.2em; /* Tổng tiền cuối cùng to hơn */
+}
+.order-total-row.final-total-row span:last-child {
+    font-weight: bold;
+    color: var(--price-color); /* Hoặc màu chính của trang */
+}
+
+.btn-continue-shopping {
+  background-color: var(--accent-color);
+  color: #000;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

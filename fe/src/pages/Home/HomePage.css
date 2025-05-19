@@ -173,7 +173,7 @@
   .slick-prev:before, .slick-next:before { font-size: 24px; }
 
   .home-page {
-    padding-top: 120px; /* Giảm padding top nếu header nhỏ hơn trên mobile */
+    padding-top: 120px;
   }
   .hero-section h1 { font-size: 2rem; }
   .hero-placeholder { height: 250px; }
@@ -182,4 +182,54 @@
 @media (max-width: 576px) {
   .slick-prev, .slick-next { display: none !important; } /* Ẩn mũi tên trên màn hình rất nhỏ nếu muốn */
   .slider-item-padding { padding: 0 5px; } /* Giảm padding item */
+}
+
+@media (max-width: 480px) {
+  .hero-section { padding: 30px 0; }
+  .hero-section h1 { font-size: 1.6rem; }
+  .hero-section p { font-size: 0.9rem; }
+  .hero-placeholder { height: 180px; }
+  .random-products-slider-section h2 { font-size: 1.4rem; }
+
+  /* Ẩn mũi tên trên màn hình rất nhỏ nếu slider chỉ hiển thị 1 item và không cần cuộn */
+  /* Hoặc nếu bạn muốn giữ lại, hãy đảm bảo chúng không chiếm quá nhiều không gian */
+  .slick-prev, .slick-next {
+     /* display: none !important; */ /* Nếu muốn ẩn hẳn */
+     /* Hoặc điều chỉnh kích thước và vị trí cho phù hợp */
+     width: 30px;
+     height: 30px;
+     left: 5px; /* Gần sát viền */
+  }
+  .slick-next {
+      right: 5px;
+  }
+  .slick-prev:before, .slick-next:before {
+      font-size: 18px;
+  }
+
+  .slider-item-padding {
+    padding: 0 2px; /* Padding rất nhỏ khi chỉ có 1 item */
+  }
+}
+
+/* tessstttt 19/5 */
+.product-slider-wrapper .slick-slide {
+  /* Thêm style cho thẻ div mà react-slick tạo ra cho mỗi slide */
+  display: flex; /* Cho phép item bên trong co giãn chiều cao */
+}
+
+.slider-item-padding {
+  padding: 0 8px; /* Giảm nhẹ padding nếu cần */
+  display: flex; /* Cho phép ProductCard bên trong co giãn theo chiều cao */
+  flex-direction: column; /* Đảm bảo ProductCard co giãn đúng hướng */
+  width: 100%; /* Quan trọng: để .product-card có thể set height: 100% */
+}
+
+/* Điều chỉnh mũi tên slider để không quá xa hoặc quá gần */
+.slick-prev { left: -20px; } /* Hoặc giá trị phù hợp */
+.slick-next { right: -20px; } /* Hoặc giá trị phù hợp */
+
+/* Có thể bạn muốn các mũi tên nhỏ hơn một chút */
+.slick-prev:before, .slick-next:before {
+  font-size: 24px; /* Giảm kích thước mũi tên */
 }

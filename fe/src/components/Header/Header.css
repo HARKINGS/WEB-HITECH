@@ -727,6 +727,18 @@ background: var(--text-secondary, #999);
 .elements-menu .dropdown-list { padding: 10px 0; }
 .elements-menu .dropdown-list li a { padding: 8px 15px; }
 
+.mobile-menu-toggle {
+  display: none; /* Ẩn trên desktop */
+  background: none;
+  border: none;
+  color: var(--text-accent); /* Màu của icon, có thể là màu của logo text */
+  font-size: 1.5rem; /* Kích thước icon */
+  cursor: pointer;
+  padding: 5px 10px;
+  z-index: 1031; /* Cao hơn nav một chút */
+  /* Sẽ được hiển thị ở media query */
+}
+
 /* ============================================ */
 /* ============= RESPONSIVE =================== */
 /* ============================================ */
@@ -737,54 +749,160 @@ background: var(--text-secondary, #999);
     .nav-item { padding: 0 10px; } 
 }
 
-@media (max-width: 991px) {
-    .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 720px; padding: 0 10px; }
-    .search-form { max-width: 400px; }
-    .browse-categories-wrapper { margin-right: auto; }
-    .mobile-menu-toggle { display: block; }
-    .nav-item { padding: 0 8px; } 
+@media (max-width: 991px) { /* Breakpoint bạn dùng để ẩn nav */
+  .header-main-inner {
+    position: relative; /* Để mobile-menu-toggle có thể position */
+  }
 
+  .mobile-menu-toggle {
+    display: block; /* Hiển thị nút toggle */
+    order: 2; /* Đẩy nút toggle sau logo */
+    margin-left: auto; /* Đẩy sang phải nếu không có actions */
+  }
+
+  .logo {
+    order: 1;
+  }
+
+  .search-form {
+    /* Ban đầu có thể ẩn hoặc thu nhỏ */
+    /* width: 100%;
+    order: 3;
+    margin-top: 10px; */
+    /* Sẽ xử lý kỹ hơn ở breakpoint nhỏ hơn nếu cần */
+    margin-right: 10px; /* Khoảng cách với cart icon */
+  }
+
+  .header-actions {
+    order: 3; /* Sau nút toggle trên một số layout */
+    /* Hoặc order: 2 và mobile-menu-toggle order: 3 tùy ý */
+  }
+
+  /* --- Thanh Điều Hướng (Navigation) cho Mobile --- */
+  .header-nav {
+    position: absolute; /* Hoặc fixed nếu muốn nó chiếm toàn màn hình */
+    top: 100%; /* Ngay dưới .header-main (nếu .site-header là relative) */
+    /* Nếu .site-header là fixed, top sẽ là chiều cao của .header-main */
+    /* top: var(--header-main-height, 70px); */ /* Cần tính toán chiều cao này */
+    left: 0;
+    width: 100%;
+    background-color: var(--accent-color, #343a40); /* Giống màu nav desktop */
+    max-height: 0; /* Ẩn ban đầu */
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Dưới header-main một chút */
+  }
+
+  .header-nav.is-open {
+    max-height: calc(100vh - var(--header-main-height, 70px)); /* Chiều cao tối đa có thể cuộn */
+    /* Hoặc một giá trị cố định như 500px nếu nội dung menu không quá dài */
+    /* max-height: 500px; */
+    overflow-y: auto; /* Cho phép cuộn nếu menu quá dài */
+  }
+
+  .header-nav-inner {
+    flex-direction: column; /* Sắp xếp các item theo chiều dọc */
+    align-items: flex-start; /* Canh trái các item */
+    height: auto; /* Để chiều cao tự động theo nội dung */
+    padding: 10px 0; /* Padding cho toàn bộ nav mobile */
+  }
+
+  .main-navigation {
+    flex-direction: column;
+    width: 100%;
+    gap: 0; /* Bỏ gap ngang */
+    align-items: stretch; /* Các nav-item chiếm toàn bộ chiều rộng */
+  }
+
+  .nav-item {
+    width: 100%;
+    height: auto; /* Chiều cao tự động */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Ngăn cách giữa các item */
+  }
+  .nav-item:last-child {
+    border-bottom: none;
+  }
+
+  .nav-item > a {
+    padding: 12px 20px; /* Padding cho link mobile */
+    height: auto;
+    justify-content: flex-start; /* Canh text sang trái */
+    width: 100%; /* Link chiếm toàn bộ chiều rộng */
+    font-size: 0.95rem;
+  }
+  .nav-item > a.active {
+     background-color: var(--primary-color-darker, #e0a800); /* Màu active đậm hơn chút */
+  }
 }
 
+
+/* --- Điều chỉnh cho màn hình rất nhỏ (ví dụ: dưới 767px hoặc 575px) --- */
 @media (max-width: 767px) {
-    .header-main-inner, .header-top-inner, .header-nav-inner { max-width: 100%; padding: 0 10px; }
-    .header-main-inner { flex-wrap: wrap; justify-content: space-between; gap: 10px; }
-    .logo { order: 1; flex-basis: 50%; }
-    .header-actions { order: 2; gap: 10px; flex-basis: 40%; justify-content: flex-end; }
-    .search-form { order: 3; width: 100%; margin-top: 10px; max-width: none; }
-    .browse-categories { padding: 0 15px; }
-    .header-action-item svg { font-size: 1.1rem; }
-    .header-action-item span { font-size: 0.8rem; }
-    .header-action-item .cart-text { display: none; }
-    .mega-menu { min-width: calc(100vw - 20px) !important; width: calc(100vw - 20px) !important; left: 10px !important; transform: none !important; padding: 15px; }
-    .dropdown-menu:not(.mega-menu) { min-width: 200px; }
-    .nav-item { padding: 0 5px; } 
+  .search-form {
+    order: 4; /* Sau logo, toggle, actions */
+    width: calc(100% - 20px); /* Chiếm gần hết chiều rộng, trừ padding của container */
+  }
+  .header-action-item .cart-link-icon span.noselect {
+    font-size: 0.8rem; 
+  }
+
+  .logo {
+    /* order: 1; */ /* Đã có */
+    /* flex-basis: auto; */ /* Để logo tự co giãn */
+    margin-right: auto; /* Đẩy các item khác sang phải */
+  }
+
+  .mobile-menu-toggle {
+    order: 2;
+    margin-left: 10px; /* Khoảng cách với cart */
+  }
+  .header-actions {
+    order: 3;
+  }
+
+  .header-action-item .cart-text-label {
+    display: none;
+    font-size: 0;
+  }
+  .header-action-item .cart-link-icon {
+    padding: 5px; /* Giảm padding của icon cart */
+  }
+  .header-action-item .cart-link-icon svg {
+    font-size: 1.2rem; /* Icon cart nhỏ hơn chút */
+  }
+
+  .cart-count {
+    min-width: 18px; height: 18px; line-height: 18px; font-size: 0.7rem;
+  }
+
+  /* Cart Preview trên mobile có thể cần điều chỉnh */
+  .cart-preview-dropdown {
+    width: calc(100vw - 20px); /* Chiếm gần hết chiều rộng */
+    max-width: 300px; /* Giới hạn độ rộng tối đa */
+    left: -36px; /* Hoặc left: 5px; tùy vị trí icon cart */
+    /* transform: translateX(0); */ /* Reset transform nếu icon cart ở giữa */
+  }
 }
 
 @media (max-width: 575px) {
-  .container {max-width: 0;}
-  .home-page {padding-top: 150px !important;}
-    .logo { flex-basis: 50%; }
-    .header-actions { flex-basis: 40%; gap: 8px; }
-    .search-category-dropdown { display: none; }
-    .mega-menu-grid { grid-template-columns: 1fr !important; gap: 20px; }
-    .shop-menu .image-ad, .categories-menu .best-selling { display: none; }
-    .product-grid-mini { grid-template-columns: 1fr; gap: 15px; }
-    .category-icons-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* Sửa thành 2 cột */
-    .product-showcase-mini img { max-width: 50px; height: 50px;}
-    .nav-item { padding: 0; } 
-  
-    .main-navigation {max-width: 20%;}
-}
+    .home-page {padding-top: 130px !important;} /* Điều chỉnh lại nếu header cao hơn */
 
-/* Mobile Menu Toggle Button */
-.mobile-menu-toggle {
-    display: none;
-    background: none; border: none;
-    color: var(--text-on-accent);
-    font-size: 1.6rem; cursor: pointer;
-    margin-left: auto;
-    padding: 0 10px;
-    height: 100%;
-    line-height: 50px;
+    .logo-text {
+      font-size: 1.2rem; 
+    }
+    .search-input {
+      font-size: 0.85rem;
+      padding: 8px 10px;
+    }
+    .search-button {
+      padding: 8px 10px;
+    }
+    .mobile-menu-toggle {
+      font-size: 1.3rem;
+    }
+    .header-main-inner {
+      gap: 0;
+    } 
+    
 }

@@ -91,17 +91,12 @@ export const getGoodsByPriceAPI = async (price) => {
         return handleError(new Error("Valid price is required."));
     }
     try {
-        // OpenAPI mô tả là query param, nhưng path là /goods/by-price/{goodsPrice}
-        // Giả sử controller thực tế dùng query param theo OpenAPI:
         const response = await axios.get(`${API_BASE_URL}/goods/by-price?goodsPrice=${price}`);
-        // Nếu controller dùng path variable:
-        // const response = await axios.get(`${API_BASE_URL}/goods/by-price/${price}`);
         const result = handleApiResponse(response, `Failed to fetch goods for price: ${price}.`);
         return Array.isArray(result) ? result : [];
     } catch (error) {
         console.error(`Error in getGoodsByPriceAPI for ${price}:`, error.message);
         return [];
-        // return handleError(error, `Failed to fetch goods by price ${price}.`);
     }
 };
 
@@ -115,7 +110,6 @@ export const getGoodsReviewsAPI = async (goodsId) => {
     } catch (error) {
         console.error(`Error in getGoodsReviewsAPI for ${goodsId}:`, error.message);
         return [];
-        // return handleError(error, `Failed to fetch reviews for good ID ${goodsId}.`);
     }
 };
 export const getGoodsWithReviewsAPI = async (goodsId) => {
@@ -123,8 +117,6 @@ export const getGoodsWithReviewsAPI = async (goodsId) => {
     if (!goodsId) return handleError(new Error("Goods ID is required."));
     try {
         const response = await axios.get(`${API_BASE_URL}/goods/details/${goodsId}`);
-        // API này trả về trực tiếp GoodsDetailsResponse (không có wrapper code, result)
-        // hoặc lỗi 500 với body là string message
         if (response.data && response.data.goods) { // Kiểm tra có goods là được
             return response.data;
         } else {
@@ -146,7 +138,6 @@ export const createGoodsReviewAPI = async (goodsId, reviewData) => {
         return handleError(new Error("Review data (rating and comment) is required."));
     }
     try {
-        // Cần JWT token nếu API yêu cầu xác thực
         const response = await axios.post(`${API_BASE_URL}/goods/${goodsId}/reviews`, reviewData);
         return handleApiResponse(response, 'Failed to create review.');
     } catch (error) {

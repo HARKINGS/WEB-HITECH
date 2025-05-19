@@ -328,10 +328,6 @@
       }
   }
   @media (max-width: 575px) {
-       .shop-product-grid {
-          grid-template-columns: 1fr; /* 1 cột trên mobile rất nhỏ */
-          gap: 20px;
-      }
        .controls-right {
            flex-direction: column; /* Stack sort và view */
            gap: 10px;
